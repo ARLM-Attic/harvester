@@ -1,0 +1,13 @@
+glob:Core/Core.csproj.user
+glob:Harvester.suo
+glob:Windows/bin/
+glob:Core.Tests/bin/
+glob:Core.Tests/obj/
+glob:Core/obj/
+glob:Core/bin/
+glob:Windows/obj/
+glob:_ReSharper.Harvester/
+glob:(SolutionBuildEvent)/bin/
+glob:(SolutionBuildEvent)/obj/
+glob:VersionInfo.cs
+glob:*.ReSharper.user

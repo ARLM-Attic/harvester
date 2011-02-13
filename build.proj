@@ -1,0 +1,55 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Test">
+
+  <Import Project="Lib\MSBuild\MSBuild.Community.Tasks\MSBuild.Community.Tasks.Targets"/>
+  <UsingTask AssemblyFile="Lib\MSBuild\xUnit\xunit.runner.msbuild.dll" TaskName="Xunit.Runner.MSBuild.Xunit" />
+
+  <ItemGroup>
+    <SolutionToBuild Include="Harvester.sln"/>
+  </ItemGroup>
+
+  <Target Name="Clean">
+    <MSBuild Projects="@(SolutionToBuild)" Targets="Clean" />
+  </Target>
+
+  <!-- 
+     Used by both the 'Build' target as well as the (SolutionBuildEvent) project to ensure that every build 
+     whether through build.cmd or Visual Studio will generate an updated VersionInfo.cs file. Visual Studio
+     does not provide a built in way to have a solution level pre-build event; using a C++ MakeFile project
+     and then ensuring that all other solution projects (via Project -> Project Dependencies) are dependant 
+     on the (SolutionBuildEvent) will ensure that VersionInfo.cs is always replced on Build/Rebuild.
+  -->
+  <Target Name="StampVersion">
+    <PropertyGroup>
+      <GetBuildVersionScript>
+        <![CDATA[
+        public static string ScriptMain()
+        {
+          DateTime now = DateTime.Now;
+          DateTime projectStart = new DateTime(2009, 2, 22);
+          Int32 daysFromStart = Convert.ToInt32(now.Date.Subtract(projectStart).TotalDays);
+          Int32 minutesFromMidnight = Convert.ToInt32(now.Subtract(now.Date).TotalMinutes);
+
+          return String.Format("1.4.{0}.{1}", daysFromStart, minutesFromMidnight);
+        }
+        ]]>
+      </GetBuildVersionScript>
+    </PropertyGroup>
+    <Script Language="C#" Code="$(GetBuildVersionScript)" Imports="System">
+      <Output TaskParameter="ReturnValue" PropertyName="BuildVersion" />
+    </Script>
+    <AssemblyInfo CodeLanguage="CS" OutputFile="VersionInfo.cs" AssemblyVersion="$(BuildVersion)" AssemblyFileVersion="$(BuildVersion)" AssemblyConfiguration="$(Configuration)" />
+  </Target>
+  
+  <Target Name="Build" DependsOnTargets="Clean; StampVersion">
+    <MSBuild Projects="@(SolutionToBuild)" Targets="Build" />
+  </Target>
+
+  <Target Name="Test" DependsOnTargets="Build">
+    <ItemGroup>
+      <TestProjects Include="*.Tests\**\$(Configuration)\*.Tests.dll" Exclude="**\obj\**"/>
+    </ItemGroup>
+
+    <Xunit Assembly="%(TestProjects.Identity)" />
+  </Target>
+
+</Project>
