@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using Harvester.Core.Messages;
 using Harvester.Core.Messages.Parsers;
 using Harvester.Core.Processes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Xunit;
 using Attribute = Harvester.Core.Messages.Attribute;
 
 /* Copyright (c) 2011 CBaxter
@@ -23,13 +23,12 @@ using Attribute = Harvester.Core.Messages.Attribute;
 
 namespace Harvester.Core.Tests.Messages
 {
-  [TestClass]
   public class LogMessageTests
   {
     private readonly Mock<IMessageParser> _messageParser = new Mock<IMessageParser>(MockBehavior.Strict);
     private readonly Mock<IProcess> _process = new Mock<IProcess>(MockBehavior.Strict);
 
-    [TestMethod]
+    [Fact]
     public void CtorBuildNewLogMessage()
     {
       SetupProcessExpectations();
@@ -38,18 +37,18 @@ namespace Harvester.Core.Tests.Messages
       var now = DateTime.Now;
       var message = new LogMessage(now, _process.Object, _messageParser.Object);
 
-      Assert.AreEqual(LogMessageLevel.Information, message.Level);
-      Assert.AreEqual(now, message.Timestamp);
-      Assert.AreEqual(1U, message.MessageId);
-      Assert.AreEqual(2000, message.ProcessId);
-      Assert.AreEqual("Harvester.exe", message.ProcessName);
-      Assert.AreEqual("Main", message.Thread);
-      Assert.AreEqual("CBaxter", message.Username);
-      Assert.AreEqual("Harvester.Logger", message.Source);
-      Assert.AreEqual("My Message", message.Message);
+      Assert.True(message.MessageId > 0U);
+      Assert.Equal(now, message.Timestamp);
+      Assert.Equal(LogMessageLevel.Information, message.Level);
+      Assert.Equal(2000, message.ProcessId);
+      Assert.Equal("Harvester.exe", message.ProcessName);
+      Assert.Equal("Main", message.Thread);
+      Assert.Equal("CBaxter", message.Username);
+      Assert.Equal("Harvester.Logger", message.Source);
+      Assert.Equal("My Message", message.Message);
     }
 
-    [TestMethod]
+    [Fact]
     public void AttributesCachedOnFirstLookup()
     {
       SetupProcessExpectations();
@@ -61,13 +60,13 @@ namespace Harvester.Core.Tests.Messages
 
       var message = new LogMessage(DateTime.Now, _process.Object, _messageParser.Object);
 
-      Assert.AreSame(attributes, message.Attributes);
-      Assert.AreSame(attributes, message.Attributes);
+      Assert.Same(attributes, message.Attributes);
+      Assert.Same(attributes, message.Attributes);
 
       _messageParser.Verify(mock => mock.GetAttributes(), Times.Once());
     }
 
-    [TestMethod]
+    [Fact]
     public void ExceptionCachedOnFirstLookup()
     {
       SetupProcessExpectations();
@@ -77,13 +76,13 @@ namespace Harvester.Core.Tests.Messages
 
       var message = new LogMessage(DateTime.Now, _process.Object, _messageParser.Object);
 
-      Assert.AreSame("My Exception", message.Exception);
-      Assert.AreSame("My Exception", message.Exception);
+      Assert.Same("My Exception", message.Exception);
+      Assert.Same("My Exception", message.Exception);
 
       _messageParser.Verify(mock => mock.GetException(), Times.Once());
     }
 
-    [TestMethod]
+    [Fact]
     public void RawMessageCachedOnFirstLookup()
     {
       SetupProcessExpectations();
@@ -93,8 +92,8 @@ namespace Harvester.Core.Tests.Messages
 
       var message = new LogMessage(DateTime.Now, _process.Object, _messageParser.Object);
 
-      Assert.AreSame("RAW Message", message.RawMessage);
-      Assert.AreSame("RAW Message", message.RawMessage);
+      Assert.Same("RAW Message", message.RawMessage);
+      Assert.Same("RAW Message", message.RawMessage);
 
       _messageParser.Verify(mock => mock.GetRawMessage(), Times.Once());
     }

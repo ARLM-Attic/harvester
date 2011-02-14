@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Harvester.Core.Processes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -19,39 +19,45 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Harvester.Core.Tests.Processes
 {
-  [TestClass]
   public class ProcessWrapperTests
   {
-    [TestMethod]
+    [Fact]
     public void ProcessWrapperWrapDiagnositcProcess()
     {
       using (var process = Process.GetCurrentProcess())
       {
         var processWrapper = new ProcessWrapper(process);
 
-        Assert.AreEqual(process.Id, processWrapper.Id);
-        Assert.AreEqual(process.ProcessName, processWrapper.Name);
-        Assert.IsFalse(processWrapper.HasExited);
-        Assert.IsNull(processWrapper.ExitTime);
+        Assert.Equal(process.Id, processWrapper.Id);
+        Assert.Equal(process.ProcessName, processWrapper.Name);
+        Assert.False(processWrapper.HasExited);
+        Assert.Null(processWrapper.ExitTime);
       }
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException), "Process has exited, so the requested information is not available.")]
+    [Fact]
     public void ProcessShouldThrowInvalidOperationExceptionIfWrappingExitedProcess()
     {
       using (var process = Process.Start(new ProcessStartInfo("cmd") { CreateNoWindow = true, WindowStyle = ProcessWindowStyle.Hidden }))
       {
+        var processId = process.Id;
+        var exitVerified = false;
+
         process.Kill();
         process.WaitForExit();
 
-        Assert.IsTrue(process.HasExited);
-        
-        new ProcessWrapper(process);
+        // Wait For Exit occassionally lies.
+        while (!exitVerified)
+          try { Process.GetProcessById(processId); } catch (ArgumentException) { exitVerified = true; }
+
+        Assert.True(process.HasExited);
+
+        var ex = Assert.Throws<InvalidOperationException>(() => new ProcessWrapper(process));
+        Assert.Equal("Process has exited, so the requested information is not available.", ex.Message);
       }
     }
 
-    [TestMethod]
+    [Fact]
     public void ProcessShouldSetExitTimeWhenHasExitedChecked()
     {
       using (var process = Process.Start(new ProcessStartInfo("cmd") { CreateNoWindow = true, WindowStyle = ProcessWindowStyle.Hidden }))
@@ -61,10 +67,10 @@ namespace Harvester.Core.Tests.Processes
         process.Kill();
         process.WaitForExit();
 
-        Assert.IsNull(processWrapper.ExitTime);
-        Assert.IsFalse(processWrapper.HasExited);
-        Assert.IsTrue(processWrapper.HasExited);
-        Assert.IsNotNull(processWrapper.ExitTime);
+        Assert.Null(processWrapper.ExitTime);
+        Assert.False(processWrapper.HasExited);
+        Assert.True(processWrapper.HasExited);
+        Assert.NotNull(processWrapper.ExitTime);
       }
     }
   }

@@ -1,6 +1,6 @@
 ﻿using System;
 using Harvester.Core.Messages.Parsers.Log4Net;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -18,63 +18,62 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Harvester.Core.Tests.Messages.Parsers.Log4Net
 {
-  [TestClass]
   public class XmlLayoutParserFactoryTests
   {
-    [TestMethod]
+    [Fact]
     public void CanCreateParserReturnsFalseOnNullMessage()
     {
       var factory = new XmlLayoutParserFactory();
 
-      Assert.IsFalse(factory.CanCreateParser(null));
+      Assert.False(factory.CanCreateParser(null));
     }
 
-    [TestMethod]
+    [Fact]
     public void CanCreateParserReturnsFalseOnEmptyMessage()
     {
       var factory = new XmlLayoutParserFactory();
 
-      Assert.IsFalse(factory.CanCreateParser(null));
+      Assert.False(factory.CanCreateParser(null));
     }
 
-    [TestMethod]
+    [Fact]
     public void CanCreateParserReturnsFalseOnWhitespaceMessage()
     {
       var factory = new XmlLayoutParserFactory();
 
-      Assert.IsFalse(factory.CanCreateParser(String.Empty));
+      Assert.False(factory.CanCreateParser(String.Empty));
     }
 
-    [TestMethod]
+    [Fact]
     public void CanCreateParserReturnsFalseWhenMessageDoesNotStartWithOpenTag()
     {
       var factory = new XmlLayoutParserFactory();
 
-      Assert.IsFalse(factory.CanCreateParser("Stuff Before <log4net:event logger"));
+      Assert.False(factory.CanCreateParser("Stuff Before <log4net:event logger"));
     }
 
-    [TestMethod]
+    [Fact]
     public void CanCreateParserReturnsFalseWhenMessageDoesNotEndWithCloseTag()
     {
       var factory = new XmlLayoutParserFactory();
 
-      Assert.IsFalse(factory.CanCreateParser("<log4net:event ></log4net:event> After Stuff"));
+      Assert.False(factory.CanCreateParser("<log4net:event ></log4net:event> After Stuff"));
     }
 
-    [TestMethod]
+    [Fact]
     public void CanCreateParserReturnsTrueWhenMessageMatchesLog4NetXmlLayoutElement()
     {
       var factory = new XmlLayoutParserFactory();
 
-      Assert.IsTrue(factory.CanCreateParser("<log4net:event ></log4net:event>"));
+      Assert.True(factory.CanCreateParser("<log4net:event ></log4net:event>"));
     }
 
-    [TestMethod]
+    [Fact]
     public void CreateReturnsXmlLayoutParser()
     {
       var factory = new XmlLayoutParserFactory();
 
-      Assert.IsInstanceOfType(factory.Create("<log4net:event ></log4net:event>"), typeof(XmlLayoutParser));
+      Assert.IsType(typeof(XmlLayoutParser), factory.Create("<log4net:event ></log4net:event>"));
     }
   }
 }

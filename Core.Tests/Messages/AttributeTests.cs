@@ -1,5 +1,5 @@
 ﻿using Harvester.Core.Messages;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -17,25 +17,24 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Harvester.Core.Tests.Messages
 {
-  [TestClass]
   public class AttributeTests
   {
-    [TestMethod]
+    [Fact]
     public void CtorShouldBuildNewAttribute()
     {
       var attribute = new Attribute("Name", "Value");
 
-      Assert.AreEqual("Name", attribute.Name);
-      Assert.AreEqual("Value", attribute.Value);
+      Assert.Equal("Name", attribute.Name);
+      Assert.Equal("Value", attribute.Value);
     }
 
-    [TestMethod]
+    [Fact]
     public void CtorShouldAcceptNullValue()
     {
       var attribute = new Attribute("Name", null);
 
-      Assert.AreEqual("Name", attribute.Name);
-      Assert.IsNull(attribute.Value);
+      Assert.Equal("Name", attribute.Name);
+      Assert.Null(attribute.Value);
     }
   }
 }

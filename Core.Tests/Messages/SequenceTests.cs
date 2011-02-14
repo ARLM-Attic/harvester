@@ -1,6 +1,6 @@
 ﻿using System;
 using Harvester.Core.Messages;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -18,34 +18,33 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Harvester.Core.Tests.Messages
 {
-  [TestClass]
   public class SequenceTests
   {
-    [TestMethod]
+    [Fact]
     public void GetNextIdShouldReturnInitialIdOnFirstCall()
     {
       var sequence = new Sequence();
 
-      Assert.AreEqual(1U, sequence.GetNextId());
+      Assert.Equal(1U, sequence.GetNextId());
     }
 
-    [TestMethod]
+    [Fact]
     public void GetNextIdShouldIncrementByOnEachCall()
     {
       var sequence = new Sequence(1);
 
-      Assert.AreEqual(1U, sequence.GetNextId());
-      Assert.AreEqual(2U, sequence.GetNextId());
-      Assert.AreEqual(3U, sequence.GetNextId());
+      Assert.Equal(1U, sequence.GetNextId());
+      Assert.Equal(2U, sequence.GetNextId());
+      Assert.Equal(3U, sequence.GetNextId());
     }
 
-    [TestMethod]
+    [Fact]
     public void GetNextIdShouldRollOverOnMaxValue()
     {
       var sequence = new Sequence(UInt32.MaxValue);
 
-      Assert.AreEqual(UInt32.MaxValue, sequence.GetNextId());
-      Assert.AreEqual(0U, sequence.GetNextId());
+      Assert.Equal(UInt32.MaxValue, sequence.GetNextId());
+      Assert.Equal(0U, sequence.GetNextId());
     }
   }
 }

@@ -2,7 +2,7 @@
 using System.Linq;
 using Harvester.Core.Messages;
 using Harvester.Core.Messages.Parsers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -20,22 +20,21 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Harvester.Core.Tests.Messages.Parsers
 {
-  [TestClass]
   public class DefaultMessageParserTests
   {
-    [TestMethod]
+    [Fact]
     public void CtorShouldBuildNewMessageParser()
     {
       var parser = new DefaultMessageParser("MySource", "MyMessage");
 
-      Assert.AreEqual(LogMessageLevel.Trace, parser.GetLevel());
-      Assert.AreEqual("MyMessage", parser.GetMessage());
-      Assert.AreEqual("MyMessage", parser.GetRawMessage());
-      Assert.AreEqual("MySource", parser.GetSource());
-      Assert.AreEqual(String.Empty, parser.GetThread());
-      Assert.AreEqual(String.Empty, parser.GetUsername());
-      Assert.AreEqual(0, parser.GetAttributes().Count());
-      Assert.AreEqual(String.Empty, parser.GetException());
+      Assert.Equal(LogMessageLevel.Trace, parser.GetLevel());
+      Assert.Equal("MyMessage", parser.GetMessage());
+      Assert.Equal("MyMessage", parser.GetRawMessage());
+      Assert.Equal("MySource", parser.GetSource());
+      Assert.Equal(String.Empty, parser.GetThread());
+      Assert.Equal(String.Empty, parser.GetUsername());
+      Assert.Equal(0, parser.GetAttributes().Count());
+      Assert.Equal(String.Empty, parser.GetException());
     }
   }
 }

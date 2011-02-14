@@ -1,6 +1,6 @@
 ﻿using System;
 using Harvester.Core.Processes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -18,18 +18,17 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Harvester.Core.Tests.Processes
 {
-  [TestClass]
   public class UnknownProcesstests
   {
-    [TestMethod]
+    [Fact]
     public void ShouldAlwaysSetHasExitedTrue()
     {
       var unknownProcess = new UnknownProcess(1);
 
-      Assert.AreEqual(1, unknownProcess.Id);
-      Assert.AreEqual(String.Empty, unknownProcess.Name);
-      Assert.IsTrue(unknownProcess.HasExited);
-      Assert.IsNotNull(unknownProcess.ExitTime);
+      Assert.Equal(1, unknownProcess.Id);
+      Assert.Equal(String.Empty, unknownProcess.Name);
+      Assert.True(unknownProcess.HasExited);
+      Assert.NotNull(unknownProcess.ExitTime);
     }
   }
 }

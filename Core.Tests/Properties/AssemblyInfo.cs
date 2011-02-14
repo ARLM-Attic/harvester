@@ -4,4 +4,4 @@
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Core.Tests")]
-[assembly: AssemblyDescription("Harvester - Core Test Project")]
+[assembly: AssemblyDescription("Harvester - Core Unit Tests")]

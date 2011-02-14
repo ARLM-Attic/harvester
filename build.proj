@@ -1,55 +1,88 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Test">
 
   <Import Project="Lib\MSBuild\MSBuild.Community.Tasks\MSBuild.Community.Tasks.Targets"/>
-  <UsingTask AssemblyFile="Lib\MSBuild\xUnit\xunit.runner.msbuild.dll" TaskName="Xunit.Runner.MSBuild.Xunit" />
+  <UsingTask TaskName="Xunit.Runner.MSBuild.xunit" AssemblyFile="Lib\MSBuild\xUnit\xunit.runner.msbuild.dll" />
 
-  <ItemGroup>
-    <SolutionToBuild Include="Harvester.sln"/>
-  </ItemGroup>
+  <PropertyGroup>
+    <BuildOrigin Condition="'$(BuildOrigin)' == ''">MSBuild</BuildOrigin>
+    <ReleaseVersion>0.0.0.0</ReleaseVersion>
+    <SolutionFile>Harvester.sln</SolutionFile>
+    <BuildOutputDir>Build</BuildOutputDir>
+    <ILMergeOutput>$(BuildOutputDir)\Harvester.exe</ILMergeOutput>
+    <ILMergeLog>$(BuildOutputDir)\ilmerge.log</ILMergeLog>
+  </PropertyGroup>
 
   <Target Name="Clean">
-    <MSBuild Projects="@(SolutionToBuild)" Targets="Clean" />
+    <RemoveDir Directories="$(BuildOutputDir)"/>
+    <MSBuild Projects="$(SolutionFile)" Targets="Clean" />
   </Target>
 
-  <!-- 
-     Used by both the 'Build' target as well as the (SolutionBuildEvent) project to ensure that every build 
-     whether through build.cmd or Visual Studio will generate an updated VersionInfo.cs file. Visual Studio
-     does not provide a built in way to have a solution level pre-build event; using a C++ MakeFile project
-     and then ensuring that all other solution projects (via Project -> Project Dependencies) are dependant 
-     on the (SolutionBuildEvent) will ensure that VersionInfo.cs is always replced on Build/Rebuild.
-  -->
-  <Target Name="StampVersion">
+  <Target Name="StampReleaseVersion">
     <PropertyGroup>
-      <GetBuildVersionScript>
-        <![CDATA[
-        public static string ScriptMain()
-        {
-          DateTime now = DateTime.Now;
-          DateTime projectStart = new DateTime(2009, 2, 22);
-          Int32 daysFromStart = Convert.ToInt32(now.Date.Subtract(projectStart).TotalDays);
-          Int32 minutesFromMidnight = Convert.ToInt32(now.Subtract(now.Date).TotalMinutes);
-
-          return String.Format("1.4.{0}.{1}", daysFromStart, minutesFromMidnight);
-        }
-        ]]>
-      </GetBuildVersionScript>
+      <Major>0</Major>
+      <Minor>9</Minor>
+      <GetBuildScript><![CDATA[ public static string ScriptMain() { return Convert.ToInt32(DateTime.Now.Date.Subtract(new DateTime(2011, 2, 11)).TotalDays).ToString(); } ]]></GetBuildScript>
+      <GetRevisionScript><![CDATA[ public static string ScriptMain() { return Convert.ToInt32(DateTime.Now.Subtract(new DateTime(2011, 2, 11)).TotalMinutes).ToString(); } ]]></GetRevisionScript>
     </PropertyGroup>
-    <Script Language="C#" Code="$(GetBuildVersionScript)" Imports="System">
-      <Output TaskParameter="ReturnValue" PropertyName="BuildVersion" />
+
+    <Script Language="C#" Code="$(GetBuildScript)" Imports="System">
+      <Output TaskParameter="ReturnValue" PropertyName="Build" />
     </Script>
-    <AssemblyInfo CodeLanguage="CS" OutputFile="VersionInfo.cs" AssemblyVersion="$(BuildVersion)" AssemblyFileVersion="$(BuildVersion)" AssemblyConfiguration="$(Configuration)" />
+
+    <Script Language="C#" Code="$(GetRevisionScript)" Imports="System">
+      <Output TaskParameter="ReturnValue" PropertyName="Revision" />
+    </Script>
+
+    <CreateProperty Value="$(Major).$(Minor).$(Build).$(Revision)" Condition="'$(BuildOrigin)' == 'MSBuild'">
+      <Output TaskParameter="Value" PropertyName="ReleaseVersion" />
+    </CreateProperty>
+
+    <AssemblyInfo CodeLanguage="CS" OutputFile="VersionInfo.cs" AssemblyVersion="$(ReleaseVersion)" AssemblyFileVersion="$(ReleaseVersion)" AssemblyConfiguration="$(Configuration)" />
   </Target>
   
-  <Target Name="Build" DependsOnTargets="Clean; StampVersion">
-    <MSBuild Projects="@(SolutionToBuild)" Targets="Build" />
+  <Target Name="PreBuild" DependsOnTargets="StampReleaseVersion">
+    <!-- 
+       Used by both the 'Build' target as well as the (SolutionBuildEvent) project to ensure that every build 
+       whether through build.cmd or Visual Studio will generate an updated VersionInfo.cs file. Visual Studio
+       does not provide a built in way to have a solution level pre-build event; using a ClassLibrary project
+       and then ensuring that all other solution projects (via Project -> Project Dependencies) are dependant 
+       on the (SolutionBuildEvent) will ensure that VersionInfo.cs is always replced on Build/Rebuild.
+    -->
+  </Target>
+  
+  <Target Name="Build" DependsOnTargets="Clean">
+    <MSBuild Projects="$(SolutionFile)" Targets="Build" Properties="BuildOrigin=$(BuildOrigin)" />
   </Target>
 
   <Target Name="Test" DependsOnTargets="Build">
+    <Xunit Assembly="Core.Tests\bin\$(Configuration)\Harvester.Core.Tests.dll" />
+  </Target>
+
+  <Target Name="MergeAssemblies">
+    <Message Text="Starting ILMerge..." />
+    
     <ItemGroup>
-      <TestProjects Include="*.Tests\**\$(Configuration)\*.Tests.dll" Exclude="**\obj\**"/>
+      <inputAssemblies Include="Windows\bin\$(Configuration)\Harvester.exe" />
+      <inputAssemblies Include="Core\bin\$(Configuration)\Harvester.Core.dll" />
     </ItemGroup>
 
-    <Xunit Assembly="%(TestProjects.Identity)" />
+    <ILMerge InputAssemblies="@(inputAssemblies)" OutputFile="$(ILMergeOutput)" LogFile="$(ILMergeLog)" DebugInfo="false" XmlDocumentation="false"  />
+    
+    <Message Text="ILMerge Complete" />
+  </Target>
+
+  <Target Name="PackageRelease">
+    <ItemGroup>
+      <RepoFiles Include="$(ILMergeOutput)" />
+    </ItemGroup>
+    <Zip Files="@(RepoFiles)" WorkingDirectory="" ZipFileName="$(BuildOutputDir)\Harvester.zip" />
+  </Target>
+
+  <Target Name="Release" DependsOnTargets="Test">
+    <MakeDir Directories="$(BuildOutputDir)"/>
+
+    <CallTarget Targets="MergeAssemblies" />
+    <CallTarget Targets="PackageRelease" />
   </Target>
 
 </Project>

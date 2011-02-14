@@ -11,3 +11,5 @@ glob:(SolutionBuildEvent)/bin/
 glob:(SolutionBuildEvent)/obj/
 glob:VersionInfo.cs
 glob:*.ReSharper.user
+glob:Build/
+glob:Harvester.sln.cache

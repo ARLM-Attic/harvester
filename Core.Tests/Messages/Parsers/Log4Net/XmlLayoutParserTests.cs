@@ -6,7 +6,7 @@ using System.Xml;
 using Harvester.Core.Messages;
 using Harvester.Core.Messages.Parsers;
 using Harvester.Core.Messages.Parsers.Log4Net;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using Attribute = Harvester.Core.Messages.Attribute;
 
 /* Copyright (c) 2011 CBaxter
@@ -25,7 +25,6 @@ using Attribute = Harvester.Core.Messages.Attribute;
 
 namespace Harvester.Core.Tests.Messages.Parsers.Log4Net
 {
-  [TestClass]
   public class XmlLayoutParserTests
   {
     private const String FatalMessage = @"<log4net:event logger=""Harvester.Test.Logger"" timestamp=""2011-02-12T12:43:34.6377-07:00"" level=""FATAL"" thread=""3"" domain=""Harvester.exe"" username=""CBaxter"">
@@ -82,74 +81,74 @@ namespace Harvester.Core.Tests.Messages.Parsers.Log4Net
       _xmlParserContext = new XmlParserContext(null, _xmlNamespaceManager, null, XmlSpace.None);
     }
 
-    [TestMethod]
+    [Fact]
     public void ParsesFatalMessageWithException()
     {
       var parser = new XmlLayoutParser(CreateXmlDocument(FatalMessage), _xmlNamespaceManager);
 
       VerifyParser(parser, LogMessageLevel.Fatal, "My FATAL Message", FatalMessage);
 
-      Assert.AreEqual("My Exception", parser.GetException());
+      Assert.Equal("My Exception", parser.GetException());
     }
 
-    [TestMethod]
+    [Fact]
     public void ParsesErrorMessageWithException()
     {
       var parser = new XmlLayoutParser(CreateXmlDocument(ErrorMessage), _xmlNamespaceManager);
 
       VerifyParser(parser, LogMessageLevel.Error, "My ERROR Message", ErrorMessage);
 
-      Assert.AreEqual("My Exception", parser.GetException());
+      Assert.Equal("My Exception", parser.GetException());
     }
 
-    [TestMethod]
+    [Fact]
     public void ParsesWarnMessageWithNoException()
     {
       var parser = new XmlLayoutParser(CreateXmlDocument(WarnMessage), _xmlNamespaceManager);
 
       VerifyParser(parser, LogMessageLevel.Warning, "My WARN Message", WarnMessage);
 
-      Assert.AreEqual(String.Empty, parser.GetException());
+      Assert.Equal(String.Empty, parser.GetException());
     }
 
-    [TestMethod]
+    [Fact]
     public void ParsesInfoMessageWithNoException()
     {
       var parser = new XmlLayoutParser(CreateXmlDocument(InfoMessage), _xmlNamespaceManager);
 
       VerifyParser(parser, LogMessageLevel.Information, "My INFO Message", InfoMessage);
 
-      Assert.AreEqual(String.Empty, parser.GetException());
+      Assert.Equal(String.Empty, parser.GetException());
     }
 
-    [TestMethod]
+    [Fact]
     public void ParsesDebugMessageWithNoException()
     {
       var parser = new XmlLayoutParser(CreateXmlDocument(DebugMessage), _xmlNamespaceManager);
 
       VerifyParser(parser, LogMessageLevel.Debug, "My DEBUG Message", DebugMessage);
 
-      Assert.AreEqual(String.Empty, parser.GetException());
+      Assert.Equal(String.Empty, parser.GetException());
     }
 
-    [TestMethod]
+    [Fact]
     public void ParsesUnknownMessageWithNoExceptionAsTrace()
     {
       var parser = new XmlLayoutParser(CreateXmlDocument(TraceMessage), _xmlNamespaceManager);
 
       VerifyParser(parser, LogMessageLevel.Trace, "My TRACE Message", TraceMessage);
 
-      Assert.AreEqual(String.Empty, parser.GetException());
+      Assert.Equal(String.Empty, parser.GetException());
     }
 
-    [TestMethod]
+    [Fact]
     public void GetAttributesHandlesIgnoresMissingExtendedPropertiesElement()
     {
       var parser = new XmlLayoutParser(CreateXmlDocument(TraceMessage), _xmlNamespaceManager);
 
       var attributes = parser.GetAttributes().ToList();
 
-      Assert.AreEqual(8, attributes.Count);
+      Assert.Equal(8, attributes.Count);
 
       VerifyAttribute(attributes[0], "Domain", "Harvester.exe");
       VerifyAttribute(attributes[1], "Exception", String.Empty);
@@ -161,14 +160,14 @@ namespace Harvester.Core.Tests.Messages.Parsers.Log4Net
       VerifyAttribute(attributes[7], "Username", "CBaxter");
     }
 
-    [TestMethod]
+    [Fact]
     public void GetAttributesReturnsSortedList()
     {
       var parser = new XmlLayoutParser(CreateXmlDocument(FatalMessage), _xmlNamespaceManager);
 
       var attributes = parser.GetAttributes().ToList();
 
-      Assert.AreEqual(9, attributes.Count);
+      Assert.Equal(9, attributes.Count);
 
       VerifyAttribute(attributes[0], "Domain", "Harvester.exe");
       VerifyAttribute(attributes[1], "Exception", "My Exception");
@@ -209,18 +208,18 @@ namespace Harvester.Core.Tests.Messages.Parsers.Log4Net
 
     private void VerifyParser(IMessageParser parser, LogMessageLevel level, String message, String rawMessage)
     {
-      Assert.AreEqual(level, parser.GetLevel());
-      Assert.AreEqual("Harvester.Test.Logger", parser.GetSource());
-      Assert.AreEqual("3", parser.GetThread());
-      Assert.AreEqual("CBaxter", parser.GetUsername());
-      Assert.AreEqual(message, parser.GetMessage());
-      Assert.AreEqual(FormatXml(rawMessage), parser.GetRawMessage());
+      Assert.Equal(level, parser.GetLevel());
+      Assert.Equal("Harvester.Test.Logger", parser.GetSource());
+      Assert.Equal("3", parser.GetThread());
+      Assert.Equal("CBaxter", parser.GetUsername());
+      Assert.Equal(message, parser.GetMessage());
+      Assert.Equal(FormatXml(rawMessage), parser.GetRawMessage());
     }
 
     private static void VerifyAttribute(Attribute attribute, String name, Object value)
     {
-      Assert.AreEqual(name, attribute.Name);
-      Assert.AreEqual(value, attribute.Value);
+      Assert.Equal(name, attribute.Name);
+      Assert.Equal(value, attribute.Value);
     }
   }
 }

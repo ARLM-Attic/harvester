@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using Harvester.Core.Processes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -20,10 +19,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Harvester.Core.Tests.Processes
 {
-  [TestClass]
   public class ProcessRetrieverTests
   {
-    [TestMethod]
+    [Fact]
     public void GetProcessByIdReturnsRunningNewProcessReferenceWhenNotFound()
     {
       var processRetriever = new ProcessRetriever();
@@ -32,14 +30,14 @@ namespace Harvester.Core.Tests.Processes
       {
         var referencedProcess = processRetriever.GetProcessById(process.Id);
 
-        Assert.AreEqual(process.Id, referencedProcess.Id);
-        Assert.AreEqual(process.ProcessName, referencedProcess.Name);
-        Assert.IsFalse(referencedProcess.HasExited);
-        Assert.IsNull(referencedProcess.ExitTime);
+        Assert.Equal(process.Id, referencedProcess.Id);
+        Assert.Equal(process.ProcessName, referencedProcess.Name);
+        Assert.False(referencedProcess.HasExited);
+        Assert.Null(referencedProcess.ExitTime);
       }
     }
 
-    [TestMethod]
+    [Fact]
     public void GetProcessByIdReturnsRunningSameProcessReferenceWhenFoundAndNotExited()
     {
       var processRetriever = new ProcessRetriever();
@@ -49,24 +47,24 @@ namespace Harvester.Core.Tests.Processes
         var referencedProcess1 = processRetriever.GetProcessById(process.Id);
         var referencedProcess2 = processRetriever.GetProcessById(process.Id);
 
-        Assert.AreSame(referencedProcess1, referencedProcess2);
+        Assert.Same(referencedProcess1, referencedProcess2);
       }
     }
 
-    [TestMethod]
+    [Fact]
     public void GetProcessByIdReturnsUnknownProcessWhenProcessIdNotFound()
     {
       var processRetriever = new ProcessRetriever();
 
       var referencedProcess = processRetriever.GetProcessById(9999999);
 
-      Assert.AreEqual(9999999, referencedProcess.Id);
-      Assert.AreEqual(String.Empty, referencedProcess.Name);
-      Assert.IsTrue(referencedProcess.HasExited);
-      Assert.IsNotNull(referencedProcess.ExitTime);
+      Assert.Equal(9999999, referencedProcess.Id);
+      Assert.Equal(String.Empty, referencedProcess.Name);
+      Assert.True(referencedProcess.HasExited);
+      Assert.NotNull(referencedProcess.ExitTime);
     }
 
-    [TestMethod]
+    [Fact]
     public void GetProcessByIdReturnsUnknownProcessWhenProcessExitedBeforeWrapped()
     {
       var processRetriever = new ProcessRetriever();
@@ -74,20 +72,25 @@ namespace Harvester.Core.Tests.Processes
       using (var process = Process.Start(new ProcessStartInfo("cmd") { CreateNoWindow = true, WindowStyle = ProcessWindowStyle.Hidden }))
       {
         var processId = process.Id;
+        var exitVerified = false;
 
         process.Kill();
         process.WaitForExit();
 
+        // Wait For Exit occassionally lies.
+        while(!exitVerified)
+          try { Process.GetProcessById(processId); } catch(ArgumentException) { exitVerified = true; }
+     
         var referencedProcess = processRetriever.GetProcessById(processId);
 
-        Assert.AreEqual(processId, referencedProcess.Id);
-        Assert.AreEqual(String.Empty, referencedProcess.Name);
-        Assert.IsTrue(referencedProcess.HasExited);
-        Assert.IsNotNull(referencedProcess.ExitTime);
+        Assert.Equal(processId, referencedProcess.Id);
+        Assert.Equal(String.Empty, referencedProcess.Name);
+        Assert.True(referencedProcess.HasExited);
+        Assert.NotNull(referencedProcess.ExitTime);
       }
     }
     
-    [TestMethod]
+    [Fact]
     public void GetProcessByIdReturnsCachedProcessReferenceIfProcessExits()
     {
       var processRetriever = new ProcessRetriever();
@@ -101,10 +104,10 @@ namespace Harvester.Core.Tests.Processes
 
         var referencedProcess2 = processRetriever.GetProcessById(process.Id);
 
-        Assert.AreEqual(referencedProcess1.Id, referencedProcess2.Id);
-        Assert.AreEqual(referencedProcess1.Name, referencedProcess2.Name);
-        Assert.IsTrue(referencedProcess2.HasExited);
-        Assert.IsNotNull(referencedProcess2.ExitTime);
+        Assert.Equal(referencedProcess1.Id, referencedProcess2.Id);
+        Assert.Equal(referencedProcess1.Name, referencedProcess2.Name);
+        Assert.True(referencedProcess2.HasExited);
+        Assert.NotNull(referencedProcess2.ExitTime);
       }
     }
 

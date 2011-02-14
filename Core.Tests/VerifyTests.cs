@@ -1,6 +1,5 @@
 ﻿using System;
-using Harvester.Core;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -16,59 +15,58 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
  * IN THE SOFTWARE. 
  */
 
-namespace Core.Tests
+namespace Harvester.Core.Tests
 {
-  [TestClass]
   public class VerifyTests
   {
-    [TestMethod]
-    [ExpectedException(typeof(VerifyException), "Value cannot be null.")]
+    [Fact]
     public void NotNullThrowsOnNullValue()
     {
-      Verify.NotNull((Object)null);
+      var ex = Assert.Throws<VerifyException>(() => Verify.NotNull((Object)null));
+      Assert.Equal("Value cannot be null.", ex.Message);
     }
 
-    [TestMethod]
+    [Fact]
     public void NotNullIgnoresNonNulLValue()
     {
       Verify.NotNull(new Object());
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(VerifyException), "Value cannot be a null, empty or whitespace only.")]
+    [Fact]
     public void NotWhitespaceThrowsOnNullValue()
     {
-      Verify.NotWhitespace(null);
+      var ex = Assert.Throws<VerifyException>(() => Verify.NotWhitespace(null));
+      Assert.Equal("Value cannot be a null, empty or whitespace only.", ex.Message);
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(VerifyException), "Value cannot be a null, empty or whitespace only.")]
+    [Fact]
     public void NotWhitespaceThrowsOnEmptValue()
     {
-      Verify.NotWhitespace(String.Empty);
+      var ex = Assert.Throws<VerifyException>(() => Verify.NotWhitespace(String.Empty));
+      Assert.Equal("Value cannot be a null, empty or whitespace only.", ex.Message);
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(VerifyException), "Value cannot be a null, empty or whitespace only.")]
+    [Fact]
     public void NotWhitespaceThrowsOnWhitespaceValue()
     {
-      Verify.NotWhitespace(Environment.NewLine);
+      var ex = Assert.Throws<VerifyException>(() => Verify.NotWhitespace(Environment.NewLine));
+      Assert.Equal("Value cannot be a null, empty or whitespace only.", ex.Message);
     }
 
-    [TestMethod]
+    [Fact]
     public void NotWhitespaceIgnoresNonNulLEmptyOrWhitespaceValue()
     {
       Verify.NotWhitespace("Not Null");
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(VerifyException), "Vallue must be greater than zero.")]
+    [Fact]
     public void GreaterThanZeroThrowsOnZero()
     {
-      Verify.GreaterThanZero(0);
+      var ex = Assert.Throws<VerifyException>(() => Verify.GreaterThanZero(0));
+      Assert.Equal("Vallue must be greater than zero.", ex.Message);
     }
 
-    [TestMethod]
+    [Fact]
     public void GreaterThanZeroIgnoresPositivevalue()
     {
       Verify.GreaterThanZero(0.001);

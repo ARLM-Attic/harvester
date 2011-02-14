@@ -2,8 +2,8 @@
 using Harvester.Core.Messages;
 using Harvester.Core.Messages.Parsers;
 using Harvester.Core.Processes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -21,7 +21,6 @@ using Moq;
 
 namespace Harvester.Core.Tests.Messages
 {
-  [TestClass]
   public class LogMessageFactoryTests
   {
 
@@ -30,13 +29,13 @@ namespace Harvester.Core.Tests.Messages
     private readonly Mock<IProcessRetriever> _processRetriever = new Mock<IProcessRetriever>(MockBehavior.Strict);
     private readonly Mock<IMessageParserFactory> _messageParserFactory = new Mock<IMessageParserFactory>(MockBehavior.Strict);
 
-    [TestMethod]
+    [Fact]
     public void CtorCreatesNewFactory()
     {
-      Assert.IsNotNull(new LogMessageFactory("Test.Source"));
+      Assert.NotNull(new LogMessageFactory("Test.Source"));
     }
 
-    [TestMethod]
+    [Fact]
     public void CreateUsesXmlLayoutParserWhenCanCreateReturnsTrue()
     {
       const String message = "<log4net:event ></log4net:event>";
@@ -53,10 +52,10 @@ namespace Harvester.Core.Tests.Messages
 
       ILogMessage logMessage = factory.Create(now, 2000, message);
 
-      Assert.IsNotNull(logMessage);
+      Assert.NotNull(logMessage);
     }
 
-    [TestMethod]
+    [Fact]
     public void CreateUsesDefaultParserWhenCanCreateReturnsFalse()
     {
       const String message = "<log4net:event ></log4net:event>";
@@ -71,8 +70,8 @@ namespace Harvester.Core.Tests.Messages
 
       ILogMessage logMessage = factory.Create(now, 2000, message);
 
-      Assert.IsNotNull(logMessage);
-      Assert.AreEqual("Test Source", logMessage.Source);
+      Assert.NotNull(logMessage);
+      Assert.Equal("Test Source", logMessage.Source);
     }
 
     private void SetupProcessExpectations()

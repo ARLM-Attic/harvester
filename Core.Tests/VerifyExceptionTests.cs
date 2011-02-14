@@ -1,8 +1,7 @@
-﻿using Harvester.Core;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿using System;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -18,38 +17,37 @@ using System.IO;
  * IN THE SOFTWARE. 
  */
 
-namespace Core.Tests
+namespace Harvester.Core.Tests
 {
-  [TestClass]
   public class VerifyExceptionTests
   {
-    [TestMethod]
+    [Fact]
     public void CtorUsesExpectedDefaultMessage()
     {
-      Assert.AreEqual("Value is invalid.", new VerifyException().Message);
+      Assert.Equal("Value is invalid.", new VerifyException().Message);
     }
 
-    [TestMethod]
+    [Fact]
     public void CtorUsesCustomMessageWhenProvided()
     {
-      Assert.AreEqual(Localization.VerifyNotNullException, new VerifyException(Localization.VerifyNotNullException).Message);
+      Assert.Equal(Localization.VerifyNotNullException, new VerifyException(Localization.VerifyNotNullException).Message);
     }
 
-    [TestMethod]
+    [Fact]
     public void CtorUsesCustomMessageWithInnerExceptionWhenProvided()
     {
       var innerEx = new Exception();
       var ex = new VerifyException(Localization.VerifyNotNullException, innerEx);
 
-      Assert.AreEqual(Localization.VerifyNotNullException, ex.Message);
-      Assert.AreEqual(innerEx, ex.InnerException);
+      Assert.Equal(Localization.VerifyNotNullException, ex.Message);
+      Assert.Equal(innerEx, ex.InnerException);
     }
 
-    [TestMethod]
+    [Fact]
     public void CanSerializeAndDeserializeException()
     {
       var exToSerializeEx = new VerifyException(Localization.VerifyNotNullException);
-      var deserializedEx = (VerifyException) null;
+      VerifyException deserializedEx;
 
       var formatter = new BinaryFormatter();
 
@@ -62,7 +60,7 @@ namespace Core.Tests
         deserializedEx = (VerifyException)formatter.Deserialize(memoryStream);
       }
 
-      Assert.AreEqual(exToSerializeEx.Message, deserializedEx.Message);
+      Assert.Equal(exToSerializeEx.Message, deserializedEx.Message);
     }
   }
 }

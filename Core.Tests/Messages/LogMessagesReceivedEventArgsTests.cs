@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Harvester.Core.Messages;
+﻿using Harvester.Core.Messages;
+using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -17,16 +17,15 @@ using Harvester.Core.Messages;
 
 namespace Harvester.Core.Tests.Messages
 {
-  [TestClass]
   public class LogMessagesReceivedEventArgsTests
   {
-    [TestMethod]
+    [Fact]
     public void CtorCreatesNewLogMessageReceivedEventArgs()
     {
       var messges = new ILogMessage[0];
       var e = new LogMessagesReceivedEventArgs(messges);
 
-      Assert.AreSame(messges, e.Messages);
+      Assert.Same(messges, e.Messages);
     }
   }
 }
