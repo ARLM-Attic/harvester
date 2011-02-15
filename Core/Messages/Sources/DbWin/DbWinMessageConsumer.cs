@@ -19,7 +19,7 @@ using System.Threading;
 
 namespace Harvester.Core.Messages.Sources.DbWin
 {
-  internal class DbWinMessageConsumer
+  internal class DbWinMessageConsumer : IBackgroundWorker
   {
     private readonly Action<IEnumerable<ILogMessage>> _messagesReceivedCallback;
     private readonly ILogMessageFactory _logMessageFactory = new LogMessageFactory("Debug.Output.Local");

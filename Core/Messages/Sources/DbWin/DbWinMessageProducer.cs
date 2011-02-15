@@ -20,7 +20,7 @@ using Harvester.Core.Win32.Basic;
 
 namespace Harvester.Core.Messages.Sources.DbWin
 {
-  internal class DbWinMessageProducer
+  internal class DbWinMessageProducer : IBackgroundWorker
   {
     private readonly Object _syncRoot = new Object();
 

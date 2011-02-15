@@ -20,8 +20,8 @@ namespace Harvester.Core.Messages.Sources.DbWin
   public sealed class DbWinMessageSource : ILogMessageSource
   {
     private readonly IBlockingQueue<DbWinMessage> _blockingQueue = new BlockingQueue<DbWinMessage>();
-    private readonly DbWinMessageConsumer _messageConsumer;
-    private readonly DbWinMessageProducer _messageProducer;
+    private readonly IBackgroundWorker _messageConsumer;
+    private readonly IBackgroundWorker _messageProducer;
 
     public event EventHandler<LogMessagesReceivedEventArgs> OnMessagesReceived;
 
@@ -29,6 +29,15 @@ namespace Harvester.Core.Messages.Sources.DbWin
     {
       _messageProducer = new DbWinMessageProducer(_blockingQueue);
       _messageConsumer = new DbWinMessageConsumer(_blockingQueue, MessagesReceivedCallback);
+    }
+
+    internal DbWinMessageSource(IBackgroundWorker messageProducer, IBackgroundWorker messageConsumer)
+    {
+      Verify.NotNull(messageProducer);
+      Verify.NotNull(messageConsumer);
+      
+      _messageProducer = messageProducer;
+      _messageConsumer = messageConsumer;
     }
 
     private void MessagesReceivedCallback(IEnumerable<ILogMessage> messages)
@@ -59,7 +68,5 @@ namespace Harvester.Core.Messages.Sources.DbWin
 
       GC.SuppressFinalize(this);
     }
-
-
   }
 }
