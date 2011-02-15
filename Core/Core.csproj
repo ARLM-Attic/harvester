@@ -48,6 +48,7 @@
     <Compile Include="IBlockingQueue.cs" />
     <Compile Include="IDequeuer.cs" />
     <Compile Include="IEnqueuer.cs" />
+    <Compile Include="IMonitor.cs" />
     <Compile Include="Localization.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -76,6 +77,7 @@
     <Compile Include="Messages\Parsers\IMessageParserFactory.cs" />
     <Compile Include="Messages\Parsers\Log4Net\XmlLayoutParser.cs" />
     <Compile Include="Messages\Parsers\Log4Net\XmlLayoutParserFactory.cs" />
+    <Compile Include="MonitorWrapper.cs" />
     <Compile Include="Processes\IProcess.cs" />
     <Compile Include="Processes\IProcessRetriever.cs" />
     <Compile Include="Processes\ProcessRetriever.cs" />

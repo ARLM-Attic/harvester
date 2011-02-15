@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -16,32 +14,12 @@ using System.Diagnostics;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core.Processes
+namespace Harvester.Core
 {
-  public class ProcessRetriever : IProcessRetriever
+  public interface IMonitor
   {
-    private readonly IDictionary<Int32, IProcess> _processCache = new Dictionary<Int32, IProcess>();
+    void PulseAll(Object obj);
 
-    public IProcess GetProcessById(Int32 processId)
-    {
-      Verify.GreaterThanZero(processId);
-
-      lock (_processCache)
-      {
-        IProcess process;
-
-        if (_processCache.TryGetValue(processId, out process) && !process.HasExited)
-          return process;
-
-        try
-        {
-          _processCache[processId] = process = new ProcessWrapper(Process.GetProcessById(processId));
-        }
-        catch (InvalidOperationException) { }
-        catch (ArgumentException) { }
-
-        return process ?? new UnknownProcess(processId);
-      }
-    }
+    Boolean Wait(Object obj, Int32 millisecondTimeout);
   }
 }

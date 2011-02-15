@@ -21,24 +21,31 @@ namespace Harvester.Core
 {
   public sealed class BlockingQueue<T> : IBlockingQueue<T>
   {
+    private readonly IMonitor _monitor;
     private readonly Queue<T> _queue;
     private Boolean _disposed;
 
     public Object SyncRoot { get { return ((ICollection)_queue).SyncRoot; } }
 
     public BlockingQueue()
-    {
-      _queue = new Queue<T>();
-    }
+      : this(new Queue<T>(), MonitorWrapper.Instance)
+    { }
 
     public BlockingQueue(Int32 capacity)
-    {
-      _queue = new Queue<T>(capacity);
-    }
+      : this(new Queue<T>(capacity), MonitorWrapper.Instance)
+    { }
 
     public BlockingQueue(IEnumerable<T> collection)
+      : this(new Queue<T>(collection), MonitorWrapper.Instance)
+    { }
+
+    internal BlockingQueue(Queue<T> queue, IMonitor monitor)
     {
-      _queue = new Queue<T>(collection);
+      Verify.NotNull(queue); 
+      Verify.NotNull(monitor);
+
+      _queue = queue;
+      _monitor = monitor;
     }
 
     public void Dispose()
@@ -50,7 +57,7 @@ namespace Harvester.Core
 
         _queue.Clear();
         _disposed = true;
-        Monitor.PulseAll(SyncRoot);
+        _monitor.PulseAll(SyncRoot);
       }
 
       GC.SuppressFinalize(this);
@@ -61,7 +68,7 @@ namespace Harvester.Core
       lock (SyncRoot)
       {
         _queue.Clear();
-        Monitor.PulseAll(SyncRoot);
+        _monitor.PulseAll(SyncRoot);
       }
     }
 
@@ -91,10 +98,8 @@ namespace Harvester.Core
       if (TryDequeue(millisecondsTimeout, out result))
         return result;
 
-      if (_disposed)
-        throw new ObjectDisposedException(GetType().FullName);
-
-      throw new Exception(); //TODO: What should be thrown?
+      //TryDequeue will only return false is if _disposed == true
+      throw new ObjectDisposedException(GetType().FullName);
     }
 
     public Boolean TryDequeue(out T result)
@@ -112,7 +117,7 @@ namespace Harvester.Core
       lock (SyncRoot)
       {
         while (!_disposed && _queue.Count == 0)
-          Monitor.Wait(SyncRoot, millisecondsTimeout);
+          _monitor.Wait(SyncRoot, millisecondsTimeout);
 
         result = default(T);
 
@@ -142,10 +147,8 @@ namespace Harvester.Core
       if (TryDequeueAll(millisecondsTimeout, out result))
         return result;
 
-      if (_disposed)
-        throw new ObjectDisposedException(GetType().FullName);
-
-      throw new Exception(); //TODO: What should be thrown?
+      //TryDequeueAll will only return false is if _disposed == true
+      throw new ObjectDisposedException(GetType().FullName);
     }
 
     public Boolean TryDequeueAll(out IList<T> result)
@@ -163,7 +166,7 @@ namespace Harvester.Core
       lock (SyncRoot)
       {
         while (!_disposed && _queue.Count == 0)
-          Monitor.Wait(SyncRoot, millisecondsTimeout);
+          _monitor.Wait(SyncRoot, millisecondsTimeout);
 
         result = new List<T>(_queue.Count);
 
@@ -184,7 +187,7 @@ namespace Harvester.Core
         _queue.Enqueue(item);
 
         if (_queue.Count == 1)
-          Monitor.PulseAll(SyncRoot);
+          _monitor.PulseAll(SyncRoot);
       }
     }
   }
