@@ -37,6 +37,8 @@
       <Output TaskParameter="Value" PropertyName="ReleaseVersion" />
     </CreateProperty>
 
+    <Message Text="Release Version = $(ReleaseVersion)" />
+    
     <AssemblyInfo CodeLanguage="CS" OutputFile="VersionInfo.cs" AssemblyVersion="$(ReleaseVersion)" AssemblyFileVersion="$(ReleaseVersion)" AssemblyConfiguration="$(Configuration)" />
   </Target>
   
