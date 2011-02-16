@@ -78,6 +78,11 @@
     <Compile Include="Messages\Parsers\Log4Net\XmlLayoutParser.cs" />
     <Compile Include="Messages\Parsers\Log4Net\XmlLayoutParserFactory.cs" />
     <Compile Include="IBackgroundWorker.cs" />
+    <Compile Include="Messages\Sources\DbWin\Localization.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Localization.resx</DependentUpon>
+    </Compile>
     <Compile Include="MonitorWrapper.cs" />
     <Compile Include="Processes\IProcess.cs" />
     <Compile Include="Processes\IProcessRetriever.cs" />
@@ -108,6 +113,10 @@
       <LastGenOutput>Localization.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Messages\Parsers\Log4Net\Localization.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Messages\Sources\DbWin\Localization.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Localization.Designer.cs</LastGenOutput>
     </EmbeddedResource>

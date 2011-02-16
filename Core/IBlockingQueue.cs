@@ -16,7 +16,7 @@
 
 namespace Harvester.Core
 {
-  interface IBlockingQueue<T> : IEnqueuer<T>, IDequeuer<T>, IDisposable
+  public interface IBlockingQueue<T> : IEnqueuer<T>, IDequeuer<T>, IDisposable
   {
     Int32 Count { get; }
 

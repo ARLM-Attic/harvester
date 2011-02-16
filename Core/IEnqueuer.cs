@@ -15,7 +15,7 @@
 
 namespace Harvester.Core
 {
-  interface IEnqueuer<T>
+  public interface IEnqueuer<T>
   {
     void Enqueue(T item);
   }

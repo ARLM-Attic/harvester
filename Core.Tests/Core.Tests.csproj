@@ -65,6 +65,8 @@
     <Compile Include="Messages\Parsers\Log4Net\XmlLayoutParserFactoryTests.cs" />
     <Compile Include="Messages\Parsers\Log4Net\XmlLayoutParserTests.cs" />
     <Compile Include="Messages\SequenceTests.cs" />
+    <Compile Include="Messages\Sources\DbWin\DbWinMessageConsumerTests.cs" />
+    <Compile Include="Messages\Sources\DbWin\DbWinMessageProducerTests.cs" />
     <Compile Include="Messages\Sources\DbWin\DbWinMessageSourceTests.cs" />
     <Compile Include="Messages\Sources\DbWin\DbWinTests.cs" />
     <Compile Include="MonitorWrapperTests.cs" />

@@ -41,6 +41,9 @@ namespace Harvester.Core.Messages.Sources.DbWin
 
     internal DbWinMessageProducer(IEnqueuer<DbWinMessage> messageEnqueuer, IWindowsApi windowsApi)
     {
+      Verify.NotNull(messageEnqueuer);
+      Verify.NotNull(windowsApi);
+
       _windowsApi = windowsApi;
       _messageEnqueuer = messageEnqueuer;
 
@@ -62,14 +65,14 @@ namespace Harvester.Core.Messages.Sources.DbWin
           throw new ObjectDisposedException(GetType().FullName);
 
         if (_listening)
-          throw new InvalidOperationException(); //TODO: Set message
+          throw new InvalidOperationException(Localization.DbWinMessageProducerAlreadyStarted); 
 
         _listening = true;
 
         _dbwinBufferListener = new Thread(CaptureOutputDebugStringData)
                                  {
                                    IsBackground = true,
-                                   Name = "DbWin Message Producer"
+                                   Name = "DbWin Reader"
                                  };
         _dbwinBufferListener.Start();
       }

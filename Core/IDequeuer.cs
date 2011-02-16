@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 namespace Harvester.Core
 {
-  interface IDequeuer<T>
+  public interface IDequeuer<T>
   {
     T Dequeue();
     T Dequeue(TimeSpan timeout);

@@ -22,8 +22,8 @@ namespace Harvester.Core.Messages.Sources.DbWin
   internal class DbWinMessageConsumer : IBackgroundWorker
   {
     private readonly Action<IEnumerable<ILogMessage>> _messagesReceivedCallback;
-    private readonly ILogMessageFactory _logMessageFactory = new LogMessageFactory("Debug.Output.Local");
     private readonly IDequeuer<DbWinMessage> _messageDequeuer;
+    private readonly ILogMessageFactory _logMessageFactory;
     private readonly Object _syncRoot = new Object();
 
     private Thread _dbwinMessageProcessor;
@@ -31,8 +31,17 @@ namespace Harvester.Core.Messages.Sources.DbWin
     private Boolean _disposed;
 
     public DbWinMessageConsumer(IDequeuer<DbWinMessage> messageDequeuer, Action<IEnumerable<ILogMessage>> messagesReceivedCallback)
+      : this(messageDequeuer, messagesReceivedCallback, new LogMessageFactory("Debug.Output.Local"))
+    { }
+
+    internal DbWinMessageConsumer(IDequeuer<DbWinMessage> messageDequeuer, Action<IEnumerable<ILogMessage>> messagesReceivedCallback, ILogMessageFactory logMessageFactory)
     {
+      Verify.NotNull(messageDequeuer);
+      Verify.NotNull(logMessageFactory);
+      Verify.NotNull(messagesReceivedCallback);
+
       _messageDequeuer = messageDequeuer;
+      _logMessageFactory = logMessageFactory;
       _messagesReceivedCallback = messagesReceivedCallback;
     }
 
@@ -44,14 +53,14 @@ namespace Harvester.Core.Messages.Sources.DbWin
           throw new ObjectDisposedException(GetType().FullName);
 
         if (_listening)
-          throw new InvalidOperationException(); //TODO: Set message
+          throw new InvalidOperationException(Localization.DbWinMessageConsumerAlreadyStarted); 
 
         _listening = true;
 
         _dbwinMessageProcessor = new Thread(CaptureOutputDebugStringData)
                                    {
                                      IsBackground = true,
-                                     Name = "DbWin Message Consumer"
+                                     Name = "DbWin Notifier"
                                    };
         _dbwinMessageProcessor.Start();
       }
@@ -74,6 +83,7 @@ namespace Harvester.Core.Messages.Sources.DbWin
       {
         IList<DbWinMessage> dbWinMessages;
 
+        // TryDequeueAll will only return false if underlying Queue has been disposed; break out of loop and exit thread.
         if (!_messageDequeuer.TryDequeueAll(out dbWinMessages))
           break;
 
