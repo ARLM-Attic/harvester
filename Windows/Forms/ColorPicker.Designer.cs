@@ -65,6 +65,7 @@
       this._traceBackColorButton = new System.Windows.Forms.Button();
       this._traceForeColorDisplay = new System.Windows.Forms.Panel();
       this._traceForeColorButton = new System.Windows.Forms.Button();
+      this._restoreDefaults = new System.Windows.Forms.Button();
       this._fatalGrouping.SuspendLayout();
       this._errorGrouping.SuspendLayout();
       this._warningGrouping.SuspendLayout();
@@ -407,6 +408,16 @@
       this._traceForeColorButton.Text = "Fore Color...";
       this._traceForeColorButton.UseVisualStyleBackColor = true;
       // 
+      // _restoreDefaults
+      // 
+      this._restoreDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this._restoreDefaults.Location = new System.Drawing.Point(12, 392);
+      this._restoreDefaults.Name = "_restoreDefaults";
+      this._restoreDefaults.Size = new System.Drawing.Size(75, 23);
+      this._restoreDefaults.TabIndex = 9;
+      this._restoreDefaults.Text = "Default";
+      this._restoreDefaults.UseVisualStyleBackColor = true;
+      // 
       // ColorPicker
       // 
       this.AcceptButton = this._okButton;
@@ -415,6 +426,7 @@
       this.CancelButton = this._cancelButton;
       this.ClientSize = new System.Drawing.Size(282, 427);
       this.ControlBox = false;
+      this.Controls.Add(this._restoreDefaults);
       this.Controls.Add(this._traceGrouping);
       this.Controls.Add(this._cancelButton);
       this.Controls.Add(this._okButton);
@@ -482,5 +494,6 @@
     private System.Windows.Forms.Button _traceBackColorButton;
     private System.Windows.Forms.Panel _traceForeColorDisplay;
     private System.Windows.Forms.Button _traceForeColorButton;
+    private System.Windows.Forms.Button _restoreDefaults;
   }
 }

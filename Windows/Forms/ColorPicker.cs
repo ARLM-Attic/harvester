@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using Harvester.Windows.Properties;
+using System.Drawing;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -19,31 +20,117 @@ using Harvester.Windows.Properties;
 
 namespace Harvester.Windows.Forms
 {
-  public partial class ColorPicker : Form
+  public partial class ColorPicker : FormBase
   {
     public ColorPicker()
     {
       InitializeComponent();
 
-      _primaryBackColorButton.Click += (sender, e) => PickColor(_primaryBackColorDisplay);
+      _primaryBackColorButton.Click += (sender, e) => HandleEvent(() => PickColor(_primaryBackColorDisplay));
 
-      _fatalForeColorButton.Click += (sender, e) => PickColor(_fatalForeColorDisplay);
-      _fatalBackColorButton.Click += (sender, e) => PickColor(_fatalBackColorDisplay);
+      _fatalForeColorButton.Click += (sender, e) => HandleEvent(() => PickColor(_fatalForeColorDisplay));
+      _fatalBackColorButton.Click += (sender, e) => HandleEvent(() => PickColor(_fatalBackColorDisplay));
 
-      _errorForeColorButton.Click += (sender, e) => PickColor(_errorForeColorDisplay);
-      _errorBackColorButton.Click += (sender, e) => PickColor(_errorBackColorDisplay);
+      _errorForeColorButton.Click += (sender, e) => HandleEvent(() => PickColor(_errorForeColorDisplay));
+      _errorBackColorButton.Click += (sender, e) => HandleEvent(() => PickColor(_errorBackColorDisplay));
 
-      _warningForeColorButton.Click += (sender, e) => PickColor(_warningForeColorDisplay);
-      _warningBackColorButton.Click += (sender, e) => PickColor(_warningBackColorDisplay);
+      _warningForeColorButton.Click += (sender, e) => HandleEvent(() => PickColor(_warningForeColorDisplay));
+      _warningBackColorButton.Click += (sender, e) => HandleEvent(() => PickColor(_warningBackColorDisplay));
 
-      _informationForeColorButton.Click += (sender, e) => PickColor(_informationForeColorDisplay);
-      _informationBackColorButton.Click += (sender, e) => PickColor(_informationBackColorDisplay);
+      _informationForeColorButton.Click += (sender, e) => HandleEvent(() => PickColor(_informationForeColorDisplay));
+      _informationBackColorButton.Click += (sender, e) => HandleEvent(() => PickColor(_informationBackColorDisplay));
 
-      _debugForeColorButton.Click += (sender, e) => PickColor(_debugForeColorDisplay);
-      _debugBackColorButton.Click += (sender, e) => PickColor(_debugBackColorDisplay);
+      _debugForeColorButton.Click += (sender, e) => HandleEvent(() => PickColor(_debugForeColorDisplay));
+      _debugBackColorButton.Click += (sender, e) => HandleEvent(() => PickColor(_debugBackColorDisplay));
 
-      _traceForeColorButton.Click += (sender, e) => PickColor(_traceForeColorDisplay);
-      _traceBackColorButton.Click += (sender, e) => PickColor(_traceBackColorDisplay);
+      _traceForeColorButton.Click += (sender, e) => HandleEvent(() => PickColor(_traceForeColorDisplay));
+      _traceBackColorButton.Click += (sender, e) => HandleEvent(() => PickColor(_traceBackColorDisplay));
+
+      _restoreDefaults.Click += (sender, e) => HandleEvent(RestoreDefaultColors);
+    }
+
+    protected override void OnLoad(EventArgs e)
+    {
+      base.OnLoad(e);
+
+      HandleEvent(() =>
+                    {
+                      _primaryBackColorDisplay.BackColor = MessageColor.Default.PrimaryBackColor;
+
+                      _fatalForeColorDisplay.BackColor = MessageColor.Default.FatalForeColor;
+                      _fatalBackColorDisplay.BackColor = MessageColor.Default.FatalBackColor;
+
+                      _errorForeColorDisplay.BackColor = MessageColor.Default.ErrorForeColor;
+                      _errorBackColorDisplay.BackColor = MessageColor.Default.ErrorBackColor;
+
+                      _warningForeColorDisplay.BackColor = MessageColor.Default.WarningForeColor;
+                      _warningBackColorDisplay.BackColor = MessageColor.Default.WarningBackColor;
+
+                      _informationForeColorDisplay.BackColor = MessageColor.Default.InformationForeColor;
+                      _informationBackColorDisplay.BackColor = MessageColor.Default.InformationBackColor;
+
+                      _debugForeColorDisplay.BackColor = MessageColor.Default.DebugForeColor;
+                      _debugBackColorDisplay.BackColor = MessageColor.Default.DebugBackColor;
+
+                      _traceForeColorDisplay.BackColor = MessageColor.Default.TraceForeColor;
+                      _traceBackColorDisplay.BackColor = MessageColor.Default.TraceBackColor;
+                    });
+    }
+
+    protected override void OnClosing(CancelEventArgs e)
+    {
+      base.OnClosing(e);
+
+      HandleEvent(() =>
+                    {
+                      if (DialogResult != DialogResult.OK)
+                        return;
+
+                      MessageColor.Default.PrimaryBackColor = _primaryBackColorDisplay.BackColor;
+
+                      MessageColor.Default.FatalForeColor = _fatalForeColorDisplay.BackColor;
+                      MessageColor.Default.FatalBackColor = _fatalBackColorDisplay.BackColor;
+
+                      MessageColor.Default.ErrorForeColor = _errorForeColorDisplay.BackColor;
+                      MessageColor.Default.ErrorBackColor = _errorBackColorDisplay.BackColor;
+
+                      MessageColor.Default.WarningForeColor = _warningForeColorDisplay.BackColor;
+                      MessageColor.Default.WarningBackColor = _warningBackColorDisplay.BackColor;
+
+                      MessageColor.Default.InformationForeColor = _informationForeColorDisplay.BackColor;
+                      MessageColor.Default.InformationBackColor = _informationBackColorDisplay.BackColor;
+
+                      MessageColor.Default.DebugForeColor = _debugForeColorDisplay.BackColor;
+                      MessageColor.Default.DebugBackColor = _debugBackColorDisplay.BackColor;
+
+                      MessageColor.Default.TraceForeColor = _traceForeColorDisplay.BackColor;
+                      MessageColor.Default.TraceBackColor = _traceBackColorDisplay.BackColor;
+
+                      MessageColor.Default.Save();
+                    });
+    }
+
+    private void RestoreDefaultColors()
+    {
+      _primaryBackColorDisplay.BackColor = Color.Black;
+
+      _fatalForeColorDisplay.BackColor = Color.White;
+      _fatalBackColorDisplay.BackColor = Color.Red;
+
+      _errorForeColorDisplay.BackColor = Color.Red;
+      _errorBackColorDisplay.BackColor = Color.Black;
+
+      _warningForeColorDisplay.BackColor = Color.Yellow;
+      _warningBackColorDisplay.BackColor = Color.Black;
+
+      _informationForeColorDisplay.BackColor = Color.White;
+      _informationBackColorDisplay.BackColor = Color.Black;
+
+      _debugForeColorDisplay.BackColor = Color.Gray;
+      _debugBackColorDisplay.BackColor = Color.Black;
+
+      _traceForeColorDisplay.BackColor = Color.DarkSlateGray;
+      _traceBackColorDisplay.BackColor = Color.Black;
     }
 
     private void PickColor(Control displayControl)
@@ -52,61 +139,6 @@ namespace Harvester.Windows.Forms
 
       if (_colorDialog.ShowDialog(this) == DialogResult.OK)
         displayControl.BackColor = _colorDialog.Color;
-    }
-
-    protected override void OnLoad(EventArgs e)
-    {
-      base.OnLoad(e);
-
-      _primaryBackColorDisplay.BackColor = MessageColor.Default.PrimaryBackColor;
-
-      _fatalForeColorDisplay.BackColor = MessageColor.Default.FatalForeColor;
-      _fatalBackColorDisplay.BackColor = MessageColor.Default.FatalBackColor;
-
-      _errorForeColorDisplay.BackColor = MessageColor.Default.ErrorForeColor;
-      _errorBackColorDisplay.BackColor = MessageColor.Default.ErrorBackColor;
-
-      _warningForeColorDisplay.BackColor = MessageColor.Default.WarningForeColor;
-      _warningBackColorDisplay.BackColor = MessageColor.Default.WarningBackColor;
-
-      _informationForeColorDisplay.BackColor = MessageColor.Default.InformationForeColor;
-      _informationBackColorDisplay.BackColor = MessageColor.Default.InformationBackColor;
-
-      _debugForeColorDisplay.BackColor = MessageColor.Default.DebugForeColor;
-      _debugBackColorDisplay.BackColor = MessageColor.Default.DebugBackColor;
-
-      _traceForeColorDisplay.BackColor = MessageColor.Default.TraceForeColor;
-      _traceBackColorDisplay.BackColor = MessageColor.Default.TraceBackColor;
-    }
-
-    protected override void OnClosing(CancelEventArgs e)
-    {
-      base.OnClosing(e);
-
-      if (DialogResult != DialogResult.OK)
-        return;
-
-      MessageColor.Default.PrimaryBackColor = _primaryBackColorDisplay.BackColor;
-
-      MessageColor.Default.FatalForeColor = _fatalForeColorDisplay.BackColor;
-      MessageColor.Default.FatalBackColor = _fatalBackColorDisplay.BackColor;
-
-      MessageColor.Default.ErrorForeColor = _errorForeColorDisplay.BackColor;
-      MessageColor.Default.ErrorBackColor = _errorBackColorDisplay.BackColor;
-
-      MessageColor.Default.WarningForeColor = _warningForeColorDisplay.BackColor;
-      MessageColor.Default.WarningBackColor = _warningBackColorDisplay.BackColor;
-
-      MessageColor.Default.InformationForeColor = _informationForeColorDisplay.BackColor;
-      MessageColor.Default.InformationBackColor = _informationBackColorDisplay.BackColor;
-
-      MessageColor.Default.DebugForeColor = _debugForeColorDisplay.BackColor;
-      MessageColor.Default.DebugBackColor = _debugBackColorDisplay.BackColor;
-
-      MessageColor.Default.TraceForeColor = _traceForeColorDisplay.BackColor;
-      MessageColor.Default.TraceBackColor = _traceBackColorDisplay.BackColor;
-
-      MessageColor.Default.Save();
     }
   }
 }
