@@ -49,11 +49,11 @@
       this._messageDetails = new System.Windows.Forms.TabControl();
       this._messageDetailsTab = new System.Windows.Forms.TabPage();
       this._messageText = new System.Windows.Forms.RichTextBox();
-      this._attributeDetailsTab = new System.Windows.Forms.TabPage();
-      this._rawDetailsTab = new System.Windows.Forms.TabPage();
       this._exceptionDetailsTab = new System.Windows.Forms.TabPage();
       this._exceptionText = new System.Windows.Forms.RichTextBox();
+      this._attributeDetailsTab = new System.Windows.Forms.TabPage();
       this._attributesText = new System.Windows.Forms.RichTextBox();
+      this._rawDetailsTab = new System.Windows.Forms.TabPage();
       this._rawText = new System.Windows.Forms.RichTextBox();
       this._splitContainer.Panel1.SuspendLayout();
       this._splitContainer.Panel2.SuspendLayout();
@@ -61,9 +61,9 @@
       this._mainMenu.SuspendLayout();
       this._messageDetails.SuspendLayout();
       this._messageDetailsTab.SuspendLayout();
+      this._exceptionDetailsTab.SuspendLayout();
       this._attributeDetailsTab.SuspendLayout();
       this._rawDetailsTab.SuspendLayout();
-      this._exceptionDetailsTab.SuspendLayout();
       this.SuspendLayout();
       // 
       // _splitContainer
@@ -78,12 +78,14 @@
       // 
       this._splitContainer.Panel1.Controls.Add(this._messageHistory);
       this._splitContainer.Panel1.Controls.Add(this._mainMenu);
+      this._splitContainer.Panel1MinSize = 200;
       // 
       // _splitContainer.Panel2
       // 
       this._splitContainer.Panel2.Controls.Add(this._messageDetails);
+      this._splitContainer.Panel2MinSize = 100;
       this._splitContainer.Size = new System.Drawing.Size(1008, 730);
-      this._splitContainer.SplitterDistance = 489;
+      this._splitContainer.SplitterDistance = 500;
       this._splitContainer.TabIndex = 0;
       // 
       // _messageHistory
@@ -111,7 +113,7 @@
       this._messageHistory.Name = "_messageHistory";
       this._messageHistory.ShowGroups = false;
       this._messageHistory.ShowItemToolTips = true;
-      this._messageHistory.Size = new System.Drawing.Size(984, 459);
+      this._messageHistory.Size = new System.Drawing.Size(984, 470);
       this._messageHistory.TabIndex = 1;
       this._messageHistory.UseCompatibleStateImageBehavior = false;
       this._messageHistory.View = System.Windows.Forms.View.Details;
@@ -179,7 +181,7 @@
       // _exitToolStripMenuItem
       // 
       this._exitToolStripMenuItem.Name = "_exitToolStripMenuItem";
-      this._exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this._exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
       this._exitToolStripMenuItem.Text = "E&xit";
       // 
       // _optionsToolStripMenuItem
@@ -194,13 +196,13 @@
       // _autoScrollToolStripMenuItem
       // 
       this._autoScrollToolStripMenuItem.Name = "_autoScrollToolStripMenuItem";
-      this._autoScrollToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this._autoScrollToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
       this._autoScrollToolStripMenuItem.Text = "&Auto Scroll";
       // 
       // _colorsToolStripMenuItem
       // 
       this._colorsToolStripMenuItem.Name = "_colorsToolStripMenuItem";
-      this._colorsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this._colorsToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
       this._colorsToolStripMenuItem.Text = "&Colors...";
       // 
       // _messageDetails
@@ -215,7 +217,7 @@
       this._messageDetails.Location = new System.Drawing.Point(12, 3);
       this._messageDetails.Name = "_messageDetails";
       this._messageDetails.SelectedIndex = 0;
-      this._messageDetails.Size = new System.Drawing.Size(984, 222);
+      this._messageDetails.Size = new System.Drawing.Size(984, 211);
       this._messageDetails.TabIndex = 2;
       // 
       // _messageDetailsTab
@@ -224,7 +226,7 @@
       this._messageDetailsTab.Location = new System.Drawing.Point(4, 22);
       this._messageDetailsTab.Name = "_messageDetailsTab";
       this._messageDetailsTab.Padding = new System.Windows.Forms.Padding(3);
-      this._messageDetailsTab.Size = new System.Drawing.Size(976, 196);
+      this._messageDetailsTab.Size = new System.Drawing.Size(976, 185);
       this._messageDetailsTab.TabIndex = 0;
       this._messageDetailsTab.Text = "Message";
       this._messageDetailsTab.UseVisualStyleBackColor = true;
@@ -237,30 +239,9 @@
       this._messageText.Location = new System.Drawing.Point(6, 6);
       this._messageText.Name = "_messageText";
       this._messageText.ReadOnly = true;
-      this._messageText.Size = new System.Drawing.Size(964, 184);
+      this._messageText.Size = new System.Drawing.Size(964, 173);
       this._messageText.TabIndex = 0;
       this._messageText.Text = "";
-      // 
-      // _attributeDetailsTab
-      // 
-      this._attributeDetailsTab.Controls.Add(this._attributesText);
-      this._attributeDetailsTab.Location = new System.Drawing.Point(4, 22);
-      this._attributeDetailsTab.Name = "_attributeDetailsTab";
-      this._attributeDetailsTab.Padding = new System.Windows.Forms.Padding(3);
-      this._attributeDetailsTab.Size = new System.Drawing.Size(976, 196);
-      this._attributeDetailsTab.TabIndex = 1;
-      this._attributeDetailsTab.Text = "Attributes";
-      this._attributeDetailsTab.UseVisualStyleBackColor = true;
-      // 
-      // _rawDetailsTab
-      // 
-      this._rawDetailsTab.Controls.Add(this._rawText);
-      this._rawDetailsTab.Location = new System.Drawing.Point(4, 22);
-      this._rawDetailsTab.Name = "_rawDetailsTab";
-      this._rawDetailsTab.Size = new System.Drawing.Size(976, 196);
-      this._rawDetailsTab.TabIndex = 2;
-      this._rawDetailsTab.Text = "Raw";
-      this._rawDetailsTab.UseVisualStyleBackColor = true;
       // 
       // _exceptionDetailsTab
       // 
@@ -284,6 +265,17 @@
       this._exceptionText.TabIndex = 1;
       this._exceptionText.Text = "";
       // 
+      // _attributeDetailsTab
+      // 
+      this._attributeDetailsTab.Controls.Add(this._attributesText);
+      this._attributeDetailsTab.Location = new System.Drawing.Point(4, 22);
+      this._attributeDetailsTab.Name = "_attributeDetailsTab";
+      this._attributeDetailsTab.Padding = new System.Windows.Forms.Padding(3);
+      this._attributeDetailsTab.Size = new System.Drawing.Size(976, 196);
+      this._attributeDetailsTab.TabIndex = 1;
+      this._attributeDetailsTab.Text = "Attributes";
+      this._attributeDetailsTab.UseVisualStyleBackColor = true;
+      // 
       // _attributesText
       // 
       this._attributesText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -295,6 +287,16 @@
       this._attributesText.Size = new System.Drawing.Size(964, 184);
       this._attributesText.TabIndex = 1;
       this._attributesText.Text = "";
+      // 
+      // _rawDetailsTab
+      // 
+      this._rawDetailsTab.Controls.Add(this._rawText);
+      this._rawDetailsTab.Location = new System.Drawing.Point(4, 22);
+      this._rawDetailsTab.Name = "_rawDetailsTab";
+      this._rawDetailsTab.Size = new System.Drawing.Size(976, 196);
+      this._rawDetailsTab.TabIndex = 2;
+      this._rawDetailsTab.Text = "Raw";
+      this._rawDetailsTab.UseVisualStyleBackColor = true;
       // 
       // _rawText
       // 
@@ -316,6 +318,7 @@
       this.Controls.Add(this._splitContainer);
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.MainMenuStrip = this._mainMenu;
+      this.MinimumSize = new System.Drawing.Size(800, 600);
       this.Name = "Main";
       this.Text = "Main";
       this._splitContainer.Panel1.ResumeLayout(false);
@@ -326,9 +329,9 @@
       this._mainMenu.PerformLayout();
       this._messageDetails.ResumeLayout(false);
       this._messageDetailsTab.ResumeLayout(false);
+      this._exceptionDetailsTab.ResumeLayout(false);
       this._attributeDetailsTab.ResumeLayout(false);
       this._rawDetailsTab.ResumeLayout(false);
-      this._exceptionDetailsTab.ResumeLayout(false);
       this.ResumeLayout(false);
 
     }

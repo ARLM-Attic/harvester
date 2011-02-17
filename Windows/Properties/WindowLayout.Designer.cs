@@ -154,5 +154,17 @@ namespace Harvester.Windows.Properties {
                 this["WindowState"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public int SplitPosition {
+            get {
+                return ((int)(this["SplitPosition"]));
+            }
+            set {
+                this["SplitPosition"] = value;
+            }
+        }
     }
 }

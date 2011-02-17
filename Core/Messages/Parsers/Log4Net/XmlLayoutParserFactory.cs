@@ -39,7 +39,7 @@ namespace Harvester.Core.Messages.Parsers.Log4Net
 
       String trimmedMessage = (message ?? String.Empty).Trim();
 
-      return !String.IsNullOrEmpty(trimmedMessage) && trimmedMessage.IndexOf(xmlFragmentStart) == 0 && trimmedMessage.LastIndexOf(xmlFragmentEnd) == (trimmedMessage.Length - xmlFragmentEnd.Length);
+      return !String.IsNullOrEmpty(trimmedMessage) && trimmedMessage.StartsWith(xmlFragmentStart) && trimmedMessage.EndsWith(xmlFragmentEnd);
     }
 
     public IMessageParser Create(String message)

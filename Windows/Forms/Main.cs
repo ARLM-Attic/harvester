@@ -47,6 +47,7 @@ namespace Harvester.Windows.Forms
       _messageHistory.Invoke(new Action(() =>
       {
         _messageHistory.BeginUpdate();
+        _messageHistory.SuspendLayout();
 
         foreach (var message in e.Messages)
         {
@@ -70,6 +71,7 @@ namespace Harvester.Windows.Forms
         }
 
         _messageHistory.EnsureVisible(_messageHistory.Items.Count - 1);
+        _messageHistory.ResumeLayout();
         _messageHistory.EndUpdate();
       }));
     }
@@ -154,16 +156,18 @@ namespace Harvester.Windows.Forms
 
       WindowLayout.Default.WindowSize = Size;
       WindowLayout.Default.WindowLocation = Location;
-      WindowLayout.Default.WindowState = WindowState;
+      WindowLayout.Default.WindowState = WindowState == FormWindowState.Minimized ? FormWindowState.Normal : WindowState;
 
       WindowLayout.Default.MessageIdWidth = _idColumn.Width;
       WindowLayout.Default.TimestampWidth = _timestampColumn.Width;
       WindowLayout.Default.LevelWidth = _levelColumn.Width;
       WindowLayout.Default.ProcessIdWidth = _processIdColumn.Width;
       WindowLayout.Default.ProcessNameWidth = _processNameColumn.Width;
-      WindowLayout.Default.ThreadWidth  = _threadColumn.Width;
+      WindowLayout.Default.ThreadWidth = _threadColumn.Width;
       WindowLayout.Default.SourceWidth = _sourceColumn.Width;
       WindowLayout.Default.UsernameWidth = _userColumn.Width;
+
+      WindowLayout.Default.SplitPosition = _splitContainer.SplitterDistance;
 
       WindowLayout.Default.Save();
     }
@@ -193,6 +197,9 @@ namespace Harvester.Windows.Forms
       _threadColumn.Width = Math.Max(60, WindowLayout.Default.ThreadWidth);
       _sourceColumn.Width = Math.Max(60, WindowLayout.Default.SourceWidth);
       _userColumn.Width = Math.Max(60, WindowLayout.Default.UsernameWidth);
+
+      if (_splitContainer.Height != 0)
+        _splitContainer.SplitterDistance = Math.Max(_splitContainer.Panel1MinSize, Math.Min(WindowLayout.Default.SplitPosition, _splitContainer.Height - _splitContainer.Panel2MinSize));
 
       _messageHistory.BackColor = MessageColor.Default.PrimaryBackColor;
 
