@@ -108,24 +108,37 @@ namespace Harvester.Windows.Forms
 
     private void ClearSelectedMessage()
     {
-      _messageDetails.SelectedIndex = 0;
+      _selectedMessageDetails.SelectedIndex = 0;
 
       _rawText.Text = String.Empty;
-      _messageText.Text = String.Empty;
-      _exceptionText.Text = String.Empty;
+
+      _selectedMessageId.Text = String.Empty;
+      _selectedMessageLevel.Text = String.Empty;
+      _selectedMessageSource.Text = String.Empty;
+      _selectedMessageTimestamp.Text = String.Empty;
+      _selectedMessageProcess.Text = String.Empty;
+      _selectedMessageThread.Text = String.Empty;
+      _selectedMessageUsername.Text = String.Empty;
+      _selectedMessageText.Text = String.Empty;
+
       _attributesText.Text = String.Empty;
     }
 
     private void DisplaySelectedMessage(ILogMessage message)
     {
       _rawText.Text = message.RawMessage;
-      _messageText.Text = message.Message;
-      _exceptionText.Text = message.Exception;
+      
+      _selectedMessageId.Text = message.MessageId.ToString();
+      _selectedMessageLevel.Text = message.Level.ToString();
+      _selectedMessageSource.Text = message.Source;
+      _selectedMessageTimestamp.Text = message.Timestamp.ToString("yyyy-MM-dd HH:mm:ss,fff");
+      _selectedMessageProcess.Text = "[" + message.ProcessId + "] " + message.ProcessName;
+      _selectedMessageThread.Text = message.Thread;
+      _selectedMessageUsername.Text = message.Username;
+      _selectedMessageText.Text = message.Message.Trim();
 
       if (!String.IsNullOrEmpty(message.Exception))
-      {
-        _messageText.Text += Environment.NewLine + Environment.NewLine + message.Exception;
-      }
+        _selectedMessageText.Text += Environment.NewLine + message.Exception;
 
       var sb = new StringBuilder();
       foreach (var attribute in message.Attributes)

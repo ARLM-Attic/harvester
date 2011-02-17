@@ -32,6 +32,7 @@ namespace Harvester.Core.Tests.Messages.Parsers.Log4Net
                                             <log4net:exception>My Exception</log4net:exception>
                                             <log4net:properties>
                                               <log4net:data name=""log4net:HostName"" value=""localhost"" />
+                                              <log4net:data name=""AnotherAttribute"" value=""AnotherValue"" />
                                             </log4net:properties>
                                           </log4net:event>";
 
@@ -148,16 +149,9 @@ namespace Harvester.Core.Tests.Messages.Parsers.Log4Net
 
       var attributes = parser.GetAttributes().ToList();
 
-      Assert.Equal(8, attributes.Count);
+      Assert.Equal(1, attributes.Count);
 
       VerifyAttribute(attributes[0], "Domain", "Harvester.exe");
-      VerifyAttribute(attributes[1], "Exception", String.Empty);
-      VerifyAttribute(attributes[2], "Level", LogMessageLevel.Trace);
-      VerifyAttribute(attributes[3], "Logger", "Harvester.Test.Logger");
-      VerifyAttribute(attributes[4], "Message", "My TRACE Message");
-      VerifyAttribute(attributes[5], "Thread", "3");
-      VerifyAttribute(attributes[6], "Timestamp", "2011-02-12T12:43:34.6377-07:00");
-      VerifyAttribute(attributes[7], "Username", "CBaxter");
     }
 
     [Fact]
@@ -167,17 +161,11 @@ namespace Harvester.Core.Tests.Messages.Parsers.Log4Net
 
       var attributes = parser.GetAttributes().ToList();
 
-      Assert.Equal(9, attributes.Count);
+      Assert.Equal(3, attributes.Count);
 
-      VerifyAttribute(attributes[0], "Domain", "Harvester.exe");
-      VerifyAttribute(attributes[1], "Exception", "My Exception");
-      VerifyAttribute(attributes[2], "Level", LogMessageLevel.Fatal);
-      VerifyAttribute(attributes[3], "log4net:HostName", "localhost");
-      VerifyAttribute(attributes[4], "Logger", "Harvester.Test.Logger");
-      VerifyAttribute(attributes[5], "Message", "My FATAL Message");
-      VerifyAttribute(attributes[6], "Thread", "3");
-      VerifyAttribute(attributes[7], "Timestamp", "2011-02-12T12:43:34.6377-07:00");
-      VerifyAttribute(attributes[8], "Username", "CBaxter");
+      VerifyAttribute(attributes[0], "AnotherAttribute", "AnotherValue");
+      VerifyAttribute(attributes[1], "Domain", "Harvester.exe");
+      VerifyAttribute(attributes[2], "HostName", "localhost");
     }
 
     private XmlDocument CreateXmlDocument(String xmlFragment)

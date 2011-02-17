@@ -425,7 +425,6 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.CancelButton = this._cancelButton;
       this.ClientSize = new System.Drawing.Size(282, 427);
-      this.ControlBox = false;
       this.Controls.Add(this._restoreDefaults);
       this.Controls.Add(this._traceGrouping);
       this.Controls.Add(this._cancelButton);

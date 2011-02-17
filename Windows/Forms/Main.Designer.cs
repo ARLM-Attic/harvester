@@ -46,11 +46,25 @@
       this._optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this._autoScrollToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this._colorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this._messageDetails = new System.Windows.Forms.TabControl();
+      this._selectedMessageDetails = new System.Windows.Forms.TabControl();
       this._messageDetailsTab = new System.Windows.Forms.TabPage();
-      this._messageText = new System.Windows.Forms.RichTextBox();
-      this._exceptionDetailsTab = new System.Windows.Forms.TabPage();
-      this._exceptionText = new System.Windows.Forms.RichTextBox();
+      this._selectedMessageDetailsLayout = new System.Windows.Forms.TableLayoutPanel();
+      this._selectedMessageLevel = new System.Windows.Forms.TextBox();
+      this._selectedMessageUsernameHeader = new System.Windows.Forms.Label();
+      this._selectedMessageThreadHeader = new System.Windows.Forms.Label();
+      this._selectedMessageSourceHeader = new System.Windows.Forms.Label();
+      this._selectedMessageLevelHeader = new System.Windows.Forms.Label();
+      this._selectedMessageIdHeader = new System.Windows.Forms.Label();
+      this._selectedMessageId = new System.Windows.Forms.TextBox();
+      this._selectedMessageTimestamp = new System.Windows.Forms.TextBox();
+      this._selectedMessageTimestampHeader = new System.Windows.Forms.Label();
+      this._selectedMessageText = new System.Windows.Forms.RichTextBox();
+      this._selectedMessageTextHeader = new System.Windows.Forms.Label();
+      this._selectedMessageProcessHeader = new System.Windows.Forms.Label();
+      this._selectedMessageSource = new System.Windows.Forms.TextBox();
+      this._selectedMessageProcess = new System.Windows.Forms.TextBox();
+      this._selectedMessageThread = new System.Windows.Forms.TextBox();
+      this._selectedMessageUsername = new System.Windows.Forms.TextBox();
       this._attributeDetailsTab = new System.Windows.Forms.TabPage();
       this._attributesText = new System.Windows.Forms.RichTextBox();
       this._rawDetailsTab = new System.Windows.Forms.TabPage();
@@ -59,9 +73,9 @@
       this._splitContainer.Panel2.SuspendLayout();
       this._splitContainer.SuspendLayout();
       this._mainMenu.SuspendLayout();
-      this._messageDetails.SuspendLayout();
+      this._selectedMessageDetails.SuspendLayout();
       this._messageDetailsTab.SuspendLayout();
-      this._exceptionDetailsTab.SuspendLayout();
+      this._selectedMessageDetailsLayout.SuspendLayout();
       this._attributeDetailsTab.SuspendLayout();
       this._rawDetailsTab.SuspendLayout();
       this.SuspendLayout();
@@ -82,10 +96,10 @@
       // 
       // _splitContainer.Panel2
       // 
-      this._splitContainer.Panel2.Controls.Add(this._messageDetails);
-      this._splitContainer.Panel2MinSize = 100;
+      this._splitContainer.Panel2.Controls.Add(this._selectedMessageDetails);
       this._splitContainer.Size = new System.Drawing.Size(1008, 730);
       this._splitContainer.SplitterDistance = 500;
+      this._splitContainer.Panel2MinSize = 200;
       this._splitContainer.TabIndex = 0;
       // 
       // _messageHistory
@@ -205,24 +219,23 @@
       this._colorsToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
       this._colorsToolStripMenuItem.Text = "&Colors...";
       // 
-      // _messageDetails
+      // _selectedMessageDetails
       // 
-      this._messageDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+      this._selectedMessageDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                   | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
-      this._messageDetails.Controls.Add(this._messageDetailsTab);
-      this._messageDetails.Controls.Add(this._exceptionDetailsTab);
-      this._messageDetails.Controls.Add(this._attributeDetailsTab);
-      this._messageDetails.Controls.Add(this._rawDetailsTab);
-      this._messageDetails.Location = new System.Drawing.Point(12, 3);
-      this._messageDetails.Name = "_messageDetails";
-      this._messageDetails.SelectedIndex = 0;
-      this._messageDetails.Size = new System.Drawing.Size(984, 211);
-      this._messageDetails.TabIndex = 2;
+      this._selectedMessageDetails.Controls.Add(this._messageDetailsTab);
+      this._selectedMessageDetails.Controls.Add(this._attributeDetailsTab);
+      this._selectedMessageDetails.Controls.Add(this._rawDetailsTab);
+      this._selectedMessageDetails.Location = new System.Drawing.Point(12, 3);
+      this._selectedMessageDetails.Name = "_selectedMessageDetails";
+      this._selectedMessageDetails.SelectedIndex = 0;
+      this._selectedMessageDetails.Size = new System.Drawing.Size(984, 211);
+      this._selectedMessageDetails.TabIndex = 2;
       // 
       // _messageDetailsTab
       // 
-      this._messageDetailsTab.Controls.Add(this._messageText);
+      this._messageDetailsTab.Controls.Add(this._selectedMessageDetailsLayout);
       this._messageDetailsTab.Location = new System.Drawing.Point(4, 22);
       this._messageDetailsTab.Name = "_messageDetailsTab";
       this._messageDetailsTab.Padding = new System.Windows.Forms.Padding(3);
@@ -231,39 +244,217 @@
       this._messageDetailsTab.Text = "Message";
       this._messageDetailsTab.UseVisualStyleBackColor = true;
       // 
-      // _messageText
+      // _selectedMessageDetailsLayout
       // 
-      this._messageText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+      this._selectedMessageDetailsLayout.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                   | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
-      this._messageText.Location = new System.Drawing.Point(6, 6);
-      this._messageText.Name = "_messageText";
-      this._messageText.ReadOnly = true;
-      this._messageText.Size = new System.Drawing.Size(964, 173);
-      this._messageText.TabIndex = 0;
-      this._messageText.Text = "";
+      this._selectedMessageDetailsLayout.ColumnCount = 4;
+      this._selectedMessageDetailsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+      this._selectedMessageDetailsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+      this._selectedMessageDetailsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+      this._selectedMessageDetailsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageLevel, 1, 1);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageUsernameHeader, 3, 2);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageThreadHeader, 2, 2);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageSourceHeader, 2, 0);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageLevelHeader, 1, 0);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageIdHeader, 0, 0);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageId, 0, 1);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageTimestamp, 0, 3);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageTimestampHeader, 0, 2);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageText, 1, 5);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageTextHeader, 0, 4);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageProcessHeader, 1, 2);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageSource, 2, 1);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageProcess, 1, 3);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageThread, 2, 3);
+      this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageUsername, 3, 3);
+      this._selectedMessageDetailsLayout.Location = new System.Drawing.Point(6, 6);
+      this._selectedMessageDetailsLayout.Name = "_selectedMessageDetailsLayout";
+      this._selectedMessageDetailsLayout.RowCount = 7;
+      this._selectedMessageDetailsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
+      this._selectedMessageDetailsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
+      this._selectedMessageDetailsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
+      this._selectedMessageDetailsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
+      this._selectedMessageDetailsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
+      this._selectedMessageDetailsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+      this._selectedMessageDetailsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+      this._selectedMessageDetailsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+      this._selectedMessageDetailsLayout.Size = new System.Drawing.Size(964, 173);
+      this._selectedMessageDetailsLayout.TabIndex = 1;
       // 
-      // _exceptionDetailsTab
+      // _selectedMessageLevel
       // 
-      this._exceptionDetailsTab.Controls.Add(this._exceptionText);
-      this._exceptionDetailsTab.Location = new System.Drawing.Point(4, 22);
-      this._exceptionDetailsTab.Name = "_exceptionDetailsTab";
-      this._exceptionDetailsTab.Size = new System.Drawing.Size(976, 196);
-      this._exceptionDetailsTab.TabIndex = 3;
-      this._exceptionDetailsTab.Text = "Exception";
-      this._exceptionDetailsTab.UseVisualStyleBackColor = true;
+      this._selectedMessageLevel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this._selectedMessageLevel.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this._selectedMessageLevel.Location = new System.Drawing.Point(244, 16);
+      this._selectedMessageLevel.Name = "_selectedMessageLevel";
+      this._selectedMessageLevel.ReadOnly = true;
+      this._selectedMessageLevel.Size = new System.Drawing.Size(235, 20);
+      this._selectedMessageLevel.TabIndex = 12;
+      this._selectedMessageLevel.Text = "Some text";
       // 
-      // _exceptionText
+      // _selectedMessageUsernameHeader
       // 
-      this._exceptionText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+      this._selectedMessageUsernameHeader.AutoSize = true;
+      this._selectedMessageUsernameHeader.Location = new System.Drawing.Point(726, 39);
+      this._selectedMessageUsernameHeader.Name = "_selectedMessageUsernameHeader";
+      this._selectedMessageUsernameHeader.Size = new System.Drawing.Size(58, 13);
+      this._selectedMessageUsernameHeader.TabIndex = 10;
+      this._selectedMessageUsernameHeader.Text = "Username:";
+      // 
+      // _selectedMessageThreadHeader
+      // 
+      this._selectedMessageThreadHeader.AutoSize = true;
+      this._selectedMessageThreadHeader.Location = new System.Drawing.Point(485, 39);
+      this._selectedMessageThreadHeader.Name = "_selectedMessageThreadHeader";
+      this._selectedMessageThreadHeader.Size = new System.Drawing.Size(44, 13);
+      this._selectedMessageThreadHeader.TabIndex = 9;
+      this._selectedMessageThreadHeader.Text = "Thread:";
+      // 
+      // _selectedMessageSourceHeader
+      // 
+      this._selectedMessageSourceHeader.AutoSize = true;
+      this._selectedMessageSourceHeader.Location = new System.Drawing.Point(485, 0);
+      this._selectedMessageSourceHeader.Name = "_selectedMessageSourceHeader";
+      this._selectedMessageSourceHeader.Size = new System.Drawing.Size(44, 13);
+      this._selectedMessageSourceHeader.TabIndex = 8;
+      this._selectedMessageSourceHeader.Text = "Source:";
+      // 
+      // _selectedMessageLevelHeader
+      // 
+      this._selectedMessageLevelHeader.AutoSize = true;
+      this._selectedMessageLevelHeader.Location = new System.Drawing.Point(244, 0);
+      this._selectedMessageLevelHeader.Name = "_selectedMessageLevelHeader";
+      this._selectedMessageLevelHeader.Size = new System.Drawing.Size(36, 13);
+      this._selectedMessageLevelHeader.TabIndex = 6;
+      this._selectedMessageLevelHeader.Text = "Level:";
+      // 
+      // _selectedMessageIdHeader
+      // 
+      this._selectedMessageIdHeader.AutoSize = true;
+      this._selectedMessageIdHeader.Location = new System.Drawing.Point(3, 0);
+      this._selectedMessageIdHeader.Name = "_selectedMessageIdHeader";
+      this._selectedMessageIdHeader.Size = new System.Drawing.Size(21, 13);
+      this._selectedMessageIdHeader.TabIndex = 3;
+      this._selectedMessageIdHeader.Text = "ID:";
+      // 
+      // _selectedMessageId
+      // 
+      this._selectedMessageId.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this._selectedMessageId.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this._selectedMessageId.Location = new System.Drawing.Point(3, 16);
+      this._selectedMessageId.Name = "_selectedMessageId";
+      this._selectedMessageId.ReadOnly = true;
+      this._selectedMessageId.Size = new System.Drawing.Size(235, 20);
+      this._selectedMessageId.TabIndex = 1;
+      this._selectedMessageId.Text = "Some text";
+      // 
+      // _selectedMessageTimestamp
+      // 
+      this._selectedMessageTimestamp.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this._selectedMessageTimestamp.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this._selectedMessageTimestamp.Location = new System.Drawing.Point(3, 55);
+      this._selectedMessageTimestamp.Name = "_selectedMessageTimestamp";
+      this._selectedMessageTimestamp.ReadOnly = true;
+      this._selectedMessageTimestamp.Size = new System.Drawing.Size(235, 20);
+      this._selectedMessageTimestamp.TabIndex = 2;
+      this._selectedMessageTimestamp.Text = "Some text";
+      // 
+      // _selectedMessageTimestampHeader
+      // 
+      this._selectedMessageTimestampHeader.AutoSize = true;
+      this._selectedMessageTimestampHeader.Location = new System.Drawing.Point(3, 39);
+      this._selectedMessageTimestampHeader.Name = "_selectedMessageTimestampHeader";
+      this._selectedMessageTimestampHeader.Size = new System.Drawing.Size(58, 13);
+      this._selectedMessageTimestampHeader.TabIndex = 4;
+      this._selectedMessageTimestampHeader.Text = "Timestamp";
+      // 
+      // _selectedMessageText
+      // 
+      this._selectedMessageText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                   | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
-      this._exceptionText.Location = new System.Drawing.Point(6, 6);
-      this._exceptionText.Name = "_exceptionText";
-      this._exceptionText.ReadOnly = true;
-      this._exceptionText.Size = new System.Drawing.Size(964, 184);
-      this._exceptionText.TabIndex = 1;
-      this._exceptionText.Text = "";
+      this._selectedMessageDetailsLayout.SetColumnSpan(this._selectedMessageText, 4);
+      this._selectedMessageText.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this._selectedMessageText.Location = new System.Drawing.Point(3, 94);
+      this._selectedMessageText.Name = "_selectedMessageText";
+      this._selectedMessageText.ReadOnly = true;
+      this._selectedMessageText.Size = new System.Drawing.Size(958, 76);
+      this._selectedMessageText.TabIndex = 0;
+      this._selectedMessageText.Text = "";
+      this._selectedMessageText.WordWrap = false;
+      // 
+      // _selectedMessageTextHeader
+      // 
+      this._selectedMessageTextHeader.AutoSize = true;
+      this._selectedMessageTextHeader.Location = new System.Drawing.Point(3, 78);
+      this._selectedMessageTextHeader.Name = "_selectedMessageTextHeader";
+      this._selectedMessageTextHeader.Size = new System.Drawing.Size(53, 13);
+      this._selectedMessageTextHeader.TabIndex = 5;
+      this._selectedMessageTextHeader.Text = "Message:";
+      // 
+      // _selectedMessageProcessHeader
+      // 
+      this._selectedMessageProcessHeader.AutoSize = true;
+      this._selectedMessageProcessHeader.Location = new System.Drawing.Point(244, 39);
+      this._selectedMessageProcessHeader.Name = "_selectedMessageProcessHeader";
+      this._selectedMessageProcessHeader.Size = new System.Drawing.Size(48, 13);
+      this._selectedMessageProcessHeader.TabIndex = 7;
+      this._selectedMessageProcessHeader.Text = "Process:";
+      // 
+      // _selectedMessageSource
+      // 
+      this._selectedMessageSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this._selectedMessageDetailsLayout.SetColumnSpan(this._selectedMessageSource, 2);
+      this._selectedMessageSource.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this._selectedMessageSource.Location = new System.Drawing.Point(485, 16);
+      this._selectedMessageSource.Name = "_selectedMessageSource";
+      this._selectedMessageSource.ReadOnly = true;
+      this._selectedMessageSource.Size = new System.Drawing.Size(476, 20);
+      this._selectedMessageSource.TabIndex = 11;
+      this._selectedMessageSource.Text = "Some text";
+      // 
+      // _selectedMessageProcess
+      // 
+      this._selectedMessageProcess.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this._selectedMessageProcess.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this._selectedMessageProcess.Location = new System.Drawing.Point(244, 55);
+      this._selectedMessageProcess.Name = "_selectedMessageProcess";
+      this._selectedMessageProcess.ReadOnly = true;
+      this._selectedMessageProcess.Size = new System.Drawing.Size(235, 20);
+      this._selectedMessageProcess.TabIndex = 13;
+      this._selectedMessageProcess.Text = "Some text";
+      // 
+      // _selectedMessageThread
+      // 
+      this._selectedMessageThread.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this._selectedMessageThread.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this._selectedMessageThread.Location = new System.Drawing.Point(485, 55);
+      this._selectedMessageThread.Name = "_selectedMessageThread";
+      this._selectedMessageThread.ReadOnly = true;
+      this._selectedMessageThread.Size = new System.Drawing.Size(235, 20);
+      this._selectedMessageThread.TabIndex = 14;
+      this._selectedMessageThread.Text = "Some text";
+      // 
+      // _selectedMessageUsername
+      // 
+      this._selectedMessageUsername.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this._selectedMessageUsername.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this._selectedMessageUsername.Location = new System.Drawing.Point(726, 55);
+      this._selectedMessageUsername.Name = "_selectedMessageUsername";
+      this._selectedMessageUsername.ReadOnly = true;
+      this._selectedMessageUsername.Size = new System.Drawing.Size(235, 20);
+      this._selectedMessageUsername.TabIndex = 15;
+      this._selectedMessageUsername.Text = "Some text";
       // 
       // _attributeDetailsTab
       // 
@@ -271,7 +462,7 @@
       this._attributeDetailsTab.Location = new System.Drawing.Point(4, 22);
       this._attributeDetailsTab.Name = "_attributeDetailsTab";
       this._attributeDetailsTab.Padding = new System.Windows.Forms.Padding(3);
-      this._attributeDetailsTab.Size = new System.Drawing.Size(976, 196);
+      this._attributeDetailsTab.Size = new System.Drawing.Size(976, 185);
       this._attributeDetailsTab.TabIndex = 1;
       this._attributeDetailsTab.Text = "Attributes";
       this._attributeDetailsTab.UseVisualStyleBackColor = true;
@@ -281,19 +472,21 @@
       this._attributesText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                   | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
+      this._attributesText.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this._attributesText.Location = new System.Drawing.Point(6, 6);
       this._attributesText.Name = "_attributesText";
       this._attributesText.ReadOnly = true;
       this._attributesText.Size = new System.Drawing.Size(964, 184);
       this._attributesText.TabIndex = 1;
       this._attributesText.Text = "";
+      this._attributesText.WordWrap = false;
       // 
       // _rawDetailsTab
       // 
       this._rawDetailsTab.Controls.Add(this._rawText);
       this._rawDetailsTab.Location = new System.Drawing.Point(4, 22);
       this._rawDetailsTab.Name = "_rawDetailsTab";
-      this._rawDetailsTab.Size = new System.Drawing.Size(976, 196);
+      this._rawDetailsTab.Size = new System.Drawing.Size(976, 185);
       this._rawDetailsTab.TabIndex = 2;
       this._rawDetailsTab.Text = "Raw";
       this._rawDetailsTab.UseVisualStyleBackColor = true;
@@ -303,12 +496,14 @@
       this._rawText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                   | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
+      this._rawText.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this._rawText.Location = new System.Drawing.Point(6, 6);
       this._rawText.Name = "_rawText";
       this._rawText.ReadOnly = true;
       this._rawText.Size = new System.Drawing.Size(964, 184);
       this._rawText.TabIndex = 1;
       this._rawText.Text = "";
+      this._rawText.WordWrap = false;
       // 
       // Main
       // 
@@ -327,9 +522,10 @@
       this._splitContainer.ResumeLayout(false);
       this._mainMenu.ResumeLayout(false);
       this._mainMenu.PerformLayout();
-      this._messageDetails.ResumeLayout(false);
+      this._selectedMessageDetails.ResumeLayout(false);
       this._messageDetailsTab.ResumeLayout(false);
-      this._exceptionDetailsTab.ResumeLayout(false);
+      this._selectedMessageDetailsLayout.ResumeLayout(false);
+      this._selectedMessageDetailsLayout.PerformLayout();
       this._attributeDetailsTab.ResumeLayout(false);
       this._rawDetailsTab.ResumeLayout(false);
       this.ResumeLayout(false);
@@ -349,9 +545,9 @@
     private System.Windows.Forms.ColumnHeader _sourceColumn;
     private System.Windows.Forms.ColumnHeader _userColumn;
     private System.Windows.Forms.ColumnHeader _messageColumn;
-    private System.Windows.Forms.TabControl _messageDetails;
+    private System.Windows.Forms.TabControl _selectedMessageDetails;
     private System.Windows.Forms.TabPage _messageDetailsTab;
-    private System.Windows.Forms.RichTextBox _messageText;
+    private System.Windows.Forms.RichTextBox _selectedMessageText;
     private System.Windows.Forms.TabPage _attributeDetailsTab;
     private System.Windows.Forms.TabPage _rawDetailsTab;
     private System.Windows.Forms.MenuStrip _mainMenu;
@@ -360,9 +556,23 @@
     private System.Windows.Forms.ToolStripMenuItem _optionsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem _autoScrollToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem _colorsToolStripMenuItem;
-    private System.Windows.Forms.TabPage _exceptionDetailsTab;
-    private System.Windows.Forms.RichTextBox _exceptionText;
     private System.Windows.Forms.RichTextBox _attributesText;
     private System.Windows.Forms.RichTextBox _rawText;
+    private System.Windows.Forms.TableLayoutPanel _selectedMessageDetailsLayout;
+    private System.Windows.Forms.TextBox _selectedMessageId;
+    private System.Windows.Forms.TextBox _selectedMessageTimestamp;
+    private System.Windows.Forms.Label _selectedMessageIdHeader;
+    private System.Windows.Forms.Label _selectedMessageTimestampHeader;
+    private System.Windows.Forms.Label _selectedMessageTextHeader;
+    private System.Windows.Forms.TextBox _selectedMessageLevel;
+    private System.Windows.Forms.Label _selectedMessageUsernameHeader;
+    private System.Windows.Forms.Label _selectedMessageThreadHeader;
+    private System.Windows.Forms.Label _selectedMessageSourceHeader;
+    private System.Windows.Forms.Label _selectedMessageLevelHeader;
+    private System.Windows.Forms.Label _selectedMessageProcessHeader;
+    private System.Windows.Forms.TextBox _selectedMessageSource;
+    private System.Windows.Forms.TextBox _selectedMessageProcess;
+    private System.Windows.Forms.TextBox _selectedMessageThread;
+    private System.Windows.Forms.TextBox _selectedMessageUsername;
   }
 }

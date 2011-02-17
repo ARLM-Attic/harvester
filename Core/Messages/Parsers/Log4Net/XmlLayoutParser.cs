@@ -66,14 +66,7 @@ namespace Harvester.Core.Messages.Parsers.Log4Net
     {
       var attributes = new List<Attribute>
                          {
-                           new Attribute(Localization.LevelAttributeLabel, GetLevel()),
-                           new Attribute(Localization.LoggerAttributeLabel, GetSource()),
-                           new Attribute(Localization.ThreadAttributeLabel, GetThread()),
-                           new Attribute(Localization.MessageAttributeLabel, GetMessage()),
-                           new Attribute(Localization.UsernameAttributeLabel, GetUsername()),
-                           new Attribute(Localization.ExceptionAttributeLabel, GetException()),
-                           new Attribute(Localization.DomainAttributeLabel, GetEventAttributeOrDefault("domain", String.Empty)),
-                           new Attribute(Localization.TimestampAttributeLabel, GetEventAttributeOrDefault("timestamp", String.Empty))
+                           new Attribute(Localization.DomainAttributeLabel, GetEventAttributeOrDefault("domain", String.Empty))
                          };
 
       XmlNodeList nodes = _document.SelectNodes("./log4net:event/log4net:properties/log4net:data", _namespaceManager);
@@ -83,13 +76,18 @@ namespace Harvester.Core.Messages.Parsers.Log4Net
                             let nameAttribute = GetNodeValueOrDefault(node.SelectSingleNode("./@name"), String.Empty)
                             let valueAttribute = GetNodeValueOrDefault(node.SelectSingleNode("./@value"), String.Empty)
                             where !String.IsNullOrEmpty(nameAttribute)
-                            select new Attribute(nameAttribute, valueAttribute)
+                            select new Attribute(EnsureNamespaceStrippedFromName(nameAttribute), valueAttribute)
                            );
       }
 
       attributes.Sort((a, b) => String.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
 
       return attributes.AsReadOnly();
+    }
+
+    private static String EnsureNamespaceStrippedFromName(String attributeName)
+    {
+      return attributeName.StartsWith("log4net:") ? attributeName.Substring(8) : attributeName;
     }
 
     public String GetException()
