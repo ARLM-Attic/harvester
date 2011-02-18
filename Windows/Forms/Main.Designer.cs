@@ -271,6 +271,7 @@
       this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageThread, 2, 3);
       this._selectedMessageDetailsLayout.Controls.Add(this._selectedMessageUsername, 3, 3);
       this._selectedMessageDetailsLayout.Location = new System.Drawing.Point(6, 6);
+      this._selectedMessageDetailsLayout.Margin = new System.Windows.Forms.Padding(0);
       this._selectedMessageDetailsLayout.Name = "_selectedMessageDetailsLayout";
       this._selectedMessageDetailsLayout.RowCount = 7;
       this._selectedMessageDetailsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
@@ -293,8 +294,7 @@
       this._selectedMessageLevel.Name = "_selectedMessageLevel";
       this._selectedMessageLevel.ReadOnly = true;
       this._selectedMessageLevel.Size = new System.Drawing.Size(235, 20);
-      this._selectedMessageLevel.TabIndex = 12;
-      this._selectedMessageLevel.Text = "Some text";
+      this._selectedMessageLevel.TabIndex = 3;
       // 
       // _selectedMessageUsernameHeader
       // 
@@ -302,7 +302,7 @@
       this._selectedMessageUsernameHeader.Location = new System.Drawing.Point(726, 39);
       this._selectedMessageUsernameHeader.Name = "_selectedMessageUsernameHeader";
       this._selectedMessageUsernameHeader.Size = new System.Drawing.Size(58, 13);
-      this._selectedMessageUsernameHeader.TabIndex = 10;
+      this._selectedMessageUsernameHeader.TabIndex = 12;
       this._selectedMessageUsernameHeader.Text = "Username:";
       // 
       // _selectedMessageThreadHeader
@@ -311,7 +311,7 @@
       this._selectedMessageThreadHeader.Location = new System.Drawing.Point(485, 39);
       this._selectedMessageThreadHeader.Name = "_selectedMessageThreadHeader";
       this._selectedMessageThreadHeader.Size = new System.Drawing.Size(44, 13);
-      this._selectedMessageThreadHeader.TabIndex = 9;
+      this._selectedMessageThreadHeader.TabIndex = 10;
       this._selectedMessageThreadHeader.Text = "Thread:";
       // 
       // _selectedMessageSourceHeader
@@ -320,7 +320,7 @@
       this._selectedMessageSourceHeader.Location = new System.Drawing.Point(485, 0);
       this._selectedMessageSourceHeader.Name = "_selectedMessageSourceHeader";
       this._selectedMessageSourceHeader.Size = new System.Drawing.Size(44, 13);
-      this._selectedMessageSourceHeader.TabIndex = 8;
+      this._selectedMessageSourceHeader.TabIndex = 4;
       this._selectedMessageSourceHeader.Text = "Source:";
       // 
       // _selectedMessageLevelHeader
@@ -329,7 +329,7 @@
       this._selectedMessageLevelHeader.Location = new System.Drawing.Point(244, 0);
       this._selectedMessageLevelHeader.Name = "_selectedMessageLevelHeader";
       this._selectedMessageLevelHeader.Size = new System.Drawing.Size(36, 13);
-      this._selectedMessageLevelHeader.TabIndex = 6;
+      this._selectedMessageLevelHeader.TabIndex = 2;
       this._selectedMessageLevelHeader.Text = "Level:";
       // 
       // _selectedMessageIdHeader
@@ -338,7 +338,7 @@
       this._selectedMessageIdHeader.Location = new System.Drawing.Point(3, 0);
       this._selectedMessageIdHeader.Name = "_selectedMessageIdHeader";
       this._selectedMessageIdHeader.Size = new System.Drawing.Size(21, 13);
-      this._selectedMessageIdHeader.TabIndex = 3;
+      this._selectedMessageIdHeader.TabIndex = 0;
       this._selectedMessageIdHeader.Text = "ID:";
       // 
       // _selectedMessageId
@@ -351,7 +351,6 @@
       this._selectedMessageId.ReadOnly = true;
       this._selectedMessageId.Size = new System.Drawing.Size(235, 20);
       this._selectedMessageId.TabIndex = 1;
-      this._selectedMessageId.Text = "Some text";
       // 
       // _selectedMessageTimestamp
       // 
@@ -362,8 +361,7 @@
       this._selectedMessageTimestamp.Name = "_selectedMessageTimestamp";
       this._selectedMessageTimestamp.ReadOnly = true;
       this._selectedMessageTimestamp.Size = new System.Drawing.Size(235, 20);
-      this._selectedMessageTimestamp.TabIndex = 2;
-      this._selectedMessageTimestamp.Text = "Some text";
+      this._selectedMessageTimestamp.TabIndex = 7;
       // 
       // _selectedMessageTimestampHeader
       // 
@@ -371,7 +369,7 @@
       this._selectedMessageTimestampHeader.Location = new System.Drawing.Point(3, 39);
       this._selectedMessageTimestampHeader.Name = "_selectedMessageTimestampHeader";
       this._selectedMessageTimestampHeader.Size = new System.Drawing.Size(58, 13);
-      this._selectedMessageTimestampHeader.TabIndex = 4;
+      this._selectedMessageTimestampHeader.TabIndex = 6;
       this._selectedMessageTimestampHeader.Text = "Timestamp";
       // 
       // _selectedMessageText
@@ -385,7 +383,7 @@
       this._selectedMessageText.Name = "_selectedMessageText";
       this._selectedMessageText.ReadOnly = true;
       this._selectedMessageText.Size = new System.Drawing.Size(958, 76);
-      this._selectedMessageText.TabIndex = 0;
+      this._selectedMessageText.TabIndex = 15;
       this._selectedMessageText.Text = "";
       this._selectedMessageText.WordWrap = false;
       // 
@@ -395,7 +393,7 @@
       this._selectedMessageTextHeader.Location = new System.Drawing.Point(3, 78);
       this._selectedMessageTextHeader.Name = "_selectedMessageTextHeader";
       this._selectedMessageTextHeader.Size = new System.Drawing.Size(53, 13);
-      this._selectedMessageTextHeader.TabIndex = 5;
+      this._selectedMessageTextHeader.TabIndex = 14;
       this._selectedMessageTextHeader.Text = "Message:";
       // 
       // _selectedMessageProcessHeader
@@ -404,7 +402,7 @@
       this._selectedMessageProcessHeader.Location = new System.Drawing.Point(244, 39);
       this._selectedMessageProcessHeader.Name = "_selectedMessageProcessHeader";
       this._selectedMessageProcessHeader.Size = new System.Drawing.Size(48, 13);
-      this._selectedMessageProcessHeader.TabIndex = 7;
+      this._selectedMessageProcessHeader.TabIndex = 8;
       this._selectedMessageProcessHeader.Text = "Process:";
       // 
       // _selectedMessageSource
@@ -417,8 +415,7 @@
       this._selectedMessageSource.Name = "_selectedMessageSource";
       this._selectedMessageSource.ReadOnly = true;
       this._selectedMessageSource.Size = new System.Drawing.Size(476, 20);
-      this._selectedMessageSource.TabIndex = 11;
-      this._selectedMessageSource.Text = "Some text";
+      this._selectedMessageSource.TabIndex = 5;
       // 
       // _selectedMessageProcess
       // 
@@ -429,8 +426,7 @@
       this._selectedMessageProcess.Name = "_selectedMessageProcess";
       this._selectedMessageProcess.ReadOnly = true;
       this._selectedMessageProcess.Size = new System.Drawing.Size(235, 20);
-      this._selectedMessageProcess.TabIndex = 13;
-      this._selectedMessageProcess.Text = "Some text";
+      this._selectedMessageProcess.TabIndex = 9;
       // 
       // _selectedMessageThread
       // 
@@ -441,8 +437,7 @@
       this._selectedMessageThread.Name = "_selectedMessageThread";
       this._selectedMessageThread.ReadOnly = true;
       this._selectedMessageThread.Size = new System.Drawing.Size(235, 20);
-      this._selectedMessageThread.TabIndex = 14;
-      this._selectedMessageThread.Text = "Some text";
+      this._selectedMessageThread.TabIndex = 11;
       // 
       // _selectedMessageUsername
       // 
@@ -453,8 +448,7 @@
       this._selectedMessageUsername.Name = "_selectedMessageUsername";
       this._selectedMessageUsername.ReadOnly = true;
       this._selectedMessageUsername.Size = new System.Drawing.Size(235, 20);
-      this._selectedMessageUsername.TabIndex = 15;
-      this._selectedMessageUsername.Text = "Some text";
+      this._selectedMessageUsername.TabIndex = 13;
       // 
       // _attributeDetailsTab
       // 
@@ -476,7 +470,7 @@
       this._attributesText.Location = new System.Drawing.Point(6, 6);
       this._attributesText.Name = "_attributesText";
       this._attributesText.ReadOnly = true;
-      this._attributesText.Size = new System.Drawing.Size(964, 184);
+      this._attributesText.Size = new System.Drawing.Size(964, 173);
       this._attributesText.TabIndex = 1;
       this._attributesText.Text = "";
       this._attributesText.WordWrap = false;
@@ -500,7 +494,7 @@
       this._rawText.Location = new System.Drawing.Point(6, 6);
       this._rawText.Name = "_rawText";
       this._rawText.ReadOnly = true;
-      this._rawText.Size = new System.Drawing.Size(964, 184);
+      this._rawText.Size = new System.Drawing.Size(964, 173);
       this._rawText.TabIndex = 1;
       this._rawText.Text = "";
       this._rawText.WordWrap = false;

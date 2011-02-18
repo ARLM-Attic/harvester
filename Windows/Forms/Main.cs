@@ -46,6 +46,8 @@ namespace Harvester.Windows.Forms
     {
       _messageHistory.Invoke(new Action(() =>
       {
+        var scrollToEnd = _messageHistory.SelectedIndices.Count == 0 || _messageHistory.SelectedIndices[0] == (_messageHistory.Items.Count - 1);
+
         _messageHistory.BeginUpdate();
         _messageHistory.SuspendLayout();
 
@@ -70,7 +72,12 @@ namespace Harvester.Windows.Forms
           _messageHistory.Items.Add(listViewItem);
         }
 
-        _messageHistory.EnsureVisible(_messageHistory.Items.Count - 1);
+        if (scrollToEnd)
+        {
+          _messageHistory.SelectedIndices.Clear();
+          _messageHistory.EnsureVisible(_messageHistory.Items.Count - 1);
+        }
+
         _messageHistory.ResumeLayout();
         _messageHistory.EndUpdate();
       }));
