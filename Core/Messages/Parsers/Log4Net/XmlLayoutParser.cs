@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -23,11 +24,14 @@ namespace Harvester.Core.Messages.Parsers.Log4Net
 {
   public class XmlLayoutParser : IMessageParser
   {
-    private readonly XmlDocument _document;
+    private static readonly ILog Log = LogManager.CreateClassLogger();
     private readonly XmlNamespaceManager _namespaceManager;
+    private readonly XmlDocument _document;
 
     public XmlLayoutParser(XmlDocument document, XmlNamespaceManager namespaceManager)
     {
+      Log.Debug("Creating XmlLayoutParser.");
+
       Verify.NotNull(document);
       Verify.NotNull(namespaceManager);
 
@@ -64,10 +68,14 @@ namespace Harvester.Core.Messages.Parsers.Log4Net
 
     public IEnumerable<Attribute> GetAttributes()
     {
+      Log.Debug("Initializing attributes with domain information.");
+
       var attributes = new List<Attribute>
                          {
                            new Attribute(Localization.DomainAttributeLabel, GetEventAttributeOrDefault("domain", String.Empty))
                          };
+
+      Log.Debug("Attempting to retrieve extended properties from log message.");
 
       XmlNodeList nodes = _document.SelectNodes("./log4net:event/log4net:properties/log4net:data", _namespaceManager);
       if (nodes != null)
@@ -79,6 +87,8 @@ namespace Harvester.Core.Messages.Parsers.Log4Net
                             select new Attribute(EnsureNamespaceStrippedFromName(nameAttribute), valueAttribute)
                            );
       }
+      
+      Log.Debug("Sorting attributes by name.");
 
       attributes.Sort((a, b) => String.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
 

@@ -1,5 +1,4 @@
-﻿using System;
-using Harvester.Core.Logging;
+﻿using System.Diagnostics;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -15,27 +14,32 @@ using Harvester.Core.Logging;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core.Processes
+namespace Harvester.Core.Logging
 {
-  public class UnknownProcess : IProcess
+  public static class LogManager
   {
-    private static readonly ILog Log = LogManager.CreateClassLogger();
-    private readonly Int32 _processId;
-    private readonly DateTime _exitTime;
+    private static SourceLevels SourceLevel { get; set; }
     
-    public Int32 Id { get { return _processId; } }
-    public String Name { get { return String.Empty; } }
-    public DateTime? ExitTime { get { return _exitTime; } }
-    public Boolean HasExited { get { return true; } }
-
-    public UnknownProcess(Int32 processId)
+    static LogManager()
     {
-      Log.DebugFormat("Creating process wrapper: {0}.", processId);
+      Trace.Listeners.Clear();
+    }
 
-      Verify.GreaterThanZero(processId);
+    public static void Initialize(SourceLevels logLevel)
+    {
+      LoggerTraceListener.PurgeOldLogFiles();
+      SourceLevel = logLevel;
+    }
 
-      _processId = processId;
-      _exitTime = DateTime.Now;
+    public static ILog CreateClassLogger()
+    {
+      var stackFrame = new StackFrame(1);
+      var traceSource = new TraceSource(stackFrame.GetMethod().DeclaringType.FullName, SourceLevel);
+
+      traceSource.Listeners.Clear();
+      traceSource.Listeners.Add(LoggerTraceListener.Instance);
+    
+      return new Logger(traceSource);
     }
   }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -19,6 +20,7 @@ namespace Harvester.Core.Messages.Sources.DbWin
 {
   public sealed class DbWinMessageSource : ILogMessageSource
   {
+    private static readonly ILog Log = LogManager.CreateClassLogger();
     private readonly IBlockingQueue<DbWinMessage> _blockingQueue = new BlockingQueue<DbWinMessage>();
     private readonly IBackgroundWorker _messageConsumer;
     private readonly IBackgroundWorker _messageProducer;
@@ -42,24 +44,32 @@ namespace Harvester.Core.Messages.Sources.DbWin
 
     private void MessagesReceivedCallback(IEnumerable<ILogMessage> messages)
     {
+      Log.Debug("MessageReceivedCallback invoked.");
+
       if (OnMessagesReceived != null)
         OnMessagesReceived.Invoke(this, new LogMessagesReceivedEventArgs(messages));
     }
 
     public void Connect()
     {
+      Log.Debug("Connect invoked.");
+
       _messageConsumer.Start();
       _messageProducer.Start();
     }
 
     public void Disconnect()
     {
+      Log.Debug("Disconnect invoked.");
+
       _messageProducer.Stop();
       _messageConsumer.Stop();
     }
 
     public void Dispose()
     {
+      Log.Debug("Dispose invoked.");
+
       Disconnect();
 
       _messageProducer.Dispose();

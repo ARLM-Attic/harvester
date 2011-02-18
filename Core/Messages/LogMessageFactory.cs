@@ -1,4 +1,5 @@
 ﻿using System;
+using Harvester.Core.Logging;
 using Harvester.Core.Messages.Parsers;
 using Harvester.Core.Messages.Parsers.Log4Net;
 using Harvester.Core.Processes;
@@ -21,9 +22,10 @@ namespace Harvester.Core.Messages
 {
   public class LogMessageFactory : ILogMessageFactory
   {
-    private readonly String _source;
-    private readonly IProcessRetriever _processRetriever;
+    private static readonly ILog Log = LogManager.CreateClassLogger();
     private readonly IMessageParserFactory _log4NetXmlLayoutParserFactory;
+    private readonly IProcessRetriever _processRetriever;
+    private readonly String _source;
 
     public LogMessageFactory(String source)
       : this(source, new ProcessRetriever(), new XmlLayoutParserFactory())
@@ -42,6 +44,8 @@ namespace Harvester.Core.Messages
 
     public ILogMessage Create(DateTime timestamp, Int32 processId, String message)
     {
+      Log.DebugFormat("Attempting to create new LogMessage with: Date={0}; ProcessId={1}; Message={2};", timestamp, processId, message);
+
       Verify.GreaterThanZero(processId);
       
       String messageText = (message ?? String.Empty).Trim();

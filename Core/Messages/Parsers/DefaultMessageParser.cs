@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -19,13 +20,16 @@ namespace Harvester.Core.Messages.Parsers
 {
   public class DefaultMessageParser : IMessageParser
   {
-    private static IEnumerable<Attribute> EmptyAttributes = new List<Attribute>().AsReadOnly();
+    private static readonly ILog Log = LogManager.CreateClassLogger();
+    private readonly static IEnumerable<Attribute> EmptyAttributes = new List<Attribute>().AsReadOnly();
 
     private readonly String _message;
     private readonly String _source;
 
     public DefaultMessageParser(String source, String message)
     {
+      Log.Debug("Creating DefaultMessageParser.");
+
       Verify.NotWhitespace(message);
       Verify.NotWhitespace(source);
 

@@ -13,3 +13,4 @@ glob:VersionInfo.cs
 glob:*.ReSharper.user
 glob:Build/
 glob:Harvester.sln.cache
+glob:Windows/Windows.csproj.user

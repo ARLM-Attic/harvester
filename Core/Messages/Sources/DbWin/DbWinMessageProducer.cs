@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Harvester.Core.Logging;
 using Harvester.Core.Win32;
 using Harvester.Core.Win32.Basic;
 
@@ -22,6 +23,7 @@ namespace Harvester.Core.Messages.Sources.DbWin
 {
   internal class DbWinMessageProducer : IBackgroundWorker
   {
+    private static readonly ILog Log = LogManager.CreateClassLogger();
     private readonly Object _syncRoot = new Object();
 
     private readonly IEnqueuer<DbWinMessage> _messageEnqueuer;
@@ -47,9 +49,13 @@ namespace Harvester.Core.Messages.Sources.DbWin
       _windowsApi = windowsApi;
       _messageEnqueuer = messageEnqueuer;
 
+      Log.Debug("Creating Win32 Securitydescriptor.");
+
       _windowsApi.Advanced.InitializeSecurityDescriptor();
 
       var securityAttributes = new SecurityAttributes();
+
+      Log.Debug("Creating Win32 handles.");
 
       _dbwinBufferReadyEvent = _windowsApi.Basic.CreateLocalEvent(ref securityAttributes, "DBWIN_BUFFER_READY");
       _dbwinDataReadyEvent = _windowsApi.Basic.CreateLocalEvent(ref securityAttributes, "DBWIN_DATA_READY");
@@ -59,15 +65,19 @@ namespace Harvester.Core.Messages.Sources.DbWin
 
     public void Start()
     {
+      Log.Debug("Starting producer.");
+
       lock (_syncRoot)
       {
         if (_disposed)
           throw new ObjectDisposedException(GetType().FullName);
 
         if (_listening)
-          throw new InvalidOperationException(Localization.DbWinMessageProducerAlreadyStarted); 
+          throw new InvalidOperationException(Localization.DbWinMessageProducerAlreadyStarted);
 
         _listening = true;
+
+        Log.Debug("Creating producer thread.");
 
         _dbwinBufferListener = new Thread(CaptureOutputDebugStringData)
                                  {
@@ -75,11 +85,15 @@ namespace Harvester.Core.Messages.Sources.DbWin
                                    Name = "DbWin Reader"
                                  };
         _dbwinBufferListener.Start();
+
+        Log.Debug("Producer thread started.");
       }
     }
 
     public void Stop()
     {
+      Log.Debug("Stopping producer.");
+
       lock (_syncRoot)
       {
         if (!_listening)
@@ -87,10 +101,16 @@ namespace Harvester.Core.Messages.Sources.DbWin
 
         _listening = false;
 
+        Log.Debug("Pulsing DBWIN_DATA_READY buffer.");
+
         _windowsApi.Basic.PulseEvent(_dbwinDataReadyEvent);
+
+        Log.Debug("Waiting for producer thread to exit.");
 
         while (_dbwinBufferListener.IsAlive)
           Thread.Sleep(25);
+
+        Log.Debug("Producer thread exited.");
       }
     }
 
@@ -101,25 +121,45 @@ namespace Harvester.Core.Messages.Sources.DbWin
 
       while (_listening)
       {
-        _windowsApi.Basic.SetEvent(_dbwinBufferReadyEvent);
+        try
+        {
+          Log.Debug("Setting DBWIN_BUFFER_READY buffer.");
 
-        Int32 ret = _windowsApi.Basic.WaitForSingleObject(_dbwinDataReadyEvent);
+          _windowsApi.Basic.SetEvent(_dbwinBufferReadyEvent);
 
-        if (!_listening)
-          break;
+          Log.Debug("Waiting on DBWIN_DATA_READY buffer.");
 
-        if (ret != 0)
-          continue;
+          Int32 ret = _windowsApi.Basic.WaitForSingleObject(_dbwinDataReadyEvent);
 
-        var processId = Marshal.ReadInt32(pidOffset);
-        var message = Marshal.PtrToStringAnsi(messageOffset);
+          Log.DebugFormat("DBWIN_DATA_READY buffer ready ({0}).", ret);
 
-        _messageEnqueuer.Enqueue(new DbWinMessage(processId, message));
+          if (!_listening)
+            break;
+
+          if (ret != 0)
+            continue;
+
+          Log.Debug("Reading DBWIN_DATA_READY buffer.");
+
+          var processId = Marshal.ReadInt32(pidOffset);
+          var message = Marshal.PtrToStringAnsi(messageOffset);
+
+          Log.Debug("Adding DbWinMessage to queue.");
+
+          _messageEnqueuer.Enqueue(new DbWinMessage(processId, message));
+        }
+        catch (Exception ex)
+        {
+          Log.Fatal(ex.Message, ex);
+          throw;
+        }
       }
     }
 
     public void Dispose()
     {
+      Log.Debug("Dispose invoked.");
+
       lock (_syncRoot)
       {
         if (_disposed)
@@ -129,6 +169,8 @@ namespace Harvester.Core.Messages.Sources.DbWin
       }
 
       Stop();
+
+      Log.Debug("Dispose Win32 handles.");
 
       _dbwinBufferReadyEvent.Dispose();
       _dbwinDataReadyEvent.Dispose();

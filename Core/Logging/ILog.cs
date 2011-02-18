@@ -1,5 +1,4 @@
 ﻿using System;
-using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -15,27 +14,28 @@ using Harvester.Core.Logging;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core.Processes
+namespace Harvester.Core.Logging
 {
-  public class UnknownProcess : IProcess
+  public interface ILog
   {
-    private static readonly ILog Log = LogManager.CreateClassLogger();
-    private readonly Int32 _processId;
-    private readonly DateTime _exitTime;
-    
-    public Int32 Id { get { return _processId; } }
-    public String Name { get { return String.Empty; } }
-    public DateTime? ExitTime { get { return _exitTime; } }
-    public Boolean HasExited { get { return true; } }
+    void Fatal(String message);
+    void Fatal(String message, Exception ex);
+    void FatalFormat(String format, params Object[] args);
 
-    public UnknownProcess(Int32 processId)
-    {
-      Log.DebugFormat("Creating process wrapper: {0}.", processId);
+    void Error(String message);
+    void Error(String message, Exception ex);
+    void ErrorFormat(String format, params Object[] args);
 
-      Verify.GreaterThanZero(processId);
+    void Warn(String message);
+    void Warn(String message, Exception ex);
+    void WarnFormat(String format, params Object[] args);
 
-      _processId = processId;
-      _exitTime = DateTime.Now;
-    }
+    void Info(String message);
+    void Info(String message, Exception ex);
+    void InfoFormat(String format, params Object[] args);
+
+    void Debug(String message);
+    void Debug(String message, Exception ex);
+    void DebugFormat(String format, params Object[] args);
   }
 }

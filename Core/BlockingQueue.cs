@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -21,6 +22,7 @@ namespace Harvester.Core
 {
   public sealed class BlockingQueue<T> : IBlockingQueue<T>
   {
+    private static readonly ILog Log = LogManager.CreateClassLogger();
     private readonly IMonitor _monitor;
     private readonly Queue<T> _queue;
     private Boolean _disposed;
@@ -50,6 +52,8 @@ namespace Harvester.Core
 
     public void Dispose()
     {
+      Log.Debug("Dispose invoked.");
+
       lock (SyncRoot)
       {
         if (_disposed)
@@ -57,6 +61,9 @@ namespace Harvester.Core
 
         _queue.Clear();
         _disposed = true;
+
+        Log.Debug("Pulsing all threads.");
+
         _monitor.PulseAll(SyncRoot);
       }
 
@@ -65,9 +72,14 @@ namespace Harvester.Core
 
     public void Clear()
     {
+      Log.Debug("Clearing all items from queue.");
+
       lock (SyncRoot)
       {
         _queue.Clear();
+        
+        Log.Debug("Pulsing all threads.");
+
         _monitor.PulseAll(SyncRoot);
       }
     }
@@ -76,6 +88,8 @@ namespace Harvester.Core
     {
       get
       {
+        Log.Debug("Retrieving queue item count.");
+
         lock (SyncRoot)
           return _queue.Count;
       }
@@ -93,11 +107,13 @@ namespace Harvester.Core
 
     public T Dequeue(Int32 millisecondsTimeout)
     {
+      Log.Debug("Attempting to dequeue item (Dequeue).");
+
       T result;
 
       if (TryDequeue(millisecondsTimeout, out result))
         return result;
-
+      
       //TryDequeue will only return false is if _disposed == true
       throw new ObjectDisposedException(GetType().FullName);
     }
@@ -114,15 +130,27 @@ namespace Harvester.Core
 
     public Boolean TryDequeue(Int32 millisecondsTimeout, out T result)
     {
+      Log.Debug("Attempting to dequeue item (TryDequeue).");
+
       lock (SyncRoot)
       {
         while (!_disposed && _queue.Count == 0)
+        {
+          Log.Debug("Queue empty; entering Wait.");
+
           _monitor.Wait(SyncRoot, millisecondsTimeout);
+
+          Log.Debug("Exiting wait.");
+        }
+
+        Log.Debug("One or more items ready to be dequeued.");
 
         result = default(T);
 
         if (_disposed)
           return false;
+
+        Log.Debug("Dequeing item.");
 
         result = _queue.Dequeue();
 
@@ -142,6 +170,8 @@ namespace Harvester.Core
 
     public IList<T> DequeueAll(Int32 millisecondsTimeout)
     {
+      Log.Debug("Attempting to dequeue all items (DequeueAll).");
+
       IList<T> result;
 
       if (TryDequeueAll(millisecondsTimeout, out result))
@@ -163,16 +193,28 @@ namespace Harvester.Core
 
     public Boolean TryDequeueAll(Int32 millisecondsTimeout, out IList<T> result)
     {
+      Log.Debug("Attempting to dequeue all items (TryDequeueAll).");
+
       lock (SyncRoot)
       {
         while (!_disposed && _queue.Count == 0)
+        {
+          Log.Debug("Queue empty; entering Wait.");
+
           _monitor.Wait(SyncRoot, millisecondsTimeout);
+
+          Log.Debug("Exiting wait.");
+        }
+
+        Log.Debug("One or more items ready to be dequeued.");
 
         result = new List<T>(_queue.Count);
 
         if (_disposed)
           return false;
-
+        
+        Log.Debug("Dequeing items.");
+        
         while (_queue.Count > 0)
           result.Add(_queue.Dequeue());
 
@@ -182,12 +224,18 @@ namespace Harvester.Core
 
     public void Enqueue(T item)
     {
+      Log.Debug("Attempting to enqueue item.");
+
       lock (SyncRoot)
       {
         _queue.Enqueue(item);
 
-        if (_queue.Count == 1)
-          _monitor.PulseAll(SyncRoot);
+        if (_queue.Count != 1) 
+          return;
+
+        Log.Debug("Pulsing all threads.");
+
+        _monitor.PulseAll(SyncRoot);
       }
     }
   }

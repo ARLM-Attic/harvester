@@ -1,8 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Windows.Forms;
-using Harvester.Windows.Properties;
 using System.Drawing;
+using System.Windows.Forms;
+using Harvester.Core.Logging;
+using Harvester.Windows.Properties;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -22,8 +23,12 @@ namespace Harvester.Windows.Forms
 {
   public partial class ColorPicker : FormBase
   {
+    private static readonly ILog Log = LogManager.CreateClassLogger();
+
     public ColorPicker()
     {
+      Log.Debug("Creating new color picker form.");
+
       InitializeComponent();
 
       _primaryBackColorButton.Click += (sender, e) => HandleEvent(() => PickColor(_primaryBackColorDisplay));
@@ -51,6 +56,8 @@ namespace Harvester.Windows.Forms
 
     protected override void OnLoad(EventArgs e)
     {
+      Log.Debug("Loading color picker settings.");
+
       base.OnLoad(e);
 
       HandleEvent(() =>
@@ -79,12 +86,16 @@ namespace Harvester.Windows.Forms
 
     protected override void OnClosing(CancelEventArgs e)
     {
+      Log.Debug("Closing color picker.");
+
       base.OnClosing(e);
 
       HandleEvent(() =>
                     {
                       if (DialogResult != DialogResult.OK)
                         return;
+
+                      Log.Debug("Saving color picker settings.");
 
                       MessageColor.Default.PrimaryBackColor = _primaryBackColorDisplay.BackColor;
 
@@ -107,6 +118,8 @@ namespace Harvester.Windows.Forms
                       MessageColor.Default.TraceBackColor = _traceBackColorDisplay.BackColor;
 
                       MessageColor.Default.Save();
+                      
+                      Log.Debug("Saved color picker settings.");
                     });
     }
 
@@ -135,6 +148,8 @@ namespace Harvester.Windows.Forms
 
     private void PickColor(Control displayControl)
     {
+      Log.Debug("Showing color picker dialog.");
+
       _colorDialog.Color = displayControl.BackColor;
 
       if (_colorDialog.ShowDialog(this) == DialogResult.OK)

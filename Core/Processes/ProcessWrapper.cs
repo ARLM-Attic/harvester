@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -19,6 +20,7 @@ namespace Harvester.Core.Processes
 {
   public class ProcessWrapper : IProcess
   {
+    private static readonly ILog Log = LogManager.CreateClassLogger();
     private readonly String _processName;
     private readonly Int32 _processId;
     private DateTime? _exitTime;
@@ -31,6 +33,8 @@ namespace Harvester.Core.Processes
 
     public ProcessWrapper(Process process)
     {
+      Log.DebugFormat("Creating process wrapper: {0}.", process.Id);
+
       Verify.NotNull(process);
 
       _process = process;
@@ -42,6 +46,8 @@ namespace Harvester.Core.Processes
 
     private void OnProcessExited(Object sender, EventArgs e)
     {
+      Log.DebugFormat("Process exited: {0}.", _processId);
+
       _exitTime = DateTime.Now;
 
       _process.Exited -= OnProcessExited;

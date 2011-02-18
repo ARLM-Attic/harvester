@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,6 +55,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Localization.resx</DependentUpon>
     </Compile>
+    <Compile Include="Logging\ILog.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\LoggerTraceListener.cs" />
+    <Compile Include="Logging\LogManager.cs" />
     <Compile Include="Messages\Attribute.cs" />
     <Compile Include="Messages\ILogMessageSource.cs" />
     <Compile Include="Messages\LogMessagesReceivedEventArgs.cs" />

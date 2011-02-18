@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -21,6 +22,7 @@ namespace Harvester.Core.Messages.Sources.DbWin
 {
   internal class DbWinMessageConsumer : IBackgroundWorker
   {
+    private static readonly ILog Log = LogManager.CreateClassLogger();
     private readonly Action<IEnumerable<ILogMessage>> _messagesReceivedCallback;
     private readonly IDequeuer<DbWinMessage> _messageDequeuer;
     private readonly ILogMessageFactory _logMessageFactory;
@@ -47,15 +49,19 @@ namespace Harvester.Core.Messages.Sources.DbWin
 
     public void Start()
     {
+      Log.Debug("Starting consumer.");
+
       lock (_syncRoot)
       {
         if (_disposed)
           throw new ObjectDisposedException(GetType().FullName);
 
         if (_listening)
-          throw new InvalidOperationException(Localization.DbWinMessageConsumerAlreadyStarted); 
+          throw new InvalidOperationException(Localization.DbWinMessageConsumerAlreadyStarted);
 
         _listening = true;
+
+        Log.Debug("Creating consumer thread.");
 
         _dbwinMessageProcessor = new Thread(CaptureOutputDebugStringData)
                                    {
@@ -63,11 +69,15 @@ namespace Harvester.Core.Messages.Sources.DbWin
                                      Name = "DbWin Notifier"
                                    };
         _dbwinMessageProcessor.Start();
+
+        Log.Debug("Consumer thread started.");
       }
     }
 
     public void Stop()
     {
+      Log.Debug("Stopping consumer.");
+
       lock (_syncRoot)
       {
         if (!_listening)
@@ -81,21 +91,37 @@ namespace Harvester.Core.Messages.Sources.DbWin
     {
       while (_listening)
       {
-        IList<DbWinMessage> dbWinMessages;
+        try
+        {
+          IList<DbWinMessage> dbWinMessages;
 
-        // TryDequeueAll will only return false if underlying Queue has been disposed; break out of loop and exit thread.
-        if (!_messageDequeuer.TryDequeueAll(out dbWinMessages))
-          break;
+          Log.Debug("Waiting for DbWinMessages.");
 
-        if (!_listening)
-          break;
+          // TryDequeueAll will only return false if underlying Queue has been disposed; break out of loop and exit thread.
+          if (!_messageDequeuer.TryDequeueAll(out dbWinMessages))
+            break;
 
-        _messagesReceivedCallback.Invoke(dbWinMessages.Select(dbwinMessage => _logMessageFactory.Create(dbwinMessage.Timestamp, dbwinMessage.ProcessId, dbwinMessage.Message)));
+          Log.Debug("One or more DbWinMessages dequeued.");
+
+          if (!_listening)
+            break;
+
+          Log.Debug("Invoking MessagesReceivedCallback.");
+
+          _messagesReceivedCallback.Invoke(dbWinMessages.Select(dbwinMessage => _logMessageFactory.Create(dbwinMessage.Timestamp, dbwinMessage.ProcessId, dbwinMessage.Message)));
+        }
+        catch (Exception ex)
+        {
+          Log.Fatal(ex.Message, ex);
+          throw;
+        }
       }
     }
 
     public void Dispose()
     {
+      Log.Debug("Dispose invoked.");
+
       lock (_syncRoot)
       {
         if (_disposed)

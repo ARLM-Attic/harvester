@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -19,11 +20,14 @@ namespace Harvester.Core.Messages.Parsers.Log4Net
 {
   public class XmlLayoutParserFactory : IMessageParserFactory
   {
+    private static readonly ILog Log = LogManager.CreateClassLogger();
     private readonly XmlParserContext _xmlParserContext;
     private readonly XmlNamespaceManager _xmlNamespaceManager;
 
     public XmlLayoutParserFactory()
     {
+      Log.Debug("Creating XmlLayoutParserFactory.");
+
       _xmlNamespaceManager = new XmlNamespaceManager(new NameTable());
       _xmlNamespaceManager.AddNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
       _xmlNamespaceManager.AddNamespace("xsd", "http://www.w3.org/2001/XMLSchema");
@@ -38,8 +42,11 @@ namespace Harvester.Core.Messages.Parsers.Log4Net
       const String xmlFragmentEnd = "</log4net:event>";
 
       String trimmedMessage = (message ?? String.Empty).Trim();
+      Boolean canParserMessage = !String.IsNullOrEmpty(trimmedMessage) && trimmedMessage.StartsWith(xmlFragmentStart) && trimmedMessage.EndsWith(xmlFragmentEnd);
 
-      return !String.IsNullOrEmpty(trimmedMessage) && trimmedMessage.StartsWith(xmlFragmentStart) && trimmedMessage.EndsWith(xmlFragmentEnd);
+      Log.DebugFormat("CanCreateParser: {0}.", canParserMessage);
+
+      return canParserMessage;
     }
 
     public IMessageParser Create(String message)
@@ -47,7 +54,9 @@ namespace Harvester.Core.Messages.Parsers.Log4Net
       Verify.NotWhitespace(message);
 
       var document = new XmlDocument();
-     
+
+      Log.Debug("Loading XmlDocument.");
+
       using (var reader = new XmlTextReader(message, XmlNodeType.Element, _xmlParserContext))
         document.Load(reader);
 

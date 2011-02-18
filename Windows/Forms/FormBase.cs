@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -19,15 +20,22 @@ namespace Harvester.Windows.Forms
 {
   public class FormBase : Form
   {
+    private static readonly ILog Log = LogManager.CreateClassLogger();
+
     protected void HandleEvent(Action action)
     {
+      Log.Debug("Handling event.");
+
       Cursor = Cursors.WaitCursor;
       try
       {
         action.Invoke();
+
+        Log.Debug("Event handled.");
       }
       catch (Exception ex)
       {
+        Log.Error(ex.Message, ex);
         MessageBox.Show(ex.Message);
       }
       finally
