@@ -61,6 +61,15 @@ namespace Harvester.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Another debugger is currently active; unable to open Harvester..
+        /// </summary>
+        public static string DebuggerAlreadyActive {
+            get {
+                return ResourceManager.GetString("DebuggerAlreadyActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value is invalid..
         /// </summary>
         public static string VerifyException {

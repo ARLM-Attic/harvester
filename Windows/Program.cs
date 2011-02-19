@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Harvester.Core;
 using Harvester.Windows.Forms;
 using Harvester.Core.Logging;
 using System.Threading;
@@ -38,6 +40,10 @@ namespace Harvester.Windows
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
         Application.Run(new Main());
+      }
+      catch (Win32Exception ex)
+      {
+        MessageBox.Show(ex.NativeErrorCode == Core.Win32.Basic.BasicApi.ErrorAlreadyExists ? Localization.DebuggerAlreadyActive : ex.Message, Application.ProductName);
       }
       catch (Exception ex)
       {
@@ -79,7 +85,7 @@ namespace Harvester.Windows
       startupInfo.AppendLine("Loaded Assemblies:");
       foreach (var loadedAssemblyName in AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetName().FullName).OrderBy(assemblyName => assemblyName.ToLowerInvariant()))
         startupInfo.AppendLine('-' + loadedAssemblyName);
-      
+
       startupInfo.Append("************************************************************************************************************************");
 
       log.Info(startupInfo.ToString());
