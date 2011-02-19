@@ -44,7 +44,6 @@
       this._fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this._exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this._optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this._autoScrollToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this._colorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this._selectedMessageDetails = new System.Windows.Forms.TabControl();
       this._messageDetailsTab = new System.Windows.Forms.TabPage();
@@ -69,6 +68,7 @@
       this._attributesText = new System.Windows.Forms.RichTextBox();
       this._rawDetailsTab = new System.Windows.Forms.TabPage();
       this._rawText = new System.Windows.Forms.RichTextBox();
+      this._clearHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this._splitContainer.Panel1.SuspendLayout();
       this._splitContainer.Panel2.SuspendLayout();
       this._splitContainer.SuspendLayout();
@@ -195,28 +195,22 @@
       // _exitToolStripMenuItem
       // 
       this._exitToolStripMenuItem.Name = "_exitToolStripMenuItem";
-      this._exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
+      this._exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
       this._exitToolStripMenuItem.Text = "E&xit";
       // 
       // _optionsToolStripMenuItem
       // 
       this._optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this._autoScrollToolStripMenuItem,
+            this._clearHistoryToolStripMenuItem,
             this._colorsToolStripMenuItem});
       this._optionsToolStripMenuItem.Name = "_optionsToolStripMenuItem";
       this._optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
       this._optionsToolStripMenuItem.Text = "&Options";
       // 
-      // _autoScrollToolStripMenuItem
-      // 
-      this._autoScrollToolStripMenuItem.Name = "_autoScrollToolStripMenuItem";
-      this._autoScrollToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
-      this._autoScrollToolStripMenuItem.Text = "&Auto Scroll";
-      // 
       // _colorsToolStripMenuItem
       // 
       this._colorsToolStripMenuItem.Name = "_colorsToolStripMenuItem";
-      this._colorsToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+      this._colorsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
       this._colorsToolStripMenuItem.Text = "&Colors...";
       // 
       // _selectedMessageDetails
@@ -499,6 +493,12 @@
       this._rawText.Text = "";
       this._rawText.WordWrap = false;
       // 
+      // _clearHistoryToolStripMenuItem
+      // 
+      this._clearHistoryToolStripMenuItem.Name = "_clearHistoryToolStripMenuItem";
+      this._clearHistoryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this._clearHistoryToolStripMenuItem.Text = "Clear &History";
+      // 
       // Main
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -548,7 +548,6 @@
     private System.Windows.Forms.ToolStripMenuItem _fileToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem _exitToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem _optionsToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem _autoScrollToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem _colorsToolStripMenuItem;
     private System.Windows.Forms.RichTextBox _attributesText;
     private System.Windows.Forms.RichTextBox _rawText;
@@ -568,5 +567,6 @@
     private System.Windows.Forms.TextBox _selectedMessageProcess;
     private System.Windows.Forms.TextBox _selectedMessageThread;
     private System.Windows.Forms.TextBox _selectedMessageUsername;
+    private System.Windows.Forms.ToolStripMenuItem _clearHistoryToolStripMenuItem;
   }
 }

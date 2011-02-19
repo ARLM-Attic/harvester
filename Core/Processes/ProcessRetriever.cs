@@ -32,19 +32,22 @@ namespace Harvester.Core.Processes
 
       lock (_processCache)
       {
-        IProcess process;
-
-        if (_processCache.TryGetValue(processId, out process) && !process.HasExited)
-          return process;
-
-        Log.Debug("Process not found in cache; retrieving process information.");
+        IProcess process = null;
 
         try
         {
+          if (_processCache.TryGetValue(processId, out process) && !process.HasExited)
+            return process;
+
+          Log.Debug("Process not found in cache; retrieving process information.");
+
           _processCache[processId] = process = new ProcessWrapper(Process.GetProcessById(processId));
         }
-        catch (InvalidOperationException ex) { Log.Warn(ex.Message, ex); }
-        catch (ArgumentException ex) { Log.Warn(ex.Message, ex); }
+        catch (Exception ex)
+        {
+          _processCache.Remove(processId);
+          Log.Warn(ex.Message, ex);
+        }
 
         return process ?? new UnknownProcess(processId);
       }

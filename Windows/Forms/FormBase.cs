@@ -26,22 +26,34 @@ namespace Harvester.Windows.Forms
     {
       Log.Debug("Handling event.");
 
-      Cursor = Cursors.WaitCursor;
-      try
-      {
-        action.Invoke();
+      EnsureInvokedOnMainThread(() =>
+                                  {
+                                    try
+                                    {
+                                      UseWaitCursor = true;
+                                      
+                                      action.Invoke();
 
-        Log.Debug("Event handled.");
-      }
-      catch (Exception ex)
-      {
-        Log.Error(ex.Message, ex);
-        MessageBox.Show(ex.Message);
-      }
-      finally
-      {
-        Cursor = Cursors.Default;
-      }
+                                      Log.Debug("Event handled.");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                      Log.Error(ex.Message, ex);
+                                      MessageBox.Show(ex.Message);
+                                    }
+                                    finally
+                                    {
+                                      UseWaitCursor = false;
+                                    }
+                                  });
+    }
+
+    private void EnsureInvokedOnMainThread(Action action)
+    {
+      if (InvokeRequired)
+        Invoke(action);
+      else
+        action.Invoke();
     }
   }
 }

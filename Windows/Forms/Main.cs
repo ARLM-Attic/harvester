@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -7,6 +8,7 @@ using Harvester.Core.Messages;
 using Harvester.Core.Messages.Sources.DbWin;
 using Harvester.Windows.Extensions;
 using Harvester.Windows.Properties;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -24,15 +26,18 @@ using Harvester.Windows.Properties;
 
 namespace Harvester.Windows.Forms
 {
-  public partial class Main : Form
+  public partial class Main : FormBase
   {
+    private static readonly ILog Log = LogManager.CreateClassLogger();
     private readonly ILogMessageSource _logMessageSource = new DbWinMessageSource();
 
     public Main()
     {
       InitializeComponent();
 
+      _clearHistoryToolStripMenuItem.Click += OnClearMessageHistoryClicked;
       _colorsToolStripMenuItem.Click += OnShowColorPickerClicked;
+      _exitToolStripMenuItem.Click += OnExitApplicationClicked;
 
       _messageHistory.EnableDoubleBuffer();
       _messageHistory.SelectedIndexChanged += OnSelectedMessageChanged;
@@ -42,50 +47,55 @@ namespace Harvester.Windows.Forms
       _logMessageSource.Connect();
     }
 
-    private void OnMessagesReceived(Object sender, LogMessagesReceivedEventArgs e)
+    private void OnClearMessageHistoryClicked(Object sender, EventArgs e)
     {
-      _messageHistory.Invoke(new Action(() =>
-      {
-        var scrollToEnd = _messageHistory.SelectedIndices.Count == 0 || _messageHistory.SelectedIndices[0] == (_messageHistory.Items.Count - 1);
+      Log.Info("Clearing message history.");
+      HandleEvent(() => _messageHistory.Items.Clear());
+    }
 
-        _messageHistory.BeginUpdate();
-        _messageHistory.SuspendLayout();
+    private void OnShowColorPickerClicked(Object sender, EventArgs e)
+    {
+      Log.Info("Showing color picker.");
+      HandleEvent(() =>
+                    {
+                      using (var colorPicker = new ColorPicker())
+                      {
+                        if (colorPicker.ShowDialog(this) == DialogResult.OK)
+                          _messageHistory.BackColor = MessageColor.Default.PrimaryBackColor;
+                      }
+                    });
+    }
 
-        foreach (var message in e.Messages)
-        {
-          var listViewItem = new ListViewItem(new String[] {
-                                message.MessageId.ToString(),
-                                message.Timestamp.ToString("yyyy-MM-dd HH:mm:ss,fff"),
-                                message.Level.ToString(),
-                                message.ProcessId.ToString(),
-                                message.ProcessName,
-                                message.Thread,
-                                message.Source,
-                                message.Username,
-                                message.Message
-                              });
+    private void OnExitApplicationClicked(Object sender, EventArgs e)
+    {
+      Log.Info("Exiting application.");
+      HandleEvent(Application.Exit);
+    }
 
-          listViewItem.ForeColor = GetForegroundColor(message.Level);
-          listViewItem.BackColor = GetBackgroundColor(message.Level);
-          listViewItem.Tag = message;
+    private void OnSelectedMessageChanged(Object sender, EventArgs e)
+    {
+      HandleEvent(() =>
+                    {
+                      if (_messageHistory.SelectedItems.Count > 0)
+                      {
+                        var message = _messageHistory.SelectedItems[0].Tag as ILogMessage;
 
-          _messageHistory.Items.Add(listViewItem);
-        }
-
-        if (scrollToEnd)
-        {
-          _messageHistory.SelectedIndices.Clear();
-          _messageHistory.EnsureVisible(_messageHistory.Items.Count - 1);
-        }
-
-        _messageHistory.ResumeLayout();
-        _messageHistory.EndUpdate();
-      }));
+                        if (message == null)
+                          ClearSelectedMessage();
+                        else
+                          DisplaySelectedMessage(message);
+                      }
+                      else
+                      {
+                        ClearSelectedMessage();
+                      }
+                    });
     }
 
     private void OnMessageHistoryResized(Object sender, EventArgs e)
     {
-      ExtendMessageColumn();
+      Log.Info("Resizing message history ListView.");
+      HandleEvent(ExtendMessageColumn);
     }
 
     private void ExtendMessageColumn()
@@ -96,134 +106,51 @@ namespace Harvester.Windows.Forms
       _messageColumn.Width = Math.Max(60, messageColumnWidth);
     }
 
-    private void OnSelectedMessageChanged(Object sender, EventArgs e)
+    private void OnMessagesReceived(Object sender, LogMessagesReceivedEventArgs e)
     {
-      if (_messageHistory.SelectedItems.Count > 0)
-      {
-        var message = _messageHistory.SelectedItems[0].Tag as ILogMessage;
-
-        if (message == null)
-          ClearSelectedMessage();
-        else
-          DisplaySelectedMessage(message);
-      }
-      else
-      {
-        ClearSelectedMessage();
-      }
+      Log.Info("One or more messages received.");
+      HandleEvent(() => ProcessMessages(e.Messages));
     }
 
-    private void ClearSelectedMessage()
+    private void ProcessMessages(IEnumerable<ILogMessage> messages)
     {
-      _selectedMessageDetails.SelectedIndex = 0;
+      var scrollToEnd = _messageHistory.SelectedIndices.Count == 0 || _messageHistory.SelectedIndices[0] == (_messageHistory.Items.Count - 1);
 
-      _rawText.Text = String.Empty;
+      _messageHistory.BeginUpdate();
+      _messageHistory.SuspendLayout();
 
-      _selectedMessageId.Text = String.Empty;
-      _selectedMessageLevel.Text = String.Empty;
-      _selectedMessageSource.Text = String.Empty;
-      _selectedMessageTimestamp.Text = String.Empty;
-      _selectedMessageProcess.Text = String.Empty;
-      _selectedMessageThread.Text = String.Empty;
-      _selectedMessageUsername.Text = String.Empty;
-      _selectedMessageText.Text = String.Empty;
+      foreach (var message in messages)
+        _messageHistory.Items.Add(CreateListViewItem(message));
 
-      _attributesText.Text = String.Empty;
-    }
-
-    private void DisplaySelectedMessage(ILogMessage message)
-    {
-      _rawText.Text = message.RawMessage;
-      
-      _selectedMessageId.Text = message.MessageId.ToString();
-      _selectedMessageLevel.Text = message.Level.ToString();
-      _selectedMessageSource.Text = message.Source;
-      _selectedMessageTimestamp.Text = message.Timestamp.ToString("yyyy-MM-dd HH:mm:ss,fff");
-      _selectedMessageProcess.Text = "[" + message.ProcessId + "] " + message.ProcessName;
-      _selectedMessageThread.Text = message.Thread;
-      _selectedMessageUsername.Text = message.Username;
-      _selectedMessageText.Text = message.Message.Trim();
-
-      if (!String.IsNullOrEmpty(message.Exception))
-        _selectedMessageText.Text += Environment.NewLine + message.Exception;
-
-      var sb = new StringBuilder();
-      foreach (var attribute in message.Attributes)
+      if (scrollToEnd)
       {
-        var value = (attribute.Value ?? String.Empty).ToString();
-
-        sb.Append(attribute.Name);
-        sb.AppendLine(":");
-        sb.AppendLine(String.IsNullOrEmpty(value) ? "<Not Set>" : value);
-        sb.AppendLine();
+        _messageHistory.SelectedIndices.Clear();
+        _messageHistory.EnsureVisible(_messageHistory.Items.Count - 1);
       }
 
-      _attributesText.Text = sb.ToString();
+      _messageHistory.ResumeLayout();
+      _messageHistory.EndUpdate();
     }
 
-    private void OnShowColorPickerClicked(Object sender, EventArgs e)
+    private static ListViewItem CreateListViewItem(ILogMessage message)
     {
-      using (var colorPicker = new ColorPicker())
-      {
-        if (colorPicker.ShowDialog(this) == DialogResult.OK)
-          _messageHistory.BackColor = MessageColor.Default.PrimaryBackColor;
-      }
-    }
+      var listViewItem = new ListViewItem(new String[] {
+                                            message.MessageId.ToString(),
+                                            message.Timestamp.ToString("yyyy-MM-dd HH:mm:ss,fff"),
+                                            message.Level.ToString(),
+                                            message.ProcessId.ToString(),
+                                            message.ProcessName,
+                                            message.Thread,
+                                            message.Source,
+                                            message.Username,
+                                            message.Message
+                                          });
 
-    protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-    {
-      base.OnClosing(e);
+      listViewItem.ForeColor = GetForegroundColor(message.Level);
+      listViewItem.BackColor = GetBackgroundColor(message.Level);
+      listViewItem.Tag = message;
 
-      WindowLayout.Default.WindowSize = Size;
-      WindowLayout.Default.WindowLocation = Location;
-      WindowLayout.Default.WindowState = WindowState == FormWindowState.Minimized ? FormWindowState.Normal : WindowState;
-
-      WindowLayout.Default.MessageIdWidth = _idColumn.Width;
-      WindowLayout.Default.TimestampWidth = _timestampColumn.Width;
-      WindowLayout.Default.LevelWidth = _levelColumn.Width;
-      WindowLayout.Default.ProcessIdWidth = _processIdColumn.Width;
-      WindowLayout.Default.ProcessNameWidth = _processNameColumn.Width;
-      WindowLayout.Default.ThreadWidth = _threadColumn.Width;
-      WindowLayout.Default.SourceWidth = _sourceColumn.Width;
-      WindowLayout.Default.UsernameWidth = _userColumn.Width;
-
-      WindowLayout.Default.SplitPosition = _splitContainer.SplitterDistance;
-
-      WindowLayout.Default.Save();
-    }
-
-    protected override void OnLoad(EventArgs e)
-    {
-      base.OnLoad(e);
-
-      Text = String.Format("{0} v{1}", Application.ProductName, Application.ProductVersion);
-
-      var formSize = WindowLayout.Default.WindowSize;
-      var formLocation = WindowLayout.Default.WindowLocation;
-      var formDimensions = new Rectangle(formLocation, formSize);
-      var workingArea = Screen.GetWorkingArea(formDimensions);
-
-      //Set Form Dimensions
-      Size = formSize;
-      Location = workingArea.Contains(formLocation) ? formLocation : workingArea.Location;
-      WindowState = WindowLayout.Default.WindowState;
-
-      //Set Column Widths
-      _idColumn.Width = Math.Max(60, WindowLayout.Default.MessageIdWidth);
-      _timestampColumn.Width = Math.Max(60, WindowLayout.Default.TimestampWidth);
-      _levelColumn.Width = Math.Max(60, WindowLayout.Default.LevelWidth);
-      _processIdColumn.Width = Math.Max(60, WindowLayout.Default.ProcessIdWidth);
-      _processNameColumn.Width = Math.Max(60, WindowLayout.Default.ProcessNameWidth);
-      _threadColumn.Width = Math.Max(60, WindowLayout.Default.ThreadWidth);
-      _sourceColumn.Width = Math.Max(60, WindowLayout.Default.SourceWidth);
-      _userColumn.Width = Math.Max(60, WindowLayout.Default.UsernameWidth);
-
-      if (_splitContainer.Height != 0)
-        _splitContainer.SplitterDistance = Math.Max(_splitContainer.Panel1MinSize, Math.Min(WindowLayout.Default.SplitPosition, _splitContainer.Height - _splitContainer.Panel2MinSize));
-
-      _messageHistory.BackColor = MessageColor.Default.PrimaryBackColor;
-
-      ExtendMessageColumn();
+      return listViewItem;
     }
 
     private static Color GetBackgroundColor(LogMessageLevel level)
@@ -252,5 +179,114 @@ namespace Harvester.Windows.Forms
       }
     }
 
+    private void ClearSelectedMessage()
+    {
+      _selectedMessageDetails.SelectedIndex = 0;
+
+      _rawText.Text = String.Empty;
+
+      _selectedMessageId.Text = String.Empty;
+      _selectedMessageLevel.Text = String.Empty;
+      _selectedMessageSource.Text = String.Empty;
+      _selectedMessageTimestamp.Text = String.Empty;
+      _selectedMessageProcess.Text = String.Empty;
+      _selectedMessageThread.Text = String.Empty;
+      _selectedMessageUsername.Text = String.Empty;
+      _selectedMessageText.Text = String.Empty;
+
+      _attributesText.Text = String.Empty;
+    }
+
+    private void DisplaySelectedMessage(ILogMessage message)
+    {
+      _rawText.Text = message.RawMessage;
+
+      _selectedMessageId.Text = message.MessageId.ToString();
+      _selectedMessageLevel.Text = message.Level.ToString();
+      _selectedMessageSource.Text = message.Source;
+      _selectedMessageTimestamp.Text = message.Timestamp.ToString("yyyy-MM-dd HH:mm:ss,fff");
+      _selectedMessageProcess.Text = "[" + message.ProcessId + "] " + message.ProcessName;
+      _selectedMessageThread.Text = message.Thread;
+      _selectedMessageUsername.Text = message.Username;
+      _selectedMessageText.Text = message.Message.Trim();
+
+      if (!String.IsNullOrEmpty(message.Exception))
+        _selectedMessageText.Text += Environment.NewLine + message.Exception;
+
+      var sb = new StringBuilder();
+      foreach (var attribute in message.Attributes)
+      {
+        var value = (attribute.Value ?? String.Empty).ToString();
+
+        sb.Append(attribute.Name);
+        sb.AppendLine(":");
+        sb.AppendLine(String.IsNullOrEmpty(value) ? "<Not Set>" : value);
+        sb.AppendLine();
+      }
+
+      _attributesText.Text = sb.ToString();
+    }
+
+    protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+    {
+      base.OnClosing(e);
+
+      HandleEvent(() =>
+                    {
+                      WindowLayout.Default.WindowSize = Size;
+                      WindowLayout.Default.WindowLocation = Location;
+                      WindowLayout.Default.WindowState = WindowState == FormWindowState.Minimized ? FormWindowState.Normal : WindowState;
+
+                      WindowLayout.Default.MessageIdWidth = _idColumn.Width;
+                      WindowLayout.Default.TimestampWidth = _timestampColumn.Width;
+                      WindowLayout.Default.LevelWidth = _levelColumn.Width;
+                      WindowLayout.Default.ProcessIdWidth = _processIdColumn.Width;
+                      WindowLayout.Default.ProcessNameWidth = _processNameColumn.Width;
+                      WindowLayout.Default.ThreadWidth = _threadColumn.Width;
+                      WindowLayout.Default.SourceWidth = _sourceColumn.Width;
+                      WindowLayout.Default.UsernameWidth = _userColumn.Width;
+
+                      WindowLayout.Default.SplitPosition = _splitContainer.SplitterDistance;
+
+                      WindowLayout.Default.Save();
+                    });
+    }
+
+    protected override void OnLoad(EventArgs e)
+    {
+      base.OnLoad(e);
+
+      HandleEvent(() =>
+                    {
+                      Text = String.Format("{0} v{1}", Application.ProductName, Application.ProductVersion);
+
+                      var formSize = WindowLayout.Default.WindowSize;
+                      var formLocation = WindowLayout.Default.WindowLocation;
+                      var formDimensions = new Rectangle(formLocation, formSize);
+                      var workingArea = Screen.GetWorkingArea(formDimensions);
+
+                      //Set Form Dimensions
+                      Size = formSize;
+                      Location = workingArea.Contains(formLocation) ? formLocation : workingArea.Location;
+                      WindowState = WindowLayout.Default.WindowState;
+
+                      //Set Column Widths
+                      _idColumn.Width = Math.Max(60, WindowLayout.Default.MessageIdWidth);
+                      _timestampColumn.Width = Math.Max(60, WindowLayout.Default.TimestampWidth);
+                      _levelColumn.Width = Math.Max(60, WindowLayout.Default.LevelWidth);
+                      _processIdColumn.Width = Math.Max(60, WindowLayout.Default.ProcessIdWidth);
+                      _processNameColumn.Width = Math.Max(60, WindowLayout.Default.ProcessNameWidth);
+                      _threadColumn.Width = Math.Max(60, WindowLayout.Default.ThreadWidth);
+                      _sourceColumn.Width = Math.Max(60, WindowLayout.Default.SourceWidth);
+                      _userColumn.Width = Math.Max(60, WindowLayout.Default.UsernameWidth);
+
+                      if (_splitContainer.Height != 0)
+                        _splitContainer.SplitterDistance = Math.Max(_splitContainer.Panel1MinSize, Math.Min(WindowLayout.Default.SplitPosition, _splitContainer.Height - _splitContainer.Panel2MinSize));
+
+                      _messageHistory.BackColor = MessageColor.Default.PrimaryBackColor;
+
+                      ExtendMessageColumn();
+                    });
+    }
   }
 }
