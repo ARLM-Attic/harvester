@@ -62,6 +62,17 @@
     <Compile Include="Messages\Attribute.cs" />
     <Compile Include="Messages\ILogMessageSource.cs" />
     <Compile Include="Messages\LogMessagesReceivedEventArgs.cs" />
+    <Compile Include="Messages\Parsers\Localization.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Localization.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Messages\Parsers\Log4JMessageParser.cs" />
+    <Compile Include="Messages\Parsers\Log4JMessageParserFactory.cs" />
+    <Compile Include="Messages\Parsers\Log4NetMessageParser.cs" />
+    <Compile Include="Messages\Parsers\Log4NetMessageParserFactory.cs" />
+    <Compile Include="Messages\Parsers\XmlMessageParserBase.cs" />
+    <Compile Include="Messages\Parsers\XmlMessageParserFactoryBase.cs" />
     <Compile Include="Messages\Sources\DbWin\DbWinMessageConsumer.cs" />
     <Compile Include="Messages\Sources\DbWin\DbWinMessage.cs" />
     <Compile Include="Messages\Sources\DbWin\DbWinMessageSource.cs" />
@@ -71,17 +82,10 @@
     <Compile Include="Messages\LogMessageFactory.cs" />
     <Compile Include="Messages\LogMessageLevel.cs" />
     <Compile Include="Messages\LogMessage.cs" />
-    <Compile Include="Messages\Parsers\Log4Net\Localization.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Localization.resx</DependentUpon>
-    </Compile>
     <Compile Include="Messages\Sequence.cs" />
     <Compile Include="Messages\Parsers\DefaultMessageParser.cs" />
     <Compile Include="Messages\Parsers\IMessageParser.cs" />
     <Compile Include="Messages\Parsers\IMessageParserFactory.cs" />
-    <Compile Include="Messages\Parsers\Log4Net\XmlLayoutParser.cs" />
-    <Compile Include="Messages\Parsers\Log4Net\XmlLayoutParserFactory.cs" />
     <Compile Include="IBackgroundWorker.cs" />
     <Compile Include="Messages\Sources\DbWin\Localization.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -117,7 +121,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Localization.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Messages\Parsers\Log4Net\Localization.resx">
+    <EmbeddedResource Include="Messages\Parsers\Localization.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Localization.Designer.cs</LastGenOutput>
     </EmbeddedResource>

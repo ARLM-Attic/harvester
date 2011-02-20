@@ -16,51 +16,38 @@ using Harvester.Core.Logging;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core.Messages.Parsers.Log4Net
+namespace Harvester.Core.Messages.Parsers
 {
-  public class XmlLayoutParserFactory : IMessageParserFactory
+  public abstract class XmlMessageParserFactoryBase : IMessageParserFactory
   {
     private static readonly ILog Log = LogManager.CreateClassLogger();
-    private readonly XmlParserContext _xmlParserContext;
     private readonly XmlNamespaceManager _xmlNamespaceManager;
+    private readonly XmlParserContext _xmlParserContext;
 
-    public XmlLayoutParserFactory()
+    protected XmlMessageParserFactoryBase(XmlNamespaceManager xmlNamespaceManager)
     {
-      Log.Debug("Creating XmlLayoutParserFactory.");
+      Verify.NotNull(xmlNamespaceManager);
 
-      _xmlNamespaceManager = new XmlNamespaceManager(new NameTable());
-      _xmlNamespaceManager.AddNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-      _xmlNamespaceManager.AddNamespace("xsd", "http://www.w3.org/2001/XMLSchema");
-      _xmlNamespaceManager.AddNamespace("log4net", "http://logging.apache.org/log4net/");
-
+      _xmlNamespaceManager = xmlNamespaceManager;
       _xmlParserContext = new XmlParserContext(null, _xmlNamespaceManager, null, XmlSpace.None);
     }
 
-    public Boolean CanCreateParser(String message)
-    {
-      const String xmlFragmentStart = "<log4net:event ";
-      const String xmlFragmentEnd = "</log4net:event>";
-
-      String trimmedMessage = (message ?? String.Empty).Trim();
-      Boolean canParserMessage = !String.IsNullOrEmpty(trimmedMessage) && trimmedMessage.StartsWith(xmlFragmentStart) && trimmedMessage.EndsWith(xmlFragmentEnd);
-
-      Log.DebugFormat("CanCreateParser: {0}.", canParserMessage);
-
-      return canParserMessage;
-    }
+    public abstract Boolean CanCreateParser(String message);
 
     public IMessageParser Create(String message)
     {
       Verify.NotWhitespace(message);
 
-      var document = new XmlDocument();
+      Log.Debug("Creating XmlMessageParser");
 
-      Log.Debug("Loading XmlDocument.");
+      var document = new XmlDocument();
 
       using (var reader = new XmlTextReader(message, XmlNodeType.Element, _xmlParserContext))
         document.Load(reader);
 
-      return new XmlLayoutParser(document, _xmlNamespaceManager);
+      return CreateMessageParser(document, _xmlNamespaceManager);
     }
+
+    protected abstract IMessageParser CreateMessageParser(XmlDocument xmlDocument, XmlNamespaceManager xmlNamespaceManager);
   }
 }

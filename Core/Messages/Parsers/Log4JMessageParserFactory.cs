@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Xml;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -17,17 +18,32 @@ using System.Collections.Generic;
 
 namespace Harvester.Core.Messages.Parsers
 {
-  public interface IMessageParser
+  public class Log4JMessageParserFactory : XmlMessageParserFactoryBase
   {
-    LogMessageLevel GetLevel();
+    private static readonly ILog Log = LogManager.CreateClassLogger();
 
-    String GetSource();
-    String GetThread();
-    String GetUsername();
-    String GetMessage();
+    public Log4JMessageParserFactory()
+      : base(GetXmlNamespaceManager())
+    { }
 
-    IEnumerable<Attribute> GetAttributes();
-    String GetException();
-    String GetRawMessage();
+    private static XmlNamespaceManager GetXmlNamespaceManager()
+    {
+      var xmlNamespaceManager = new XmlNamespaceManager(new NameTable());
+      xmlNamespaceManager.AddNamespace("log4j", "http://logging.apache.org/log4j/");
+
+      return xmlNamespaceManager;
+    }
+
+    public override Boolean CanCreateParser(String message)
+    {
+      return message != null && message.StartsWith("<log4j:event ") && message.EndsWith("</log4j:event>");
+    }
+
+    protected override IMessageParser CreateMessageParser(XmlDocument xmlDocument, XmlNamespaceManager xmlNamespaceManager)
+    {
+      Log.Debug("Creating Log4JMessageParser.");
+
+      return new Log4JMessageParser(xmlDocument, xmlNamespaceManager);
+    }
   }
 }

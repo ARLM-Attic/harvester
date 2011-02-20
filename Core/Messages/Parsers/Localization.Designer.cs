@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Harvester.Core.Messages.Parsers.Log4Net {
+namespace Harvester.Core.Messages.Parsers {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Harvester.Core.Messages.Parsers.Log4Net {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Harvester.Core.Messages.Parsers.Log4Net.Localization", typeof(Localization).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Harvester.Core.Messages.Parsers.Localization", typeof(Localization).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

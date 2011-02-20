@@ -1,5 +1,5 @@
 ﻿using System;
-using Harvester.Core.Messages.Parsers.Log4Net;
+using Harvester.Core.Messages.Parsers;
 using Xunit;
 
 /* Copyright (c) 2011 CBaxter
@@ -16,14 +16,14 @@ using Xunit;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core.Tests.Messages.Parsers.Log4Net
+namespace Harvester.Core.Tests.Messages.Parsers
 {
-  public class XmlLayoutParserFactoryTests
+  public class Log4JMessageParserFactoryTests
   {
     [Fact]
     public void CanCreateParserReturnsFalseOnNullMessage()
     {
-      var factory = new XmlLayoutParserFactory();
+      var factory = new Log4JMessageParserFactory();
 
       Assert.False(factory.CanCreateParser(null));
     }
@@ -31,7 +31,7 @@ namespace Harvester.Core.Tests.Messages.Parsers.Log4Net
     [Fact]
     public void CanCreateParserReturnsFalseOnEmptyMessage()
     {
-      var factory = new XmlLayoutParserFactory();
+      var factory = new Log4JMessageParserFactory();
 
       Assert.False(factory.CanCreateParser(null));
     }
@@ -39,7 +39,7 @@ namespace Harvester.Core.Tests.Messages.Parsers.Log4Net
     [Fact]
     public void CanCreateParserReturnsFalseOnWhitespaceMessage()
     {
-      var factory = new XmlLayoutParserFactory();
+      var factory = new Log4JMessageParserFactory();
 
       Assert.False(factory.CanCreateParser(String.Empty));
     }
@@ -47,33 +47,33 @@ namespace Harvester.Core.Tests.Messages.Parsers.Log4Net
     [Fact]
     public void CanCreateParserReturnsFalseWhenMessageDoesNotStartWithOpenTag()
     {
-      var factory = new XmlLayoutParserFactory();
+      var factory = new Log4JMessageParserFactory();
 
-      Assert.False(factory.CanCreateParser("Stuff Before <log4net:event logger"));
+      Assert.False(factory.CanCreateParser("Stuff Before <log4j:event logger"));
     }
 
     [Fact]
     public void CanCreateParserReturnsFalseWhenMessageDoesNotEndWithCloseTag()
     {
-      var factory = new XmlLayoutParserFactory();
+      var factory = new Log4JMessageParserFactory();
 
-      Assert.False(factory.CanCreateParser("<log4net:event ></log4net:event> After Stuff"));
+      Assert.False(factory.CanCreateParser("<log4j:event ></log4j:event> After Stuff"));
     }
 
     [Fact]
     public void CanCreateParserReturnsTrueWhenMessageMatchesLog4NetXmlLayoutElement()
     {
-      var factory = new XmlLayoutParserFactory();
+      var factory = new Log4JMessageParserFactory();
 
-      Assert.True(factory.CanCreateParser("<log4net:event ></log4net:event>"));
+      Assert.True(factory.CanCreateParser("<log4j:event ></log4j:event>"));
     }
 
     [Fact]
     public void CreateReturnsXmlLayoutParser()
     {
-      var factory = new XmlLayoutParserFactory();
+      var factory = new Log4JMessageParserFactory();
 
-      Assert.IsType(typeof(XmlLayoutParser), factory.Create("<log4net:event ></log4net:event>"));
+      Assert.IsType(typeof(Log4JMessageParser), factory.Create("<log4j:event ></log4j:event>"));
     }
   }
 }
