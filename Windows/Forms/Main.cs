@@ -41,9 +41,9 @@ namespace Harvester.Windows.Forms
       //      raised: SplitterDistance must be between Panel1MinSize and Width - Panel2MinSize.
       _splitContainer.Panel2MinSize = 200;
 
-      _clearHistoryToolStripMenuItem.Click += OnClearMessageHistoryClicked;
-      _colorsToolStripMenuItem.Click += OnShowColorPickerClicked;
-      _exitToolStripMenuItem.Click += OnExitApplicationClicked;
+      _clearHistoryButton.Click += OnClearMessageHistoryClicked;
+      _colorPickerButton.Click += OnShowColorPickerClicked;
+      _exitButton.Click += OnExitApplicationClicked;
 
       _messageHistory.EnableDoubleBuffer();
       _messageHistory.SelectedIndexChanged += OnSelectedMessageChanged;
