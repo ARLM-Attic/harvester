@@ -99,7 +99,6 @@
       this._splitContainer.Panel2.Controls.Add(this._selectedMessageDetails);
       this._splitContainer.Size = new System.Drawing.Size(1008, 730);
       this._splitContainer.SplitterDistance = 500;
-      this._splitContainer.Panel2MinSize = 200;
       this._splitContainer.TabIndex = 0;
       // 
       // _messageHistory

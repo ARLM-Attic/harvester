@@ -35,6 +35,12 @@ namespace Harvester.Windows.Forms
     {
       InitializeComponent();
 
+      //NOTE: Explicitly moved the following statement out of the 'Windows Form Designer generated code' region
+      //      as IDE would always place the setting of Panel2MinSize prior to setting of SplitterDistance. As 
+      //      such, any time the designer was modified (i.e., adding new control), the following error would be 
+      //      raised: SplitterDistance must be between Panel1MinSize and Width - Panel2MinSize.
+      _splitContainer.Panel2MinSize = 200;
+
       _clearHistoryToolStripMenuItem.Click += OnClearMessageHistoryClicked;
       _colorsToolStripMenuItem.Click += OnShowColorPickerClicked;
       _exitToolStripMenuItem.Click += OnExitApplicationClicked;
