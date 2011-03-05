@@ -620,7 +620,7 @@
       this._attributesText.Location = new System.Drawing.Point(6, 6);
       this._attributesText.Name = "_attributesText";
       this._attributesText.ReadOnly = true;
-      this._attributesText.Size = new System.Drawing.Size(964, 173);
+      this._attributesText.Size = new System.Drawing.Size(985, 182);
       this._attributesText.TabIndex = 1;
       this._attributesText.Text = "";
       this._attributesText.WordWrap = false;
@@ -644,7 +644,7 @@
       this._rawText.Location = new System.Drawing.Point(6, 6);
       this._rawText.Name = "_rawText";
       this._rawText.ReadOnly = true;
-      this._rawText.Size = new System.Drawing.Size(964, 173);
+      this._rawText.Size = new System.Drawing.Size(985, 183);
       this._rawText.TabIndex = 1;
       this._rawText.Text = "";
       this._rawText.WordWrap = false;
