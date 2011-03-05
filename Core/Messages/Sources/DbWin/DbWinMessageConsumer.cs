@@ -110,6 +110,10 @@ namespace Harvester.Core.Messages.Sources.DbWin
 
           _messagesReceivedCallback.Invoke(dbWinMessages.Select(dbwinMessage => _logMessageFactory.Create(dbwinMessage.Timestamp, dbwinMessage.ProcessId, dbwinMessage.Message)));
         }
+        catch (ObjectDisposedException ex)
+        {
+          Log.Warn(ex.Message, ex);
+        }
         catch (Exception ex)
         {
           Log.Fatal(ex.Message, ex);

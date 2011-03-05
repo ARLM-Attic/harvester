@@ -148,6 +148,10 @@ namespace Harvester.Core.Messages.Sources.DbWin
 
           _messageEnqueuer.Enqueue(new DbWinMessage(processId, message));
         }
+        catch (ObjectDisposedException ex)
+        {
+          Log.Warn(ex.Message, ex);
+        }
         catch (Exception ex)
         {
           Log.Fatal(ex.Message, ex);

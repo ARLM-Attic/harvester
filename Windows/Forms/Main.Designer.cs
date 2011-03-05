@@ -231,6 +231,7 @@
       this._clearHistoryButton.Name = "_clearHistoryButton";
       this._clearHistoryButton.Size = new System.Drawing.Size(23, 22);
       this._clearHistoryButton.Text = "Clear History";
+      this._clearHistoryButton.ToolTipText = "Clear History (Ctrl - C)";
       // 
       // _colorPickerButton
       // 
@@ -240,6 +241,7 @@
       this._colorPickerButton.Name = "_colorPickerButton";
       this._colorPickerButton.Size = new System.Drawing.Size(23, 22);
       this._colorPickerButton.Text = "Color Picker";
+      this._colorPickerButton.ToolTipText = "Color Picker";
       // 
       // _scrollResumeButton
       // 
@@ -249,6 +251,7 @@
       this._scrollResumeButton.Name = "_scrollResumeButton";
       this._scrollResumeButton.Size = new System.Drawing.Size(23, 22);
       this._scrollResumeButton.Text = "Resume Auto-Scroll";
+      this._scrollResumeButton.ToolTipText = "Resume Auto-Scroll (Ctrl - R)";
       // 
       // _separator2
       // 
@@ -264,6 +267,7 @@
       this._filterLevelButton.Name = "_filterLevelButton";
       this._filterLevelButton.Size = new System.Drawing.Size(23, 22);
       this._filterLevelButton.Text = "Filter by Level";
+      this._filterLevelButton.ToolTipText = "Filter by Level (Ctrl - L)";
       // 
       // _filterProcessButton
       // 
@@ -274,6 +278,7 @@
       this._filterProcessButton.Name = "_filterProcessButton";
       this._filterProcessButton.Size = new System.Drawing.Size(23, 22);
       this._filterProcessButton.Text = "Filter by Processes";
+      this._filterProcessButton.ToolTipText = "Filter by Processes (Ctrl - P)";
       // 
       // _filterApplicationButton
       // 
@@ -284,6 +289,7 @@
       this._filterApplicationButton.Name = "_filterApplicationButton";
       this._filterApplicationButton.Size = new System.Drawing.Size(23, 22);
       this._filterApplicationButton.Text = "Filter by Applications";
+      this._filterApplicationButton.ToolTipText = "Filter by Applications (Ctrl - A)";
       // 
       // _filterSourceButton
       // 
@@ -294,6 +300,7 @@
       this._filterSourceButton.Name = "_filterSourceButton";
       this._filterSourceButton.Size = new System.Drawing.Size(23, 22);
       this._filterSourceButton.Text = "Filter by Sources";
+      this._filterSourceButton.ToolTipText = "Filter by Sources (Ctrl - S)";
       // 
       // _filterUserButton
       // 
@@ -304,6 +311,7 @@
       this._filterUserButton.Name = "_filterUserButton";
       this._filterUserButton.Size = new System.Drawing.Size(23, 22);
       this._filterUserButton.Text = "Filter by Users";
+      this._filterUserButton.ToolTipText = "Filter by Users (Ctrl - U)";
       // 
       // _filterMessageButton
       // 
@@ -314,6 +322,7 @@
       this._filterMessageButton.Name = "_filterMessageButton";
       this._filterMessageButton.Size = new System.Drawing.Size(23, 22);
       this._filterMessageButton.Text = "Filter by Messages";
+      this._filterMessageButton.ToolTipText = "Filter by Messages (Ctrl - M)";
       // 
       // _separator3
       // 
@@ -329,6 +338,7 @@
       this._searchButton.Name = "_searchButton";
       this._searchButton.Size = new System.Drawing.Size(23, 22);
       this._searchButton.Text = "Search";
+      this._searchButton.ToolTipText = "Search (Ctrl - F)";
       // 
       // _searchText
       // 
@@ -345,6 +355,7 @@
       this._searchPrevButton.Name = "_searchPrevButton";
       this._searchPrevButton.Size = new System.Drawing.Size(23, 22);
       this._searchPrevButton.Text = "Find Previous";
+      this._searchPrevButton.ToolTipText = "Find Previous (Ctrl - -)";
       // 
       // _searchNextButton
       // 
@@ -355,6 +366,7 @@
       this._searchNextButton.Name = "_searchNextButton";
       this._searchNextButton.Size = new System.Drawing.Size(23, 22);
       this._searchNextButton.Text = "Find Next";
+      this._searchNextButton.ToolTipText = "Find Next (Ctrl - +)";
       // 
       // _selectedMessageDetails
       // 

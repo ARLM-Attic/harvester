@@ -307,5 +307,26 @@ namespace Harvester.Windows.Forms
                       ExtendMessageColumn();
                     });
     }
+
+    protected override Boolean ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+      if (PerformClickIfAccelerator(keyData, Keys.C, _clearHistoryButton))
+        return true;
+
+      if (PerformClickIfAccelerator(keyData, Keys.R, _scrollResumeButton))
+        return true;
+
+      return base.ProcessCmdKey(ref msg, keyData);
+    }
+
+    private static Boolean PerformClickIfAccelerator(Keys keyData, Keys key, ToolStripButton button)
+    {
+      var expectedAccelerator = keyData == (key | Keys.Control);
+
+      if (expectedAccelerator)
+        button.PerformClick();
+
+      return expectedAccelerator;
+    }
   }
 }
