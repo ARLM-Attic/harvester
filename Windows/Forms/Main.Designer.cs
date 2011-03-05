@@ -45,7 +45,6 @@
       this._separator1 = new System.Windows.Forms.ToolStripSeparator();
       this._clearHistoryButton = new System.Windows.Forms.ToolStripButton();
       this._colorPickerButton = new System.Windows.Forms.ToolStripButton();
-      this._scrollStopButton = new System.Windows.Forms.ToolStripButton();
       this._scrollResumeButton = new System.Windows.Forms.ToolStripButton();
       this._separator2 = new System.Windows.Forms.ToolStripSeparator();
       this._filterLevelButton = new System.Windows.Forms.ToolStripButton();
@@ -190,7 +189,6 @@
             this._separator1,
             this._clearHistoryButton,
             this._colorPickerButton,
-            this._scrollStopButton,
             this._scrollResumeButton,
             this._separator2,
             this._filterLevelButton,
@@ -243,20 +241,9 @@
       this._colorPickerButton.Size = new System.Drawing.Size(23, 22);
       this._colorPickerButton.Text = "Color Picker";
       // 
-      // _scrollStopButton
-      // 
-      this._scrollStopButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this._scrollStopButton.Enabled = false;
-      this._scrollStopButton.Image = ((System.Drawing.Image)(resources.GetObject("_scrollStopButton.Image")));
-      this._scrollStopButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this._scrollStopButton.Name = "_scrollStopButton";
-      this._scrollStopButton.Size = new System.Drawing.Size(23, 22);
-      this._scrollStopButton.Text = "Stop Auto-Scroll";
-      // 
       // _scrollResumeButton
       // 
       this._scrollResumeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this._scrollResumeButton.Enabled = false;
       this._scrollResumeButton.Image = ((System.Drawing.Image)(resources.GetObject("_scrollResumeButton.Image")));
       this._scrollResumeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
       this._scrollResumeButton.Name = "_scrollResumeButton";
@@ -716,7 +703,6 @@
     private System.Windows.Forms.ToolStripSeparator _separator1;
     private System.Windows.Forms.ToolStripButton _clearHistoryButton;
     private System.Windows.Forms.ToolStripButton _colorPickerButton;
-    private System.Windows.Forms.ToolStripButton _scrollStopButton;
     private System.Windows.Forms.ToolStripButton _scrollResumeButton;
     private System.Windows.Forms.ToolStripSeparator _separator2;
     private System.Windows.Forms.ToolStripButton _filterLevelButton;

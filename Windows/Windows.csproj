@@ -146,7 +146,6 @@
     <Content Include="Resources\Images\FilterProcesses.png" />
     <Content Include="Resources\Images\FilterSources.png" />
     <Content Include="Resources\Images\FilterUsers.png" />
-    <Content Include="Resources\Images\ScrollStop.png" />
     <Content Include="Resources\Images\ScrollToEnd.png" />
     <Content Include="Resources\Images\Search.png" />
     <Content Include="Resources\Images\SearchNext.png" />

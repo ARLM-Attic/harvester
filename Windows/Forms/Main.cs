@@ -4,11 +4,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Harvester.Core.Logging;
 using Harvester.Core.Messages;
 using Harvester.Core.Messages.Sources.DbWin;
 using Harvester.Windows.Extensions;
 using Harvester.Windows.Properties;
-using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -41,9 +41,10 @@ namespace Harvester.Windows.Forms
       //      raised: SplitterDistance must be between Panel1MinSize and Width - Panel2MinSize.
       _splitContainer.Panel2MinSize = 200;
 
+      _exitButton.Click += OnExitApplicationClicked;
       _clearHistoryButton.Click += OnClearMessageHistoryClicked;
       _colorPickerButton.Click += OnShowColorPickerClicked;
-      _exitButton.Click += OnExitApplicationClicked;
+      _scrollResumeButton.Click += OnScrollResumeClicked;
 
       _messageHistory.EnableDoubleBuffer();
       _messageHistory.SelectedIndexChanged += OnSelectedMessageChanged;
@@ -69,6 +70,18 @@ namespace Harvester.Windows.Forms
                         if (colorPicker.ShowDialog(this) == DialogResult.OK)
                           _messageHistory.BackColor = MessageColor.Default.PrimaryBackColor;
                       }
+                    });
+    }
+
+    private void OnScrollResumeClicked(Object sender, EventArgs e)
+    {
+      Log.Info("Resuming auto-scroll.");
+      HandleEvent(() =>
+                    {
+                      _messageHistory.SelectedIndices.Clear();
+
+                      if (_messageHistory.Items.Count > 0)
+                        _messageHistory.EnsureVisible(_messageHistory.Items.Count - 1);
                     });
     }
 
