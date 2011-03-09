@@ -310,18 +310,24 @@ namespace Harvester.Windows.Forms
 
     protected override Boolean ProcessCmdKey(ref Message msg, Keys keyData)
     {
-      if (PerformClickIfAccelerator(keyData, Keys.C, _clearHistoryButton))
+      if (PerformClickIfAccelerator(keyData, Keys.Control | Keys.Shift | Keys.C, _clearHistoryButton))
         return true;
 
-      if (PerformClickIfAccelerator(keyData, Keys.R, _scrollResumeButton))
+      if (PerformClickIfAccelerator(keyData, Keys.Control | Keys.Shift | Keys.P, _colorPickerButton))
+        return true;
+
+      if (PerformClickIfAccelerator(keyData, Keys.Control | Keys.Shift | Keys.V, _scrollResumeButton))
         return true;
 
       return base.ProcessCmdKey(ref msg, keyData);
     }
 
-    private static Boolean PerformClickIfAccelerator(Keys keyData, Keys key, ToolStripButton button)
+    private static Boolean PerformClickIfAccelerator(Keys keyData, Keys keys, ToolStripButton button)
     {
-      var expectedAccelerator = keyData == (key | Keys.Control);
+      var expectedAccelerator = keyData == keys;
+
+
+      Log.InfoFormat("{0} == {1}", keyData, keys);
 
       if (expectedAccelerator)
         button.PerformClick();
