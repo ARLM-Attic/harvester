@@ -74,6 +74,24 @@ namespace Harvester.Core.Tests.Messages
       Assert.Equal("Test Source", logMessage.Source);
     }
 
+    [Fact]
+    public void CreateUsesDefaultParserWhenProvidedNullMessage()
+    {
+      var factory = new LogMessageFactory("Test Source", _processRetriever.Object, _messageParserFactory.Object);
+      var now = DateTime.Now;
+
+      SetupProcessExpectations();
+
+      _messageParserFactory.Setup(mock => mock.CanCreateParser(String.Empty)).Returns(false);
+      _processRetriever.Setup(mock => mock.GetProcessById(2000)).Returns(_process.Object);
+
+      ILogMessage logMessage = factory.Create(now, 2000, null);
+
+      Assert.NotNull(logMessage);
+      Assert.Equal("Test Source", logMessage.Source);
+      Assert.Equal(String.Empty, logMessage.Message);
+    }
+
     private void SetupProcessExpectations()
     {
       _process.SetupGet(mock => mock.Id).Returns(2000);

@@ -57,7 +57,12 @@ namespace Harvester.Windows.Forms
     private void OnClearMessageHistoryClicked(Object sender, EventArgs e)
     {
       Log.Info("Clearing message history.");
-      HandleEvent(() => _messageHistory.Items.Clear());
+      HandleEvent(() =>
+                    {
+                      ClearSelectedMessage();
+
+                      _messageHistory.Items.Clear();
+                    });
     }
 
     private void OnShowColorPickerClicked(Object sender, EventArgs e)
