@@ -30,8 +30,8 @@ namespace Harvester.Core.Messages.Parsers
     {
       Log.Debug("Creating DefaultMessageParser.");
 
-      Verify.NotWhitespace(message);
       Verify.NotWhitespace(source);
+      Verify.NotNull(message);
 
       _message = message;
       _source = source;
