@@ -22,7 +22,7 @@
       <Major>1</Major>
       <Minor>0</Minor>
       <GetBuildScript><![CDATA[ public static string ScriptMain() { return Convert.ToInt32(DateTime.Now.Date.Subtract(new DateTime(2011, 2, 11)).TotalDays).ToString(); } ]]></GetBuildScript>
-      <GetRevisionScript><![CDATA[ public static string ScriptMain() { return Convert.ToInt32(DateTime.Now.Subtract(new DateTime(2011, 2, 11)).TotalMinutes).ToString(); } ]]></GetRevisionScript>
+      <GetRevisionScript><![CDATA[ public static string ScriptMain() { return Convert.ToInt32(DateTime.Now.Subtract(DateTime.Today).TotalMinutes).ToString(); } ]]></GetRevisionScript>
     </PropertyGroup>
 
     <Script Language="C#" Code="$(GetBuildScript)" Imports="System">
