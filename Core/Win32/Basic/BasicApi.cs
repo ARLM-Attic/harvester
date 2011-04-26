@@ -104,7 +104,7 @@ namespace Harvester.Core.Win32.Basic
     {
       Verify.NotNull(fileHandle);
 
-      IntPtr handle = MapViewOfFile(fileHandle, SectionMapRead, 0, 0, 512);
+      IntPtr handle = MapViewOfFile(fileHandle, SectionMapRead, 0, 0, 0);
 
       if (handle == IntPtr.Zero)
         throw new Win32Exception(Marshal.GetLastWin32Error());
