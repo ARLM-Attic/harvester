@@ -4,9 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Harvester.Core;
 using Harvester.Core.Logging;
 using Harvester.Core.Messages;
-using Harvester.Core.Messages.Sources.DbWin;
 using Harvester.Windows.Extensions;
 using Harvester.Windows.Properties;
 
@@ -26,10 +26,12 @@ using Harvester.Windows.Properties;
 
 namespace Harvester.Windows.Forms
 {
-  public partial class Main : FormBase
+
+
+  public partial class Main : FormBase, ILogMessageRenderer
   {
     private static readonly ILog Log = LogManager.CreateClassLogger();
-    private readonly ILogMessageSource _logMessageSource = new DbWinMessageSource();
+    private readonly WindowsMonitor _windowsMonitor;
 
     public Main()
     {
@@ -50,8 +52,13 @@ namespace Harvester.Windows.Forms
       _messageHistory.SelectedIndexChanged += OnSelectedMessageChanged;
       _messageHistory.Resize += OnMessageHistoryResized;
 
-      _logMessageSource.OnMessagesReceived += OnMessagesReceived;
-      _logMessageSource.Connect();
+      _windowsMonitor = new WindowsMonitor(this);
+    }
+
+    public void Render(IEnumerable<ILogMessage> logMessages)
+    {
+      Log.Info("One or more messages received.");
+      HandleEvent(() => ProcessMessages(logMessages));
     }
 
     private void OnClearMessageHistoryClicked(Object sender, EventArgs e)
@@ -130,12 +137,6 @@ namespace Harvester.Windows.Forms
       _messageColumn.Width = Math.Max(60, messageColumnWidth);
     }
 
-    private void OnMessagesReceived(Object sender, LogMessagesReceivedEventArgs e)
-    {
-      Log.Info("One or more messages received.");
-      HandleEvent(() => ProcessMessages(e.Messages));
-    }
-
     private void ProcessMessages(IEnumerable<ILogMessage> messages)
     {
       var scrollToEnd = _messageHistory.SelectedIndices.Count == 0 || _messageHistory.SelectedIndices[0] == (_messageHistory.Items.Count - 1);
@@ -170,9 +171,9 @@ namespace Harvester.Windows.Forms
                                             message.Message
                                           });
 
+      listViewItem.Tag = message;
       listViewItem.ForeColor = GetForegroundColor(message.Level);
       listViewItem.BackColor = GetBackgroundColor(message.Level);
-      listViewItem.Tag = message;
 
       return listViewItem;
     }
@@ -273,6 +274,8 @@ namespace Harvester.Windows.Forms
                       WindowLayout.Default.SplitPosition = _splitContainer.SplitterDistance;
 
                       WindowLayout.Default.Save();
+
+                      _windowsMonitor.Dispose();
                     });
     }
 

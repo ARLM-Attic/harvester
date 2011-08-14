@@ -48,7 +48,11 @@ namespace Harvester.Core.Logging
       using (var listener = new LoggerTraceListener())
         fileName = listener.FullLogFileName;
 
-      var files = Directory.GetFiles(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName) + "*" + Path.GetExtension(fileName));
+      var directory = Path.GetDirectoryName(fileName);
+      if (String.IsNullOrEmpty(directory))
+        return;
+
+      var files = Directory.GetFiles(directory, Path.GetFileNameWithoutExtension(fileName) + "*" + Path.GetExtension(fileName));
       foreach(var file in files)
       {
         if (File.Exists(file))

@@ -3,6 +3,7 @@ using System.Linq;
 using Harvester.Core.Logging;
 using Harvester.Core.Messages.Parsers;
 using Harvester.Core.Processes;
+using Harvester.Core.Tracing;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -25,36 +26,33 @@ namespace Harvester.Core.Messages
     private static readonly ILog Log = LogManager.CreateClassLogger();
     private readonly IMessageParserFactory[] _messageParserFactories;
     private readonly IProcessRetriever _processRetriever;
-    private readonly String _source;
 
-    public LogMessageFactory(String source)
-      : this(source, new ProcessRetriever(), new Log4NetMessageParserFactory(), new Log4JMessageParserFactory())
+    public LogMessageFactory()
+      : this(new ProcessRetriever(), new Log4NetMessageParserFactory(), new Log4JMessageParserFactory())
     { }
 
-    internal LogMessageFactory(String source, IProcessRetriever processRetriever, params IMessageParserFactory[] messageParserFactories)
+    internal LogMessageFactory(IProcessRetriever processRetriever, params IMessageParserFactory[] messageParserFactories)
     {
-      Verify.NotWhitespace(source);
       Verify.NotNull(processRetriever);
       Verify.NotNull(messageParserFactories);
 
-      _source = source;
       _processRetriever = processRetriever;
       _messageParserFactories = messageParserFactories;
     }
 
-    public ILogMessage Create(DateTime timestamp, Int32 processId, String message)
+    public ILogMessage Create(TraceEvent traceEvent)
     {
-      Log.DebugFormat("Attempting to create new LogMessage with: Date={0}; ProcessId={1}; Message={2};", timestamp, processId, message);
+      Log.Debug("Creating new log message.");
 
-      Verify.GreaterThanZero(processId);
-      
-      String messageText = (message ?? String.Empty).Trim();
-      IProcess process = _processRetriever.GetProcessById(processId);
+      Verify.NotNull(traceEvent);
+
+      String messageText = (traceEvent.Message ?? String.Empty).Trim();
+      IProcess process = _processRetriever.GetProcessById(traceEvent.ProcessId);
 
       IMessageParserFactory messageParserFactory = _messageParserFactories.FirstOrDefault(factory => factory.CanCreateParser(messageText));
-      IMessageParser messageParser = messageParserFactory != null ? messageParserFactory.Create(messageText) : new DefaultMessageParser(_source, messageText);
+      IMessageParser messageParser = messageParserFactory != null ? messageParserFactory.Create(messageText) : new DefaultMessageParser(traceEvent.Source, messageText);
 
-      return new LogMessage(timestamp, process, messageParser);
+      return new LogMessage(traceEvent.Timestamp, process, messageParser);
     }
   }
 }

@@ -9,7 +9,6 @@
     <SolutionFile>Harvester.sln</SolutionFile>
     <BuildOutputDir>Build</BuildOutputDir>
     <ILMergeOutput>$(BuildOutputDir)\Harvester.exe</ILMergeOutput>
-    <ILMergeLog>$(BuildOutputDir)\ilmerge.log</ILMergeLog>
   </PropertyGroup>
 
   <Target Name="Clean">
@@ -60,31 +59,29 @@
     <Xunit Assembly="Core.Tests\bin\$(Configuration)\Harvester.Core.Tests.dll" />
   </Target>
 
-  <Target Name="MergeAssemblies">
-    <Message Text="Starting ILMerge..." />
-    
+  <Target Name="PackageConsole">
     <ItemGroup>
-      <inputAssemblies Include="Windows\bin\$(Configuration)\Harvester.exe" />
-      <inputAssemblies Include="Core\bin\$(Configuration)\Harvester.Core.dll" />
+      <ConsoleFiles Include="Console\bin\$(Configuration)\Harvester.Core.dll" />
+      <ConsoleFiles Include="Console\bin\$(Configuration)\Harvester.Console.exe" />
     </ItemGroup>
-
-    <ILMerge InputAssemblies="@(inputAssemblies)" OutputFile="$(ILMergeOutput)" LogFile="$(ILMergeLog)" DebugInfo="false" XmlDocumentation="false" ToolPath="Lib\ILMerge" />
     
-    <Message Text="ILMerge Complete" />
+    <Zip Files="@(ConsoleFiles)" WorkingDirectory="Console\bin\$(Configuration)" ZipFileName="$(BuildOutputDir)\Harvester.Console.zip" />
   </Target>
-
-  <Target Name="PackageRelease">
+  
+  <Target Name="PackageWindows">
     <ItemGroup>
-      <RepoFiles Include="$(ILMergeOutput)" />
+      <WindowsFiles Include="Windows\bin\$(Configuration)\Harvester.Core.dll" />
+      <WindowsFiles Include="Windows\bin\$(Configuration)\Harvester.exe" />
     </ItemGroup>
-    <Zip Files="@(RepoFiles)" WorkingDirectory="" ZipFileName="$(BuildOutputDir)\Harvester.zip" />
+
+    <Zip Files="@(WindowsFiles)" WorkingDirectory="Windows\bin\$(Configuration)" ZipFileName="$(BuildOutputDir)\Harvester.zip" />
   </Target>
 
   <Target Name="Release" DependsOnTargets="Test">
     <MakeDir Directories="$(BuildOutputDir)"/>
 
-    <CallTarget Targets="MergeAssemblies" />
-    <CallTarget Targets="PackageRelease" />
+    <CallTarget Targets="PackageConsole" />
+    <CallTarget Targets="PackageWindows" />
   </Target>
 
 </Project>

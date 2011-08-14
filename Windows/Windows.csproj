@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Harvester.Windows</RootNamespace>
     <AssemblyName>Harvester</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -112,6 +112,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\MessageColor.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>MessageColor.Designer.cs</LastGenOutput>
@@ -130,12 +131,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{DF5769AC-B714-40C3-810C-D5FEC39C461A}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Resources\Icons\harvester.ico" />
     <Content Include="Resources\Images\ClearHistory.png" />
     <Content Include="Resources\Images\Close.png" />
@@ -151,7 +146,12 @@
     <Content Include="Resources\Images\SearchNext.png" />
     <Content Include="Resources\Images\SearchPrev.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{5281CCB1-F535-4E5E-9B2A-2BE362291C78}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -14,3 +14,6 @@ glob:*.ReSharper.user
 glob:Build/
 glob:Harvester.sln.cache
 glob:Windows/Windows.csproj.user
+glob:Console/bin/
+glob:Console/obj/
+glob:Core.Tests/Core.Tests.csproj.user

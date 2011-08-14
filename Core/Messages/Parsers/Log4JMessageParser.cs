@@ -47,7 +47,6 @@ namespace Harvester.Core.Messages.Parsers
 
       Log.Debug("Attempting to retrieve extended properties from log message.");
 
-
       attributes.AddRange(from XmlNode node in QueryMultipleValues("./log4j:event/log4j:properties/log4j:data")
                           let nameAttribute = QuerySingleValue("./@name", node).ToLowerInvariant()
                           let valueAttribute = QuerySingleValue("./@value", node)

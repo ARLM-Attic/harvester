@@ -241,7 +241,6 @@
       // 
       this._informationBackColorButton.Location = new System.Drawing.Point(172, 19);
       this._informationBackColorButton.Name = "_informationBackColorButton";
-      this._informationBackColorButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
       this._informationBackColorButton.Size = new System.Drawing.Size(80, 23);
       this._informationBackColorButton.TabIndex = 3;
       this._informationBackColorButton.Text = "Back Color...";

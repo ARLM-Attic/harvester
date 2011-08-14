@@ -34,7 +34,7 @@ namespace Harvester.Core.Logging
     public static ILog CreateClassLogger()
     {
       var stackFrame = new StackFrame(1);
-      var traceSource = new TraceSource(stackFrame.GetMethod().DeclaringType.FullName, SourceLevel);
+      var traceSource = new TraceSource(stackFrame.GetMethod().DeclaringType.FullName ?? "Harvester", SourceLevel);
 
       traceSource.Listeners.Clear();
       traceSource.Listeners.Add(LoggerTraceListener.Instance);

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Harvester.Core.Tracing;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -18,6 +18,6 @@ namespace Harvester.Core.Messages
 {
   public interface ILogMessageFactory
   {
-    ILogMessage Create(DateTime timestamp, Int32 processId, String message);
+    ILogMessage Create(TraceEvent traceEvent);
   }
 }

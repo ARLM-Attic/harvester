@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -16,10 +17,27 @@
 
 namespace Harvester.Core
 {
-  public interface IBlockingQueue<T> : IEnqueuer<T>, IDequeuer<T>, IDisposable
+  public interface IBlockingQueue<T> : IDisposable
   {
     Int32 Count { get; }
 
     void Clear();
+    void Enqueue(T item);
+
+    T Dequeue();
+    T Dequeue(TimeSpan timeout);
+    T Dequeue(Int32 millisecondsTimeout);
+
+    IList<T> DequeueAll();
+    IList<T> DequeueAll(TimeSpan timeout);
+    IList<T> DequeueAll(Int32 millisecondsTimeout);
+
+    Boolean TryDequeue(out T result);
+    Boolean TryDequeue(TimeSpan timeout, out T result);
+    Boolean TryDequeue(Int32 millisecondsTimeout, out T result);
+
+    Boolean TryDequeueAll(out IList<T> result);
+    Boolean TryDequeueAll(TimeSpan timeout, out IList<T> result);
+    Boolean TryDequeueAll(Int32 millisecondsTimeout, out IList<T> result);
   }
 }

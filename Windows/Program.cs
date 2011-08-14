@@ -41,10 +41,6 @@ namespace Harvester.Windows
         Application.SetCompatibleTextRenderingDefault(false);
         Application.Run(new Main());
       }
-      catch (Win32Exception ex)
-      {
-        MessageBox.Show(ex.NativeErrorCode == Core.Win32.Basic.BasicApi.ErrorAlreadyExists ? Localization.DebuggerAlreadyActive : ex.Message, Application.ProductName);
-      }
       catch (Exception ex)
       {
         LogManager.CreateClassLogger().Fatal(ex.Message, ex);

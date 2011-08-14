@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Harvester.Core.Win32;
-using Harvester.Core.Win32.UI;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -21,26 +20,39 @@ namespace Harvester.Windows.Extensions
 {
   public static class ListViewExtensions
   {
-    private readonly static IWindowsApi WinApi = WindowsApi.Instance;
+    private enum ListViewMessages
+    {
+      First = 0x1000,
+      SetExtendedStyle = (First + 54),
+      GetExtendedStyle = (First + 55),
+    }
 
+    [Flags]
+    private enum ListViewExtendedStyles
+    {
+      BorderSelect = 0x00008000,
+      DoubleBuffer = 0x00010000
+    }
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    private static extern Int32 SendMessage(IntPtr hWnd, UInt32 msg, Int32 wParam, Int32 lParam);
+    
     public static void EnableDoubleBuffer(this ListView listView)
     {
-      var handle = new Handle(listView.Handle);
-      var styles = (ListViewExtendedStyles)WinApi.UserInterface.SendMessage(handle, (Int32)ListViewMessages.GetExtendedStyle, 0, 0);
+      var styles = (ListViewExtendedStyles)SendMessage(listView.Handle, (Int32)ListViewMessages.GetExtendedStyle, 0, 0);
 
       styles |= ListViewExtendedStyles.DoubleBuffer | ListViewExtendedStyles.BorderSelect;
 
-      WinApi.UserInterface.SendMessage(handle, (Int32)ListViewMessages.SetExtendedStyle, 0, (Int32)styles);
+      SendMessage(listView.Handle, (Int32)ListViewMessages.SetExtendedStyle, 0, (Int32)styles);
     }
 
     public static void DisableDoubleBuffer(this ListView listView)
     {
-      var handle = new Handle(listView.Handle);
-      var styles = (ListViewExtendedStyles)WinApi.UserInterface.SendMessage(handle, (Int32)ListViewMessages.GetExtendedStyle, 0, 0);
+      var styles = (ListViewExtendedStyles)SendMessage(listView.Handle, (Int32)ListViewMessages.GetExtendedStyle, 0, 0);
 
       styles -= styles & ListViewExtendedStyles.DoubleBuffer; styles -= styles & ListViewExtendedStyles.BorderSelect;
 
-      WinApi.UserInterface.SendMessage(handle, (Int32)ListViewMessages.SetExtendedStyle, 0, (Int32)styles);
+      SendMessage(listView.Handle, (Int32)ListViewMessages.SetExtendedStyle, 0, (Int32)styles);
     }
   }
 }
