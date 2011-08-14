@@ -59,6 +59,11 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="LogMessageRenderer.cs" />
+    <Compile Include="Properties\MessageColor.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>MessageColor.settings</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -69,6 +74,11 @@
   <ItemGroup>
     <None Include="..\Harvester.snk">
       <Link>Harvester.snk</Link>
+    </None>
+    <None Include="App.config" />
+    <None Include="Properties\MessageColor.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>MessageColor.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@ using System.Text;
 using Harvester.Core;
 using Harvester.Core.Logging;
 using Harvester.Core.Messages;
+using Harvester.Properties;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -109,21 +110,27 @@ namespace Harvester
     
     private static void SetConsoleBackgroundColor(ILogMessage logMessage)
     {
-      //TODO: Make Configurable
-      Console.BackgroundColor = logMessage.Level == LogMessageLevel.Fatal ? ConsoleColor.Red : ConsoleColor.Black; 
+      switch (logMessage.Level)
+      {
+        case LogMessageLevel.Fatal: Console.BackgroundColor = MessageColor.Default.FatalBackColor; break;
+        case LogMessageLevel.Error: Console.BackgroundColor = MessageColor.Default.ErrorBackColor; break;
+        case LogMessageLevel.Warning: Console.BackgroundColor = MessageColor.Default.WarningBackColor; break;
+        case LogMessageLevel.Information: Console.BackgroundColor = MessageColor.Default.InformationBackColor; break;
+        case LogMessageLevel.Debug: Console.BackgroundColor = MessageColor.Default.DebugBackColor; break;
+        default: Console.BackgroundColor = MessageColor.Default.TraceBackColor; break;
+      }
     }
 
     private static void SetConsoleForegroundColor(ILogMessage logMessage)
     {
-      //TODO: Make Configurable
       switch (logMessage.Level)
       {
-        case LogMessageLevel.Fatal: Console.ForegroundColor = ConsoleColor.White; break;
-        case LogMessageLevel.Error: Console.ForegroundColor = ConsoleColor.Red; break;
-        case LogMessageLevel.Warning: Console.ForegroundColor = ConsoleColor.Yellow; break;
-        case LogMessageLevel.Information: Console.ForegroundColor = ConsoleColor.White; break;
-        case LogMessageLevel.Debug: Console.ForegroundColor = ConsoleColor.DarkGray; break;
-        default: Console.ForegroundColor = ConsoleColor.DarkGreen; break;
+        case LogMessageLevel.Fatal: Console.ForegroundColor = MessageColor.Default.FatalForeColor; break;
+        case LogMessageLevel.Error: Console.ForegroundColor = MessageColor.Default.ErrorForeColor; break;
+        case LogMessageLevel.Warning: Console.ForegroundColor = MessageColor.Default.WarningForeColor; break;
+        case LogMessageLevel.Information: Console.ForegroundColor = MessageColor.Default.InformationForeColor; break;
+        case LogMessageLevel.Debug: Console.ForegroundColor = MessageColor.Default.DebugForeColor; break;
+        default: Console.ForegroundColor = MessageColor.Default.TraceForeColor; break;
       }
     }
   }
