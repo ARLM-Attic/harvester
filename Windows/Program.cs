@@ -30,6 +30,25 @@ namespace Harvester.Windows
     [STAThread]
     static void Main(String[] args)
     {
+      Boolean onlyInstance;
+
+      using (new Mutex(true, "Harvester", out onlyInstance))
+      {
+        if (onlyInstance)
+          StartApplication(args);
+        else
+          ExitApplication();
+      }
+    }
+
+    private static void ExitApplication()
+    {
+      MessageBox.Show(Localization.DebuggerAlreadyActive, Application.ProductName);
+      Application.Exit();
+    }
+
+    private static void StartApplication(String[] args)
+    {
       try
       {
         Thread.CurrentThread.Name = "Main";

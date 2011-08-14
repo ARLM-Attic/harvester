@@ -23,15 +23,34 @@ using Harvester.Core.Logging;
 
 namespace Harvester
 {
-  class Program
+  static class Program
   {
-    static void Main(string[] args)
+    public static void Main(String[] args)
     {
-      Thread.CurrentThread.Name = "Main";
-      LogManager.Initialize(ConfigureLogLevel(args));
+      Boolean onlyInstance;
 
+      using (new Mutex(true, "Harvester", out onlyInstance))
+      {
+        if (onlyInstance)
+          StartApplication(args);
+        else
+          ExitApplication();
+      }
+    }
+
+    private static void ExitApplication()
+    {
+      Console.WriteLine(Localization.DebuggerAlreadyActive);
+      Console.ReadKey();
+    }
+
+    private static void StartApplication(String[] args)
+    {
       try
       {
+        Thread.CurrentThread.Name = "Main";
+        LogManager.Initialize(ConfigureLogLevel(args));
+
         LogEnvironment(LogManager.CreateClassLogger());
 
         using (new WindowsMonitor(new ConsoleRenderer()))
