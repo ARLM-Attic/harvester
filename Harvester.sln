@@ -9,6 +9,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "(SolutionBuildEvent)", "(SolutionBuildEvent)\(SolutionBuildEvent).csproj", "{07ACE179-226E-48C8-9643-C91BE3A5FCF4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.csproj", "{3BF23283-9729-4B08-925F-550291206E30}"
+	ProjectSection(ProjectDependencies) = postProject
+		{07ACE179-226E-48C8-9643-C91BE3A5FCF4} = {07ACE179-226E-48C8-9643-C91BE3A5FCF4}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{5281CCB1-F535-4E5E-9B2A-2BE362291C78}"
 EndProject

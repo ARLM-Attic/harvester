@@ -76,10 +76,12 @@ namespace Harvester
 
       AppDomain.CurrentDomain.AssemblyLoad += (sender, e) => Log.Info("Assembly Loaded: " + e.LoadedAssembly.GetName().FullName);
       AppDomain.CurrentDomain.UnhandledException += (sender, e) => Log.Fatal(e.ExceptionObject.ToString());
-
-      startupInfo.AppendLine("Harvester (Console) v" + Assembly.GetExecutingAssembly().GetName().Version);
+      
+      startupInfo.AppendLine();
+      startupInfo.AppendLine("Harvester (Console)\t" + Assembly.GetExecutingAssembly().GetName().Version);
       startupInfo.AppendLine("OS Version:\t\t" + Environment.OSVersion);
       startupInfo.AppendLine("Framework Version:\t" + Environment.Version);
+
       startupInfo.AppendLine();
       startupInfo.AppendLine("Loaded Assemblies:");
       foreach (var loadedAssemblyName in AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetName().FullName).OrderBy(name => name.ToLowerInvariant()))

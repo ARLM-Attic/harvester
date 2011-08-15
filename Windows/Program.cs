@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -79,27 +78,15 @@ namespace Harvester.Windows
       AppDomain.CurrentDomain.AssemblyLoad += (sender, e) => Log.Info("Assembly Loaded: " + e.LoadedAssembly.GetName().FullName);
       AppDomain.CurrentDomain.UnhandledException += (sender, e) => Log.Fatal(e.ExceptionObject);
 
-      startupInfo.AppendLine("Application Start");
-      startupInfo.AppendLine("************************************************************************************************************************");
-      startupInfo.AppendLine(Application.ProductName + " v" + Application.ProductVersion);
       startupInfo.AppendLine();
-      startupInfo.AppendLine("MachineName:\t\t" + Environment.MachineName);
-      startupInfo.AppendLine("Processor Count:\t" + Environment.ProcessorCount);
+      startupInfo.AppendLine("Harvester (Windows)\t" + Application.ProductVersion);
       startupInfo.AppendLine("OS Version:\t\t" + Environment.OSVersion);
       startupInfo.AppendLine("Framework Version:\t" + Environment.Version);
-
-      using (var process = Process.GetCurrentProcess())
-      {
-        startupInfo.AppendLine("Process ID:\t\t" + process.Id);
-        startupInfo.AppendLine("Process Name:\t\t" + process.ProcessName);
-      }
-
+      
       startupInfo.AppendLine();
       startupInfo.AppendLine("Loaded Assemblies:");
       foreach (var loadedAssemblyName in AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetName().FullName).OrderBy(assemblyName => assemblyName.ToLowerInvariant()))
         startupInfo.AppendLine('-' + loadedAssemblyName);
-
-      startupInfo.Append("************************************************************************************************************************");
 
       Log.Info(startupInfo.ToString());
     }
