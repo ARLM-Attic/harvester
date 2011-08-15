@@ -19,7 +19,7 @@ using Harvester.Core.Processes;
 
 namespace Harvester.Core.Messages
 {
-  public class LogMessage : ILogMessage
+  internal class LogMessage : ILogMessage
   {
     private static readonly Sequence Sequence = new Sequence();
 

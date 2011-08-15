@@ -20,7 +20,7 @@ using NLog;
 
 namespace Harvester.Core.Messages.Parsers
 {
-  public class Log4JMessageParser : XmlMessageParserBase
+  internal class Log4JMessageParser : XmlMessageParserBase
   {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 

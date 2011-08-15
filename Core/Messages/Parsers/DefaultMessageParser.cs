@@ -18,7 +18,7 @@ using NLog;
 
 namespace Harvester.Core.Messages.Parsers
 {
-  public class DefaultMessageParser : IMessageParser
+  internal class DefaultMessageParser : IMessageParser
   {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly static IEnumerable<Attribute> EmptyAttributes = new List<Attribute>().AsReadOnly();

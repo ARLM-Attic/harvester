@@ -18,7 +18,7 @@ using NLog;
 
 namespace Harvester.Core.Processes
 {
-  public class ProcessWrapper : IProcess
+  internal class ProcessWrapper : IProcess
   {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly String _processName;

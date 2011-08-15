@@ -19,7 +19,7 @@ using NLog;
 
 namespace Harvester.Core.Processes
 {
-  public class ProcessRetriever : IProcessRetriever
+  internal class ProcessRetriever : IProcessRetriever
   {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly IDictionary<Int32, IProcess> _processCache = new Dictionary<Int32, IProcess>();

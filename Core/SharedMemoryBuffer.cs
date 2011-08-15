@@ -19,7 +19,7 @@ using NLog;
 
 namespace Harvester.Core
 {
-  internal sealed class SharedMemoryBuffer : IBuffer
+  public sealed class SharedMemoryBuffer : IBuffer
   {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(10);

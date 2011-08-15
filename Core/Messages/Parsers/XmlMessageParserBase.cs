@@ -22,7 +22,7 @@ using NLog;
 
 namespace Harvester.Core.Messages.Parsers
 {
-  public abstract class XmlMessageParserBase : IMessageParser
+  internal abstract class XmlMessageParserBase : IMessageParser
   {
     private readonly XmlNamespaceManager _namespaceManager;
     private readonly XmlDocument _document;

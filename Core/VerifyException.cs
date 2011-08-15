@@ -18,7 +18,7 @@ using System.Runtime.Serialization;
 namespace Harvester.Core
 {
   [Serializable]
-  public class VerifyException : Exception
+  internal class VerifyException : Exception
   {
     public VerifyException() : base(Localization.VerifyException) { }
     public VerifyException(String message) : base(message) { }

@@ -17,7 +17,7 @@ using NLog;
 
 namespace Harvester.Core.Messages
 {
-  public class Sequence
+  internal class Sequence
   {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly Object _syncLock = new Object();

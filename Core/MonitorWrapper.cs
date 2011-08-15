@@ -17,7 +17,7 @@ using System.Threading;
 
 namespace Harvester.Core
 {
-  public class MonitorWrapper : IMonitor
+  internal class MonitorWrapper : IMonitor
   {
     #region Singleton
 

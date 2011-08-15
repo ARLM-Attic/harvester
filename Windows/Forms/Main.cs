@@ -26,7 +26,7 @@ using NLog;
 
 namespace Harvester.Windows.Forms
 {
-  public partial class Main : FormBase, ILogMessageRenderer
+  internal partial class Main : FormBase, ILogMessageRenderer
   {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly WindowsMonitor _windowsMonitor;

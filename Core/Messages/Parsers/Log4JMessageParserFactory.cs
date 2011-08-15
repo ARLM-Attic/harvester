@@ -18,7 +18,7 @@ using NLog;
 
 namespace Harvester.Core.Messages.Parsers
 {
-  public class Log4JMessageParserFactory : XmlMessageParserFactoryBase
+  internal class Log4JMessageParserFactory : XmlMessageParserFactoryBase
   {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 

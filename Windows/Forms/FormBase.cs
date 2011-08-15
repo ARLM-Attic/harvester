@@ -18,7 +18,7 @@ using NLog;
 
 namespace Harvester.Windows.Forms
 {
-  public class FormBase : Form
+  internal class FormBase : Form
   {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 

@@ -21,7 +21,7 @@ using NLog;
 
 namespace Harvester.Windows.Forms
 {
-  public partial class ColorPicker : FormBase
+  internal partial class ColorPicker : FormBase
   {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 

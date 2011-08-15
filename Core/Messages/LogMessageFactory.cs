@@ -21,7 +21,7 @@ using NLog;
 
 namespace Harvester.Core.Messages
 {
-  public class LogMessageFactory : ILogMessageFactory
+  internal class LogMessageFactory : ILogMessageFactory
   {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly IMessageParserFactory[] _messageParserFactories;

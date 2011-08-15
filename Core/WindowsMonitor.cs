@@ -19,7 +19,7 @@ using Harvester.Core.Tracing;
 
 namespace Harvester.Core
 {
-  public class WindowsMonitor : IDisposable
+  public sealed class WindowsMonitor : IDisposable
   {
     private readonly ITraceListener _dbWinLocal;
     private readonly ITraceListener _dbWinGlobal;
