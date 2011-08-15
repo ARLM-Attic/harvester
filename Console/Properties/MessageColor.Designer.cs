@@ -124,7 +124,7 @@ namespace Harvester.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("DarkGreen")]
+        [global::System.Configuration.DefaultSettingValueAttribute("DarkCyan")]
         public global::System.ConsoleColor TraceForeColor {
             get {
                 return ((global::System.ConsoleColor)(this["TraceForeColor"]));

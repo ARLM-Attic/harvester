@@ -36,7 +36,7 @@
       <Value Profile="(Default)">Black</Value>
     </Setting>
     <Setting Name="TraceForeColor" Type="System.ConsoleColor" Scope="Application">
-      <Value Profile="(Default)">DarkGreen</Value>
+      <Value Profile="(Default)">DarkCyan</Value>
     </Setting>
   </Settings>
 </SettingsFile>
