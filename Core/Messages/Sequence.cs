@@ -1,5 +1,5 @@
 ﻿using System;
-using Harvester.Core.Logging;
+using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -19,7 +19,7 @@ namespace Harvester.Core.Messages
 {
   public class Sequence
   {
-    private static readonly ILog Log = LogManager.CreateClassLogger();
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly Object _syncLock = new Object();
     private UInt32 _nextId;
 
@@ -29,7 +29,7 @@ namespace Harvester.Core.Messages
 
     public Sequence(UInt32 nextId)
     {
-      Log.DebugFormat("Initializing sequence: {0}", nextId);
+      Log.Debug("Initializing sequence: {0}", nextId);
 
       _nextId = nextId;
     }

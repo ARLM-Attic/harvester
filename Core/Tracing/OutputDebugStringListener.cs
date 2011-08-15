@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -19,6 +20,7 @@ namespace Harvester.Core.Tracing
 {
   internal class OutputDebugStringListener : ITraceListener
   {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly IBuffer _sharedMemoryBuffer;
     private readonly Thread _listenerThread;
     private readonly String _listenerName;
@@ -45,6 +47,8 @@ namespace Harvester.Core.Tracing
 
     public void Dispose()
     {
+      Log.Debug("Disposing Listener");
+
       Disposed = true;
 
       _sharedMemoryBuffer.Dispose();
@@ -57,6 +61,8 @@ namespace Harvester.Core.Tracing
     {
       while (!Disposed)
       {
+        Log.Debug("Reading from shared memory.");
+
         try
         {
           var data = _sharedMemoryBuffer.Read();
@@ -64,6 +70,8 @@ namespace Harvester.Core.Tracing
 
           if (String.IsNullOrEmpty(debugString.Message))
             continue;
+
+          Log.Debug("Trace event rececived.");
 
           var defensiveCopy = TraceEventReceived;
           if (defensiveCopy != null)

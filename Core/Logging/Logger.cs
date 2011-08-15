@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -19,108 +18,78 @@ namespace Harvester.Core.Logging
 {
   public class Logger : ILog
   {
-    private readonly TraceSource _traceSource;
+    private readonly log4net.ILog _logger;
 
-    public Logger(TraceSource traceSource)
+    public Logger(log4net.ILog logger)
     {
-      Verify.NotNull(traceSource);
+      Verify.NotNull(logger);
 
-      _traceSource = traceSource;
+      _logger = logger;
     }
 
     public void Fatal(String message)
     {
-      Trace(TraceEventType.Critical, message, null);
+      _logger.Fatal(message);
     }
 
     public void Fatal(String message, Exception ex)
     {
-      Trace(TraceEventType.Critical, message, ex);
+      _logger.Fatal(message, ex);
     }
 
     public void FatalFormat(String format, params Object[] args)
     {
-      TraceFormat(TraceEventType.Critical, format, args);
+      _logger.FatalFormat(format, args);
     }
 
     public void Error(String message)
     {
-      Trace(TraceEventType.Error, message, null);
+      _logger.Error(message);
     }
 
     public void Error(String message, Exception ex)
     {
-      Trace(TraceEventType.Error, message, ex);
+      _logger.Error(message, ex);
     }
 
     public void ErrorFormat(String format, params Object[] args)
     {
-      TraceFormat(TraceEventType.Error, format, args);
+      _logger.ErrorFormat(format, args);
     }
 
     public void Warn(String message)
     {
-      Trace(TraceEventType.Warning, message, null);
+      _logger.Warn(message);
     }
 
     public void Warn(String message, Exception ex)
     {
-      Trace(TraceEventType.Warning, message, ex);
+      _logger.Warn(message, ex);
     }
 
     public void WarnFormat(String format, params Object[] args)
     {
-      TraceFormat(TraceEventType.Warning, format, args);
+      _logger.WarnFormat(format, args);
     }
 
     public void Info(String message)
     {
-      Trace(TraceEventType.Information, message, null);
-    }
-
-    public void Info(String message, Exception ex)
-    {
-      Trace(TraceEventType.Information, message, ex);
+      _logger.Info(message);
     }
 
     public void InfoFormat(String format, params Object[] args)
     {
-      TraceFormat(TraceEventType.Information, format, args);
+      _logger.InfoFormat(format, args);
     }
 
     public void Debug(String message)
     {
-      Trace(TraceEventType.Verbose, message, null);
-    }
-
-    public void Debug(String message, Exception ex)
-    {
-      Trace(TraceEventType.Verbose, message, ex);
+      _logger.Debug(message);
     }
 
     public void DebugFormat(String format, params Object[] args)
     {
-      TraceFormat(TraceEventType.Verbose, format, args);
-    }
-
-    private void Trace(TraceEventType eventType, String message, Exception ex)
-    {
-      if (!_traceSource.Switch.ShouldTrace(eventType))
-        return;
-
-      String trimmedMessage = (message ?? String.Empty).Trim();
-      if (ex != null)
-        trimmedMessage += Environment.NewLine + ex;
-
-      _traceSource.TraceEvent(eventType, 0, trimmedMessage);
-    }
-
-    private void TraceFormat(TraceEventType eventType, String message, params Object[] args)
-    {
-      if (!_traceSource.Switch.ShouldTrace(eventType))
-        return;
-
-      _traceSource.TraceEvent(eventType, 0, String.Format(message, args));
+      _logger.DebugFormat(format, args);
     }
   }
 }

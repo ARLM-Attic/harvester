@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 using Harvester.Core;
-using Harvester.Core.Logging;
+using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -25,14 +24,18 @@ namespace Harvester
 {
   static class Program
   {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     public static void Main(String[] args)
     {
       Boolean onlyInstance;
 
+      Thread.CurrentThread.Name = "Main";
+
       using (new Mutex(true, "Harvester", out onlyInstance))
       {
         if (onlyInstance)
-          StartApplication(args);
+          StartApplication();
         else
           ExitApplication();
       }
@@ -40,25 +43,26 @@ namespace Harvester
 
     private static void ExitApplication()
     {
+      Log.Warn("Harvester session already active.");
+
       Console.WriteLine(Localization.DebuggerAlreadyActive);
       Console.ReadKey();
     }
 
-    private static void StartApplication(String[] args)
+    private static void StartApplication()
     {
+      Log.Info("Opening Harvester session.");
+
       try
       {
-        Thread.CurrentThread.Name = "Main";
-        LogManager.Initialize(ConfigureLogLevel(args));
-
-        LogEnvironment(LogManager.CreateClassLogger());
+        LogEnvironmentInformation();
 
         using (new WindowsMonitor(new ConsoleRenderer()))
           new ManualResetEvent(false).WaitOne();
       }
       catch (Exception ex)
       {
-        LogManager.CreateClassLogger().Fatal(ex.Message, ex);
+        Log.Fatal(ex);
 
         Console.BackgroundColor = ConsoleColor.Red;
         Console.ForegroundColor = ConsoleColor.White;
@@ -66,12 +70,12 @@ namespace Harvester
       }
     }
 
-    public static void LogEnvironment(ILog log)
+    public static void LogEnvironmentInformation()
     {
       var startupInfo = new StringBuilder();
 
-      AppDomain.CurrentDomain.AssemblyLoad += (sender, e) => log.Info("Assembly Loaded: " + e.LoadedAssembly.GetName().FullName);
-      AppDomain.CurrentDomain.UnhandledException += (sender, e) => log.Fatal(e.ExceptionObject.ToString());
+      AppDomain.CurrentDomain.AssemblyLoad += (sender, e) => Log.Info("Assembly Loaded: " + e.LoadedAssembly.GetName().FullName);
+      AppDomain.CurrentDomain.UnhandledException += (sender, e) => Log.Fatal(e.ExceptionObject.ToString());
 
       startupInfo.AppendLine("Harvester (Console) v" + Assembly.GetExecutingAssembly().GetName().Version);
       startupInfo.AppendLine("OS Version:\t\t" + Environment.OSVersion);
@@ -81,14 +85,7 @@ namespace Harvester
       foreach (var loadedAssemblyName in AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetName().FullName).OrderBy(name => name.ToLowerInvariant()))
         startupInfo.AppendLine('-' + loadedAssemblyName);
 
-      log.Info(startupInfo.ToString());
-    }
-
-    private static SourceLevels ConfigureLogLevel(String[] args)
-    {
-      return args != null && args.Length > 0 && String.Compare("-trace", args[0], StringComparison.OrdinalIgnoreCase) == 0
-               ? SourceLevels.All
-               : SourceLevels.Information;
+      Log.Info(startupInfo.ToString());
     }
   }
 }

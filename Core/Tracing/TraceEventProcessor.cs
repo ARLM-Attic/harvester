@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Harvester.Core.Messages;
+using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -22,6 +23,7 @@ namespace Harvester.Core.Tracing
 {
   internal class TraceEventProcessor : ITraceEventProcessor
   {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly IBlockingQueue<TraceEvent> _traceEvents;
     private readonly ILogMessageFactory _logMessageFactory;
     private readonly Thread _processingThread;
@@ -45,6 +47,8 @@ namespace Harvester.Core.Tracing
 
     public void Dispose()
     {
+      Log.Debug("Disposing Processor");
+
       _traceEvents.Dispose();
 
       if (_processingThread.IsAlive)
@@ -53,6 +57,8 @@ namespace Harvester.Core.Tracing
 
     public void ProcessEvent(TraceEvent traceEvent)
     {
+      Log.Debug("Enqueing TraceEvent.");
+
       _traceEvents.Enqueue(traceEvent);
     }
 
@@ -62,6 +68,8 @@ namespace Harvester.Core.Tracing
 
       while(_traceEvents.TryDequeueAll(out events))
       {
+        Log.Debug("Processing queued trace events.");
+
         var defensiveCopy = TraceEventsProcessed;
         if(defensiveCopy != null)
           defensiveCopy.Invoke(this, CreateEventArgs(events));

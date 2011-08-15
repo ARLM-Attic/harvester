@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml;
-using Harvester.Core.Logging;
+using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -20,7 +20,7 @@ namespace Harvester.Core.Messages.Parsers
 {
   public class Log4NetMessageParserFactory : XmlMessageParserFactoryBase
   {
-    private static readonly ILog Log = LogManager.CreateClassLogger();
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public Log4NetMessageParserFactory()
       : base(GetXmlNamespaceManager())

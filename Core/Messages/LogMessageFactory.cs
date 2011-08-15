@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using Harvester.Core.Logging;
 using Harvester.Core.Messages.Parsers;
 using Harvester.Core.Processes;
 using Harvester.Core.Tracing;
+using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -23,7 +23,7 @@ namespace Harvester.Core.Messages
 {
   public class LogMessageFactory : ILogMessageFactory
   {
-    private static readonly ILog Log = LogManager.CreateClassLogger();
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly IMessageParserFactory[] _messageParserFactories;
     private readonly IProcessRetriever _processRetriever;
 

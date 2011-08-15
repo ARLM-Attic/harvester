@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Harvester.Core.Logging;
+using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -20,7 +20,7 @@ namespace Harvester.Core.Messages.Parsers
 {
   public class DefaultMessageParser : IMessageParser
   {
-    private static readonly ILog Log = LogManager.CreateClassLogger();
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly static IEnumerable<Attribute> EmptyAttributes = new List<Attribute>().AsReadOnly();
 
     private readonly String _message;

@@ -1,13 +1,12 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using Harvester.Core;
 using Harvester.Windows.Forms;
-using Harvester.Core.Logging;
-using System.Threading;
+using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -27,15 +26,19 @@ namespace Harvester.Windows
 {
   static class Program
   {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     [STAThread]
     static void Main(String[] args)
     {
       Boolean onlyInstance;
 
+      Thread.CurrentThread.Name = "Main";
+
       using (new Mutex(true, "Harvester", out onlyInstance))
       {
         if (onlyInstance)
-          StartApplication(args);
+          StartApplication();
         else
           ExitApplication();
       }
@@ -43,17 +46,18 @@ namespace Harvester.Windows
 
     private static void ExitApplication()
     {
+      Log.Warn("Harvester session already active.");
+
       MessageBox.Show(Localization.DebuggerAlreadyActive, Application.ProductName);
       Application.Exit();
     }
 
-    private static void StartApplication(String[] args)
+    private static void StartApplication()
     {
+      Log.Info("Opening Harvester session.");
+
       try
       {
-        Thread.CurrentThread.Name = "Main";
-        LogManager.Initialize(ConfigureLogLevel(args));
-
         LogEnvironmentInformation();
 
         Application.EnableVisualStyles();
@@ -62,24 +66,18 @@ namespace Harvester.Windows
       }
       catch (Exception ex)
       {
-        LogManager.CreateClassLogger().Fatal(ex.Message, ex);
+        Log.Fatal(ex);
+
         MessageBox.Show(ex.Message, Application.ProductName);
       }
     }
-
-    private static SourceLevels ConfigureLogLevel(String[] args)
-    {
-      return args != null && args.Length > 0 && String.Compare("-trace", args[0], StringComparison.OrdinalIgnoreCase) == 0
-               ? SourceLevels.All
-               : SourceLevels.Information;
-    }
-
+    
     private static void LogEnvironmentInformation()
     {
-      var log = LogManager.CreateClassLogger();
       var startupInfo = new StringBuilder();
 
-      AppDomain.CurrentDomain.AssemblyLoad += (sender, e) => log.Info("Assembly Loaded: " + e.LoadedAssembly.GetName().FullName);
+      AppDomain.CurrentDomain.AssemblyLoad += (sender, e) => Log.Info("Assembly Loaded: " + e.LoadedAssembly.GetName().FullName);
+      AppDomain.CurrentDomain.UnhandledException += (sender, e) => Log.Fatal(e.ExceptionObject);
 
       startupInfo.AppendLine("Application Start");
       startupInfo.AppendLine("************************************************************************************************************************");
@@ -103,7 +101,7 @@ namespace Harvester.Windows
 
       startupInfo.Append("************************************************************************************************************************");
 
-      log.Info(startupInfo.ToString());
+      Log.Info(startupInfo.ToString());
     }
   }
 }

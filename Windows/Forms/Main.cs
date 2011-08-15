@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Harvester.Core;
-using Harvester.Core.Logging;
 using Harvester.Core.Messages;
 using Harvester.Windows.Extensions;
 using Harvester.Windows.Properties;
+using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -26,11 +26,9 @@ using Harvester.Windows.Properties;
 
 namespace Harvester.Windows.Forms
 {
-
-
   public partial class Main : FormBase, ILogMessageRenderer
   {
-    private static readonly ILog Log = LogManager.CreateClassLogger();
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly WindowsMonitor _windowsMonitor;
 
     public Main()
@@ -334,8 +332,7 @@ namespace Harvester.Windows.Forms
     {
       var expectedAccelerator = keyData == keys;
 
-
-      Log.InfoFormat("{0} == {1}", keyData, keys);
+      Log.Info("{0} == {1}", keyData, keys);
 
       if (expectedAccelerator)
         button.PerformClick();

@@ -61,8 +61,10 @@
 
   <Target Name="PackageConsole">
     <ItemGroup>
+      <ConsoleFiles Include="Console\bin\$(Configuration)\NLog.dll" />
       <ConsoleFiles Include="Console\bin\$(Configuration)\Harvester.Core.dll" />
       <ConsoleFiles Include="Console\bin\$(Configuration)\Harvester.Console.exe" />
+      <ConsoleFiles Include="Console\bin\$(Configuration)\Harvester.Console.exe.config" />
     </ItemGroup>
     
     <Zip Files="@(ConsoleFiles)" WorkingDirectory="Console\bin\$(Configuration)" ZipFileName="$(BuildOutputDir)\Harvester.Console.zip" />
@@ -70,8 +72,10 @@
   
   <Target Name="PackageWindows">
     <ItemGroup>
+      <WindowsFiles Include="Windows\bin\$(Configuration)\NLog.dll" />
       <WindowsFiles Include="Windows\bin\$(Configuration)\Harvester.Core.dll" />
       <WindowsFiles Include="Windows\bin\$(Configuration)\Harvester.exe" />
+      <WindowsFiles Include="Windows\bin\$(Configuration)\Harvester.exe.config" />
     </ItemGroup>
 
     <Zip Files="@(WindowsFiles)" WorkingDirectory="Windows\bin\$(Configuration)" ZipFileName="$(BuildOutputDir)\Harvester.zip" />

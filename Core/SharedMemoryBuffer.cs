@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO.MemoryMappedFiles;
 using System.Threading;
+using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -20,6 +21,7 @@ namespace Harvester.Core
 {
   internal sealed class SharedMemoryBuffer : IBuffer
   {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly Mutex _writeMutex;
     private readonly MemoryMappedFile _bufferFile;
     private readonly EventWaitHandle _dataReadyEvent;
@@ -44,6 +46,8 @@ namespace Harvester.Core
 
     public void Dispose()
     {
+      Log.Debug("Disposing buffer.");
+
       lock (_buffer)
       {
         if (Disposed)
@@ -65,12 +69,18 @@ namespace Harvester.Core
     {
       EnsureNotDisposed();
 
+      Log.Debug("Waiting for data ready event.");
+
       _dataReadyEvent.WaitOne();
+
+      Log.Debug("Data ready event received.");
 
       var bytesRead = _bufferView.ReadArray(0, _buffer, 0, _buffer.Length);
       var result = new Byte[bytesRead];
 
       Buffer.BlockCopy(_buffer, 0, result, 0, bytesRead);
+
+      Log.Debug("Setting buffer ready event.");
 
       _bufferReadyEvent.Set();
 
@@ -84,17 +94,25 @@ namespace Harvester.Core
       if (buffer == null || buffer.Length == 0)
         return;
 
+      Log.Debug("Waiting for buffer mutex.");
+
       _writeMutex.WaitOne();
       try
       {
+        Log.Debug("Waiting for buffer ready event.");
+
         _bufferReadyEvent.WaitOne();
 
         _bufferView.WriteArray(0, buffer, 0, Math.Min(buffer.Length, _buffer.Length));
+
+        Log.Debug("Setting data ready event.");
 
         _dataReadyEvent.Set();
       }
       finally
       {
+        Log.Debug("Releasing buffer mutex.");
+
         _writeMutex.ReleaseMutex();
       }
     }

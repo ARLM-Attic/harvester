@@ -1,5 +1,5 @@
 ﻿using System;
-using Harvester.Core.Logging;
+using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -19,7 +19,7 @@ namespace Harvester.Core.Processes
 {
   public class UnknownProcess : IProcess
   {
-    private static readonly ILog Log = LogManager.CreateClassLogger();
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly Int32 _processId;
     private readonly DateTime _exitTime;
     
@@ -30,7 +30,7 @@ namespace Harvester.Core.Processes
 
     public UnknownProcess(Int32 processId)
     {
-      Log.DebugFormat("Creating process wrapper: {0}.", processId);
+      Log.Debug("Creating process wrapper: {0}.", processId);
 
       Verify.GreaterThanZero(processId);
 

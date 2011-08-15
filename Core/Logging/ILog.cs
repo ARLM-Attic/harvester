@@ -31,11 +31,9 @@ namespace Harvester.Core.Logging
     void WarnFormat(String format, params Object[] args);
 
     void Info(String message);
-    void Info(String message, Exception ex);
     void InfoFormat(String format, params Object[] args);
 
     void Debug(String message);
-    void Debug(String message, Exception ex);
     void DebugFormat(String format, params Object[] args);
   }
 }

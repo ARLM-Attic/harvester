@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Harvester.Core.Logging;
+using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -21,12 +21,12 @@ namespace Harvester.Core.Processes
 {
   public class ProcessRetriever : IProcessRetriever
   {
-    private static readonly ILog Log = LogManager.CreateClassLogger();
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly IDictionary<Int32, IProcess> _processCache = new Dictionary<Int32, IProcess>();
 
     public IProcess GetProcessById(Int32 processId)
     {
-      Log.DebugFormat("Atempting to get process by id: {0}.", processId);
+      Log.Debug("Atempting to get process by id: {0}.", processId);
 
       Verify.GreaterThanZero(processId);
 
@@ -46,7 +46,8 @@ namespace Harvester.Core.Processes
         catch (Exception ex)
         {
           _processCache.Remove(processId);
-          Log.Warn(ex.Message, ex);
+
+          Log.Warn(ex);
         }
 
         return process ?? new UnknownProcess(processId);
