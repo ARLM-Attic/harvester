@@ -66,7 +66,7 @@ namespace Harvester.Core
       if (!principal.IsInRole(WindowsBuiltInRole.Administrator))
         return new NullListener();
 
-      var listener = new OutputDebugStringListener("Local.OutputDebugString", "DBWinMutex", "Local\\DBWIN");
+      var listener = new OutputDebugStringListener("Local.OutputDebugString", "DBWinMutex", "Global\\DBWIN");
       
       listener.TraceEventReceived += HandleTraceEventReceived;
 
