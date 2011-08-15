@@ -24,34 +24,37 @@ namespace Harvester.Core.Tracing
     private readonly IBuffer _sharedMemoryBuffer;
     private readonly Thread _listenerThread;
     private readonly String _listenerName;
+    private readonly Mutex _mutex;
 
     public event EventHandler<TraceEventArgs> TraceEventReceived;
     public String Name { get { return _listenerName; } }
     private Boolean Disposed { get; set; }
 
     public OutputDebugStringListener(String friendlyName, String mutexName, String baseObjectName)
-      : this(friendlyName, baseObjectName, new SharedMemoryBuffer(mutexName, baseObjectName, 4096))
+      : this(friendlyName, mutexName, new SharedMemoryBuffer(baseObjectName, 4096))
     { }
 
-    internal OutputDebugStringListener(String friendlyName, String baseObjectName, IBuffer sharedMemoryBuffer)
+    internal OutputDebugStringListener(String friendlyName, String mutexName, IBuffer sharedMemoryBuffer)
     {
       Verify.NotNull(sharedMemoryBuffer);
       Verify.NotWhitespace(friendlyName);
-      Verify.NotWhitespace(baseObjectName);
+      Verify.NotWhitespace(mutexName);
 
       _listenerName = friendlyName;
+      _mutex = new Mutex(false, mutexName);
       _sharedMemoryBuffer = sharedMemoryBuffer;
-      _listenerThread = new Thread(ReadBufferData) { Name = baseObjectName + " Listener", Priority = ThreadPriority.Highest, IsBackground = true };
+      _listenerThread = new Thread(ReadBufferData) { Name = sharedMemoryBuffer.Name + " Listener", Priority = ThreadPriority.Highest, IsBackground = true };
       _listenerThread.Start();
     }
 
     public void Dispose()
     {
-      Log.Debug("Disposing Listener");
+      Log.Debug("Disposing Monitor");
 
       Disposed = true;
 
       _sharedMemoryBuffer.Dispose();
+      _mutex.Dispose();
 
       if (_listenerThread.IsAlive)
         _listenerThread.Join();
@@ -68,7 +71,7 @@ namespace Harvester.Core.Tracing
           var data = _sharedMemoryBuffer.Read();
           var debugString = new OutputDebugString(data);
 
-          if (String.IsNullOrEmpty(debugString.Message))
+          if (String.IsNullOrWhiteSpace(debugString.Message))
             continue;
 
           Log.Debug("Trace event rececived.");

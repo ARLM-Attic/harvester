@@ -90,6 +90,7 @@
     <Compile Include="Tracing\ITraceListener.cs" />
     <Compile Include="Tracing\OutputDebugString.cs" />
     <Compile Include="Tracing\OutputDebugStringListener.cs" />
+    <Compile Include="Tracing\OutputDebugStringWriter.cs" />
     <Compile Include="Tracing\TraceEvent.cs" />
     <Compile Include="Tracing\TraceEventArgs.cs" />
     <Compile Include="Localization.Designer.cs">

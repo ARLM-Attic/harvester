@@ -24,7 +24,6 @@ namespace Harvester.Core
     private readonly ITraceListener _dbWinLocal;
     private readonly ITraceListener _dbWinGlobal;
     private readonly ITraceListener _harvesterLocal;
-    private readonly ITraceListener _harvesterGlobal;
     private readonly ITraceEventProcessor _traceEventProcessor;
 
     public WindowsMonitor(ILogMessageRenderer renderer)
@@ -36,10 +35,8 @@ namespace Harvester.Core
       _traceEventProcessor.TraceEventsProcessed += (sender, e) => renderer.Render(e.LogMessages);
 
       _dbWinLocal = GetLocalDbWinListener();
-      _harvesterLocal = GetLocalHarvesterListener();
-
       _dbWinGlobal = GetGlobalDbWinListener(principal);
-      _harvesterGlobal = GetGlobalHarvesterListener(principal);
+      _harvesterLocal = GetLocalHarvesterListener();
     }
 
     public void Dispose()
@@ -47,7 +44,6 @@ namespace Harvester.Core
       _dbWinLocal.Dispose();
       _harvesterLocal.Dispose();
       _dbWinGlobal.Dispose();
-      _harvesterGlobal.Dispose();
 
       _traceEventProcessor.Dispose();
     }
@@ -75,12 +71,11 @@ namespace Harvester.Core
 
     private ITraceListener GetLocalHarvesterListener()
     {
-      return new NullListener();
-    }
+      var listener = new OutputDebugStringListener("Local.HarvesterString", "HarvestDBWinMutex", "Local\\HRVST_DBWIN");
 
-    private ITraceListener GetGlobalHarvesterListener(WindowsPrincipal principal)
-    {
-      return new NullListener();
+      listener.TraceEventReceived += HandleTraceEventReceived;
+
+      return listener;
     }
 
     private void HandleTraceEventReceived(Object sender, TraceEventArgs e)

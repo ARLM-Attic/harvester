@@ -24,26 +24,27 @@ namespace Harvester.Core
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(10);
 
-    private readonly Mutex _writeMutex;
     private readonly MemoryMappedFile _bufferFile;
     private readonly EventWaitHandle _dataReadyEvent;
     private readonly EventWaitHandle _bufferReadyEvent;
     private readonly MemoryMappedViewAccessor _bufferView;
     private readonly Byte[] _buffer;
+    private readonly String _name;
 
+    public String Name { get { return _name; } }
     private Boolean Disposed { get; set; }
 
-    public SharedMemoryBuffer(String mutexName, String baseObjectName, Int64 capacity)
+    public SharedMemoryBuffer(String baseObjectName, Int64 capacity)
     {
       Verify.NotWhitespace(baseObjectName);
       Verify.GreaterThanZero(capacity);
 
+      _name = baseObjectName;
       _buffer = new Byte[capacity];
-      _writeMutex = new Mutex(false, mutexName);
       _dataReadyEvent = new EventWaitHandle(false, EventResetMode.AutoReset, baseObjectName + "_DATA_READY");
       _bufferReadyEvent = new EventWaitHandle(true, EventResetMode.AutoReset, baseObjectName + "_BUFFER_READY");
       _bufferFile = MemoryMappedFile.CreateOrOpen(baseObjectName + "_BUFFER", capacity, MemoryMappedFileAccess.ReadWrite);
-      _bufferView = _bufferFile.CreateViewAccessor(0, 0, MemoryMappedFileAccess.ReadWrite);   
+      _bufferView = _bufferFile.CreateViewAccessor(0, 0, MemoryMappedFileAccess.ReadWrite);
     }
 
     public void Dispose()
@@ -64,7 +65,6 @@ namespace Harvester.Core
       _dataReadyEvent.Dispose();
       _bufferView.Dispose();
       _bufferFile.Dispose();
-      _writeMutex.Dispose();
     }
 
     public Byte[] Read()
@@ -96,32 +96,20 @@ namespace Harvester.Core
       if (buffer == null || buffer.Length == 0)
         return false;
 
-      Log.Debug("Waiting for buffer mutex.");
+      Log.Debug("Waiting for buffer ready event.");
 
-      _writeMutex.WaitOne();
-      try
-      {
-        Log.Debug("Waiting for buffer ready event.");
+      if (!_bufferReadyEvent.WaitOne(Timeout))
+        return false;
 
-        if (!_bufferReadyEvent.WaitOne(Timeout))
-          return false;
+      Log.Debug("Buffer ready event received.");
 
-        Log.Debug("Buffer ready event received.");
+      _bufferView.WriteArray(0, buffer, 0, Math.Min(buffer.Length, _buffer.Length));
 
-        _bufferView.WriteArray(0, buffer, 0, Math.Min(buffer.Length, _buffer.Length));
+      Log.Debug("Setting data ready event.");
 
-        Log.Debug("Setting data ready event.");
+      _dataReadyEvent.Set();
 
-        _dataReadyEvent.Set();
-
-        return true;
-      }
-      finally
-      {
-        Log.Debug("Releasing buffer mutex.");
-
-        _writeMutex.ReleaseMutex();
-      }
+      return true;
     }
 
     private void EnsureNotDisposed()

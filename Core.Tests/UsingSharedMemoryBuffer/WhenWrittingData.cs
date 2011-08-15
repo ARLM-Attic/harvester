@@ -28,11 +28,10 @@ namespace Harvester.Core.Tests.UsingSharedMemoryBuffer
     public WhenWrittingData()
     {
       var guid = Guid.NewGuid();
-      var mutexName = String.Format(@"HRVSTR_{0}_MUTEXT", guid);
       var bufferName = String.Format(@"Local\HRVSTR_{0}", guid);
 
       _randomizer = new Random(1);
-      _buffer = new SharedMemoryBuffer(mutexName, bufferName, 1024);
+      _buffer = new SharedMemoryBuffer(bufferName, 1024);
     }
 
     public void Dispose()

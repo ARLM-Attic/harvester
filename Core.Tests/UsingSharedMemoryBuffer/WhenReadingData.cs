@@ -29,10 +29,9 @@ namespace Harvester.Core.Tests.UsingSharedMemoryBuffer
     public WhenReadingData()
     {
       var guid = Guid.NewGuid();
-      var mutexName = String.Format(@"HRVSTR_{0}_MUTEXT", guid);
       var bufferName = String.Format(@"Local\HRVSTR_{0}", guid);
 
-      _buffer = new SharedMemoryBuffer(mutexName, bufferName, 1024);
+      _buffer = new SharedMemoryBuffer(bufferName, 1024);
       _syncEvent1 = new ManualResetEvent(false);
       _syncEvent2 = new ManualResetEvent(false);
       _syncEvent3 = new ManualResetEvent(false);

@@ -41,6 +41,8 @@ namespace Harvester.Core.Tests.Tracing.UsingOutputDebugStringListener
       private Boolean _disposed;
       private Byte[] _buffer;
 
+      public String Name { get { return "Fake Buffer"; } }
+
       public void SignalDataReady(Byte[] data)
       {
         _buffer = data;
@@ -74,7 +76,7 @@ namespace Harvester.Core.Tests.Tracing.UsingOutputDebugStringListener
           return;
 
         SignalDataReady(new Byte[0]);
-        
+
         _bufferReadyEvent.Dispose();
         _dataReadyEvent.Dispose();
         _disposed = true;
