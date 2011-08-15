@@ -91,7 +91,7 @@ namespace Harvester.Core.Tests.UsingSharedMemoryBuffer
       _buffer.Write(null);
 
       // Second write typically not allowed without an intermediate read.
-      Assert.DoesNotThrow(() => _buffer.Write(null));
+      Assert.False(_buffer.Write(null));
     }
 
     [Fact]
@@ -100,7 +100,18 @@ namespace Harvester.Core.Tests.UsingSharedMemoryBuffer
       _buffer.Write(new Byte[0]);
 
       // Second write typically not allowed without an intermediate read.
-      Assert.DoesNotThrow(() => _buffer.Write(new Byte[0]));
+      Assert.False(_buffer.Write(new Byte[0]));
+    }
+
+    [Fact]
+    public void IgnoreIfBufferReadyEventNotReceived()
+    {
+      var data = Encoding.ASCII.GetBytes(_randomizer.NextString(32));
+
+      _buffer.Write(data);
+
+      // Second write typically not allowed without an intermediate read.
+      Assert.False(_buffer.Write(data));
     }
   }
 }

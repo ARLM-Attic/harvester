@@ -54,18 +54,16 @@ namespace Harvester.Core.Tests.Tracing.UsingOutputDebugStringListener
         _bufferReadyEvent.Reset();
       }
 
-      public byte[] Read()
+      public Byte[] Read()
       {
         _bufferReadyEvent.Set();
         _dataReadyEvent.WaitOne();
         _dataReadyEvent.Reset();
 
-
-
         return _buffer;
       }
 
-      public void Write(byte[] buffer)
+      public Boolean Write(Byte[] buffer)
       {
         throw new NotImplementedException();
       }

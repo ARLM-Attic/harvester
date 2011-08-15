@@ -19,6 +19,6 @@ namespace Harvester.Core
   public interface IBuffer : IDisposable 
   {
     Byte[] Read();
-    void Write(Byte[] buffer);
+    Boolean Write(Byte[] buffer);
   }
 }

@@ -22,6 +22,8 @@ namespace Harvester.Core
   internal sealed class SharedMemoryBuffer : IBuffer
   {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(10);
+
     private readonly Mutex _writeMutex;
     private readonly MemoryMappedFile _bufferFile;
     private readonly EventWaitHandle _dataReadyEvent;
@@ -87,12 +89,12 @@ namespace Harvester.Core
       return result;
     }
 
-    public void Write(Byte[] buffer)
+    public Boolean Write(Byte[] buffer)
     {
       EnsureNotDisposed();
 
       if (buffer == null || buffer.Length == 0)
-        return;
+        return false;
 
       Log.Debug("Waiting for buffer mutex.");
 
@@ -101,13 +103,18 @@ namespace Harvester.Core
       {
         Log.Debug("Waiting for buffer ready event.");
 
-        _bufferReadyEvent.WaitOne();
+        if (!_bufferReadyEvent.WaitOne(Timeout))
+          return false;
+
+        Log.Debug("Buffer ready event received.");
 
         _bufferView.WriteArray(0, buffer, 0, Math.Min(buffer.Length, _buffer.Length));
 
         Log.Debug("Setting data ready event.");
 
         _dataReadyEvent.Set();
+
+        return true;
       }
       finally
       {
