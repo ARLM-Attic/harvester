@@ -1,5 +1,6 @@
 ﻿using System;
-using Moq;
+using System.Threading;
+using Harvester.Core.Threading;
 using Xunit;
 
 /* Copyright (c) 2011 CBaxter
@@ -16,34 +17,44 @@ using Xunit;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core.Tests.UsingBlockingQueue
+namespace Harvester.Core.Tests.Threading.UsingMonitorWrapper
 {
-  public class WhenEnqueingItem : BlockingQueueTestBase
+  public class WhenWaiting
   {
+    private readonly IMonitor _monitor = MonitorWrapper.Instance;
+
     [Fact]
-    public void PulseAllThreadsOnFirstItemAdded()
+    public void BlockUntilPulsed()
     {
-      var item = new Object();
+      var syncLock = new Object();
 
-      Monitor.Setup(mock => mock.PulseAll(It.IsAny<Object>()));
-      BlockingQueue.Enqueue(item);
-      Monitor.Verify(mock => mock.PulseAll(It.IsAny<Object>()), Times.Once());
+      lock (syncLock)
+      {
+        ThreadPool.QueueUserWorkItem(state =>
+                                       {
+                                         lock (syncLock)
+                                           Monitor.PulseAll(syncLock);
+                                       });
 
-      Assert.Equal(1, UnderlyingQueue.Count);
+        Assert.True(_monitor.Wait(syncLock, 100));
+      }
     }
 
     [Fact]
-    public void DoNotPulseAllThreadsOnSubsequentItemsAdded()
+    public void ReturnFalseIfTimeoutExceeded()
     {
-      var item1 = new Object();
-      var item2 = new Object();
+      var syncLock = new Object();
 
-      Monitor.Setup(mock => mock.PulseAll(It.IsAny<Object>()));
-      BlockingQueue.Enqueue(item1);
-      BlockingQueue.Enqueue(item2);
-      Monitor.Verify(mock => mock.PulseAll(It.IsAny<Object>()), Times.Once());
+      lock (syncLock)
+      {
+        ThreadPool.QueueUserWorkItem(state =>
+                                       {
+                                         lock (syncLock)
+                                           Thread.Sleep(250);
+                                       });
 
-      Assert.Equal(2, UnderlyingQueue.Count);
+        Assert.False(_monitor.Wait(syncLock, 100));
+      }
     }
   }
 }

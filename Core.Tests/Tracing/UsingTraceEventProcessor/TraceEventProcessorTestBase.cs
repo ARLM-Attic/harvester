@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Harvester.Core.Messages;
+using Harvester.Core.Threading;
 using Harvester.Core.Tracing;
 
 /* Copyright (c) 2011 CBaxter

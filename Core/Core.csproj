@@ -49,10 +49,8 @@
     <Compile Include="..\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="BlockingQueue.cs" />
     <Compile Include="IBuffer.cs" />
     <Compile Include="Extensions\RandomExtensions.cs" />
-    <Compile Include="IBlockingQueue.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="Logging\NullLogger.cs" />
@@ -83,8 +81,10 @@
     <Compile Include="Processes\ProcessRetriever.cs" />
     <Compile Include="Processes\ProcessWrapper.cs" />
     <Compile Include="Processes\UnknownProcess.cs" />
-    <Compile Include="IMonitor.cs" />
-    <Compile Include="MonitorWrapper.cs" />
+    <Compile Include="Threading\BlockingQueue.cs" />
+    <Compile Include="Threading\IBlockingQueue.cs" />
+    <Compile Include="Threading\IMonitor.cs" />
+    <Compile Include="Threading\MonitorWrapper.cs" />
     <Compile Include="Tracing\ITraceEventProcessor.cs" />
     <Compile Include="Tracing\NullListener.cs" />
     <Compile Include="Tracing\ITraceListener.cs" />

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using Harvester.Core.Logging;
 using Harvester.Core.Messages;
+using Harvester.Core.Threading;
 
 /* Copyright (c) 2011 CBaxter
  * 

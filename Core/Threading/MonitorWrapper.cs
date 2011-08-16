@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -16,44 +15,30 @@ using Xunit;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core.Tests.UsingMonitorWrapper
+namespace Harvester.Core.Threading
 {
-  public class WhenWaiting
+  internal class MonitorWrapper : IMonitor
   {
-    private readonly IMonitor _monitor = MonitorWrapper.Instance;
+    #region Singleton
 
-    [Fact]
-    public void BlockUntilPulsed()
+    public static readonly IMonitor Instance;
+
+    private MonitorWrapper() { }
+    static MonitorWrapper()
     {
-      var syncLock = new Object();
-
-      lock (syncLock)
-      {
-        ThreadPool.QueueUserWorkItem(state =>
-                                       {
-                                         lock (syncLock)
-                                           Monitor.PulseAll(syncLock);
-                                       });
-
-        Assert.True(_monitor.Wait(syncLock, 100));
-      }
+      Instance = new MonitorWrapper();
     }
 
-    [Fact]
-    public void ReturnFalseIfTimeoutExceeded()
+    #endregion
+
+    public void PulseAll(Object obj)
     {
-      var syncLock = new Object();
+      Monitor.PulseAll(obj);
+    }
 
-      lock (syncLock)
-      {
-        ThreadPool.QueueUserWorkItem(state =>
-                                       {
-                                         lock (syncLock)
-                                           Thread.Sleep(250);
-                                       });
-
-        Assert.False(_monitor.Wait(syncLock, 100));
-      }
+    public Boolean Wait(Object obj, Int32 millisecondTimeout)
+    {
+      return Monitor.Wait(obj, millisecondTimeout);
     }
   }
 }

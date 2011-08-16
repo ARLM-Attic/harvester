@@ -26,12 +26,11 @@ namespace Harvester
   {
     public static void Main(String[] args)
     {
-      Boolean onlyInstance;
-
       Thread.CurrentThread.Name = "Main";
       LogManager.EnableLogging(name => new LoggerWrapper(NLog.LogManager.GetLogger(name)));
       ILog log = LogManager.GetCurrentClassLogger();
 
+      Boolean onlyInstance;
       using (new Mutex(true, "Harvester", out onlyInstance))
       {
         if (onlyInstance)

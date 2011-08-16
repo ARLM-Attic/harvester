@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Threading;
+using System.Collections.Generic;
+using Harvester.Core.Threading;
+using Moq;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -15,30 +17,17 @@ using System.Threading;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core
+namespace Harvester.Core.Tests.Threading.UsingBlockingQueue
 {
-  internal class MonitorWrapper : IMonitor
+  public abstract class BlockingQueueTestBase
   {
-    #region Singleton
+    protected readonly Queue<Object> UnderlyingQueue = new Queue<Object>();
+    protected readonly Mock<IMonitor> Monitor = new Mock<IMonitor>();
+    protected readonly IBlockingQueue<Object> BlockingQueue;
 
-    public static readonly IMonitor Instance;
-
-    private MonitorWrapper() { }
-    static MonitorWrapper()
+    protected BlockingQueueTestBase()
     {
-      Instance = new MonitorWrapper();
-    }
-
-    #endregion
-
-    public void PulseAll(Object obj)
-    {
-      Monitor.PulseAll(obj);
-    }
-
-    public Boolean Wait(Object obj, Int32 millisecondTimeout)
-    {
-      return Monitor.Wait(obj, millisecondTimeout);
+      BlockingQueue = new BlockingQueue<object>(UnderlyingQueue, Monitor.Object);
     }
   }
 }

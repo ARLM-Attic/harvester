@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using Moq;
 using Xunit;
@@ -18,41 +17,32 @@ using Xunit;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core.Tests.UsingBlockingQueue
+namespace Harvester.Core.Tests.Threading.UsingBlockingQueue
 {
-  public class WhenDequeingAllItems : BlockingQueueTestBase
+  public class WhenDequeingItem : BlockingQueueTestBase
   {
     [Fact]
-    public void ReturnItemIfItemDequeueAlldWithInifinitTimeout()
+    public void ReturnItemIfItemDequeuedWithInifinitTimeout()
     {
       UnderlyingQueue.Enqueue(String.Empty);
 
-      IList<Object> list = BlockingQueue.DequeueAll();
-
-      Assert.Equal(1, list.Count);
-      Assert.Equal(String.Empty, list[0]);
+      Assert.Same(String.Empty, BlockingQueue.Dequeue());
     }
 
     [Fact]
-    public void ReturnItemIfItemDequeueAlldWithTimespanTimeout()
+    public void ReturnItemIfItemDequeuedWithTimespanTimeout()
     {
       UnderlyingQueue.Enqueue(String.Empty);
 
-      IList<Object> list = BlockingQueue.DequeueAll(TimeSpan.FromMilliseconds(10));
-
-      Assert.Equal(1, list.Count);
-      Assert.Equal(String.Empty, list[0]);
+      Assert.Same(String.Empty, BlockingQueue.Dequeue(TimeSpan.FromMilliseconds(10)));
     }
 
     [Fact]
-    public void ReturnItemIfItemDequeueAlldWithMsTimeout()
+    public void ReturnItemIfItemDequeuedWithinMsTimeout()
     {
       UnderlyingQueue.Enqueue(String.Empty);
 
-      IList<Object> list = BlockingQueue.DequeueAll(Timeout.Infinite);
-
-      Assert.Equal(1, list.Count);
-      Assert.Equal(String.Empty, list[0]);
+      Assert.Same(String.Empty, BlockingQueue.Dequeue(Timeout.Infinite));
     }
 
     [Fact]
@@ -62,7 +52,7 @@ namespace Harvester.Core.Tests.UsingBlockingQueue
       UnderlyingQueue.Enqueue(String.Empty);
       BlockingQueue.Dispose();
 
-      Assert.Throws<ObjectDisposedException>(() => BlockingQueue.DequeueAll(Timeout.Infinite));
+      Assert.Throws<ObjectDisposedException>(() => BlockingQueue.Dequeue(Timeout.Infinite));
     }
 
     [Fact]
@@ -70,10 +60,7 @@ namespace Harvester.Core.Tests.UsingBlockingQueue
     {
       Monitor.Setup(mock => mock.Wait(It.IsAny<Object>(), Timeout.Infinite)).Returns(false).Callback(() => UnderlyingQueue.Enqueue(String.Empty));
 
-      IList<Object> list = BlockingQueue.DequeueAll(Timeout.Infinite);
-
-      Assert.Equal(1, list.Count);
-      Assert.Equal(String.Empty, list[0]);
+      Assert.Equal(String.Empty, BlockingQueue.Dequeue(Timeout.Infinite));
     }
 
     [Fact]
@@ -82,7 +69,7 @@ namespace Harvester.Core.Tests.UsingBlockingQueue
       Monitor.Setup(mock => mock.PulseAll(It.IsAny<Object>()));
       Monitor.Setup(mock => mock.Wait(It.IsAny<Object>(), Timeout.Infinite)).Returns(false).Callback(() => BlockingQueue.Dispose());
 
-      Assert.Throws<ObjectDisposedException>(() => BlockingQueue.DequeueAll(Timeout.Infinite));
+      Assert.Throws<ObjectDisposedException>(() => BlockingQueue.Dequeue(Timeout.Infinite));
     }
   }
 }

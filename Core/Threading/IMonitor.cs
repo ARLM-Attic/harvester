@@ -1,5 +1,4 @@
 ﻿using System;
-using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -15,18 +14,12 @@ using Xunit;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core.Tests.UsingBlockingQueue
+namespace Harvester.Core.Threading
 {
-  public class WhenDisposing : BlockingQueueTestBase
+  public interface IMonitor
   {
-    [Fact]
-    public void IgnoreMultipleCalls()
-    {
-      var queue = new BlockingQueue<Object>();
+    void PulseAll(Object obj);
 
-      queue.Dispose();
-
-      Assert.DoesNotThrow(queue.Dispose);
-    }
+    Boolean Wait(Object obj, Int32 millisecondTimeout);
   }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Harvester.Core.Threading;
 using Xunit;
 
 /* Copyright (c) 2011 CBaxter
@@ -15,32 +16,18 @@ using Xunit;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core.Tests.UsingBlockingQueue
+namespace Harvester.Core.Tests.Threading.UsingBlockingQueue
 {
-  public class WhenCreatingNew : BlockingQueueTestBase
+  public class WhenDisposing : BlockingQueueTestBase
   {
     [Fact]
-    public void DefaultCtorCreatesEmptyQueue()
+    public void IgnoreMultipleCalls()
     {
       var queue = new BlockingQueue<Object>();
 
-      Assert.Equal(0, queue.Count);
-    }
+      queue.Dispose();
 
-    [Fact]
-    public void CapacityCtorCreatesEmptyQueue()
-    {
-      var queue = new BlockingQueue<Object>(10);
-
-      Assert.Equal(0, queue.Count);
-    }
-
-    [Fact]
-    public void CopyCtorCreatesPrePopulatedQueue()
-    {
-      var queue = new BlockingQueue<Object>(new[] { new Object() });
-
-      Assert.Equal(1, queue.Count);
+      Assert.DoesNotThrow(queue.Dispose);
     }
   }
 }

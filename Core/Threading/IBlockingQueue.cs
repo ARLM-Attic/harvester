@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Moq;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -16,17 +15,29 @@ using Moq;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core.Tests.UsingBlockingQueue
+namespace Harvester.Core.Threading
 {
-  public abstract class BlockingQueueTestBase
+  public interface IBlockingQueue<T> : IDisposable
   {
-    protected readonly Queue<Object> UnderlyingQueue = new Queue<Object>();
-    protected readonly Mock<IMonitor> Monitor = new Mock<IMonitor>();
-    protected readonly IBlockingQueue<Object> BlockingQueue;
+    Int32 Count { get; }
 
-    protected BlockingQueueTestBase()
-    {
-      BlockingQueue = new BlockingQueue<object>(UnderlyingQueue, Monitor.Object);
-    }
+    void Clear();
+    void Enqueue(T item);
+
+    T Dequeue();
+    T Dequeue(TimeSpan timeout);
+    T Dequeue(Int32 millisecondsTimeout);
+
+    IList<T> DequeueAll();
+    IList<T> DequeueAll(TimeSpan timeout);
+    IList<T> DequeueAll(Int32 millisecondsTimeout);
+
+    Boolean TryDequeue(out T result);
+    Boolean TryDequeue(TimeSpan timeout, out T result);
+    Boolean TryDequeue(Int32 millisecondsTimeout, out T result);
+
+    Boolean TryDequeueAll(out IList<T> result);
+    Boolean TryDequeueAll(TimeSpan timeout, out IList<T> result);
+    Boolean TryDequeueAll(Int32 millisecondsTimeout, out IList<T> result);
   }
 }

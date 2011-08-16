@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Moq;
 using Xunit;
@@ -17,59 +18,81 @@ using Xunit;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core.Tests.UsingBlockingQueue
+namespace Harvester.Core.Tests.Threading.UsingBlockingQueue
 {
-  public class WhenDequeingItem : BlockingQueueTestBase
+  public class WhenTryingToDequeueAllItems : BlockingQueueTestBase
   {
     [Fact]
-    public void ReturnItemIfItemDequeuedWithInifinitTimeout()
+    public void ReturnTrueIfItemDequeuedWithInifinitTimeout()
     {
+      IList<Object> items;
+
       UnderlyingQueue.Enqueue(String.Empty);
 
-      Assert.Same(String.Empty, BlockingQueue.Dequeue());
+      Assert.True(BlockingQueue.TryDequeueAll(out items));
+      Assert.Equal(1, items.Count);
+      Assert.Equal(String.Empty, items[0]);
     }
 
     [Fact]
-    public void ReturnItemIfItemDequeuedWithTimespanTimeout()
+    public void ReturnTrueIfItemDequeuedWithTimespanTimeout()
     {
+      IList<Object> items;
+
       UnderlyingQueue.Enqueue(String.Empty);
 
-      Assert.Same(String.Empty, BlockingQueue.Dequeue(TimeSpan.FromMilliseconds(10)));
+      Assert.True(BlockingQueue.TryDequeueAll(TimeSpan.FromMilliseconds(10), out items));
+      Assert.Equal(1, items.Count);
+      Assert.Equal(String.Empty, items[0]);
     }
 
     [Fact]
-    public void ReturnItemIfItemDequeuedWithinMsTimeout()
+    public void ReturnTrueIfItemDequeuedWithMsTimeout()
     {
+      IList<Object> items;
+
       UnderlyingQueue.Enqueue(String.Empty);
 
-      Assert.Same(String.Empty, BlockingQueue.Dequeue(Timeout.Infinite));
+      Assert.True(BlockingQueue.TryDequeueAll(10, out items));
+      Assert.Equal(1, items.Count);
+      Assert.Equal(String.Empty, items[0]);
     }
 
     [Fact]
-    public void ThrowExceptionIfQueueDisposed()
+    public void ReturnFalseIfQueueDisposed()
     {
+      IList<Object> items2;
+
       Monitor.Setup(mock => mock.PulseAll(It.IsAny<Object>()));
       UnderlyingQueue.Enqueue(String.Empty);
       BlockingQueue.Dispose();
 
-      Assert.Throws<ObjectDisposedException>(() => BlockingQueue.Dequeue(Timeout.Infinite));
+      Assert.False(BlockingQueue.TryDequeueAll(Timeout.Infinite, out items2));
+      Assert.Equal(0, items2.Count);
     }
 
     [Fact]
     public void BlockUntilItemAdded()
     {
+      IList<Object> items;
+
       Monitor.Setup(mock => mock.Wait(It.IsAny<Object>(), Timeout.Infinite)).Returns(false).Callback(() => UnderlyingQueue.Enqueue(String.Empty));
 
-      Assert.Equal(String.Empty, BlockingQueue.Dequeue(Timeout.Infinite));
+      Assert.True(BlockingQueue.TryDequeueAll(Timeout.Infinite, out items));
+      Assert.Equal(1, items.Count);
+      Assert.Equal(String.Empty, items[0]);
     }
 
     [Fact]
-    public void BlockUntilQueueDisposedAndThenThrowException()
+    public void BlockUntilQueueDisposed()
     {
+      IList<Object> items;
+
       Monitor.Setup(mock => mock.PulseAll(It.IsAny<Object>()));
       Monitor.Setup(mock => mock.Wait(It.IsAny<Object>(), Timeout.Infinite)).Returns(false).Callback(() => BlockingQueue.Dispose());
 
-      Assert.Throws<ObjectDisposedException>(() => BlockingQueue.Dequeue(Timeout.Infinite));
+      Assert.False(BlockingQueue.TryDequeueAll(Timeout.Infinite, out items));
+      Assert.Equal(0, items.Count);
     }
   }
 }

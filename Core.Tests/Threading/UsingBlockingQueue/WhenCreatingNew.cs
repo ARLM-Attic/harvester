@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using Harvester.Core.Threading;
+using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -15,29 +16,32 @@ using System.Collections.Generic;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core
+namespace Harvester.Core.Tests.Threading.UsingBlockingQueue
 {
-  public interface IBlockingQueue<T> : IDisposable
+  public class WhenCreatingNew : BlockingQueueTestBase
   {
-    Int32 Count { get; }
+    [Fact]
+    public void DefaultCtorCreatesEmptyQueue()
+    {
+      var queue = new BlockingQueue<Object>();
 
-    void Clear();
-    void Enqueue(T item);
+      Assert.Equal(0, queue.Count);
+    }
 
-    T Dequeue();
-    T Dequeue(TimeSpan timeout);
-    T Dequeue(Int32 millisecondsTimeout);
+    [Fact]
+    public void CapacityCtorCreatesEmptyQueue()
+    {
+      var queue = new BlockingQueue<Object>(10);
 
-    IList<T> DequeueAll();
-    IList<T> DequeueAll(TimeSpan timeout);
-    IList<T> DequeueAll(Int32 millisecondsTimeout);
+      Assert.Equal(0, queue.Count);
+    }
 
-    Boolean TryDequeue(out T result);
-    Boolean TryDequeue(TimeSpan timeout, out T result);
-    Boolean TryDequeue(Int32 millisecondsTimeout, out T result);
+    [Fact]
+    public void CopyCtorCreatesPrePopulatedQueue()
+    {
+      var queue = new BlockingQueue<Object>(new[] { new Object() });
 
-    Boolean TryDequeueAll(out IList<T> result);
-    Boolean TryDequeueAll(TimeSpan timeout, out IList<T> result);
-    Boolean TryDequeueAll(Int32 millisecondsTimeout, out IList<T> result);
+      Assert.Equal(1, queue.Count);
+    }
   }
 }

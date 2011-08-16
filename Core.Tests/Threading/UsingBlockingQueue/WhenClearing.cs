@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Threading;
+using Harvester.Core.Threading;
 using Xunit;
 
 /* Copyright (c) 2011 CBaxter
@@ -16,27 +16,18 @@ using Xunit;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core.Tests.UsingMonitorWrapper
+namespace Harvester.Core.Tests.Threading.UsingBlockingQueue
 {
-  public class WhenPulsingMonitor
+  public class WhenClearing : BlockingQueueTestBase
   {
-    private readonly IMonitor _monitor = MonitorWrapper.Instance;
-
     [Fact]
-    public void WakeUpBlockedThreads()
+    public void RemoveAllItems()
     {
-      var syncLock = new Object();
+      var queue = new BlockingQueue<Object>(new[] { new Object() });
 
-      lock (syncLock)
-      {
-        ThreadPool.QueueUserWorkItem(state =>
-                                       {
-                                         lock (syncLock)
-                                           _monitor.PulseAll(syncLock);
-                                       });
+      queue.Clear();
 
-        Assert.True(Monitor.Wait(syncLock));
-      }
+      Assert.Equal(0, queue.Count);
     }
   }
 }

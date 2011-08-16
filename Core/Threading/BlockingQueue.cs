@@ -18,7 +18,7 @@ using Harvester.Core.Logging;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core
+namespace Harvester.Core.Threading
 {
   public sealed class BlockingQueue<T> : IBlockingQueue<T>
   {

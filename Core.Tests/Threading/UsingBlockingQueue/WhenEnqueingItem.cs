@@ -1,4 +1,6 @@
 ﻿using System;
+using Moq;
+using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -14,12 +16,34 @@
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core
+namespace Harvester.Core.Tests.Threading.UsingBlockingQueue
 {
-  public interface IMonitor
+  public class WhenEnqueingItem : BlockingQueueTestBase
   {
-    void PulseAll(Object obj);
+    [Fact]
+    public void PulseAllThreadsOnFirstItemAdded()
+    {
+      var item = new Object();
 
-    Boolean Wait(Object obj, Int32 millisecondTimeout);
+      Monitor.Setup(mock => mock.PulseAll(It.IsAny<Object>()));
+      BlockingQueue.Enqueue(item);
+      Monitor.Verify(mock => mock.PulseAll(It.IsAny<Object>()), Times.Once());
+
+      Assert.Equal(1, UnderlyingQueue.Count);
+    }
+
+    [Fact]
+    public void DoNotPulseAllThreadsOnSubsequentItemsAdded()
+    {
+      var item1 = new Object();
+      var item2 = new Object();
+
+      Monitor.Setup(mock => mock.PulseAll(It.IsAny<Object>()));
+      BlockingQueue.Enqueue(item1);
+      BlockingQueue.Enqueue(item2);
+      Monitor.Verify(mock => mock.PulseAll(It.IsAny<Object>()), Times.Once());
+
+      Assert.Equal(2, UnderlyingQueue.Count);
+    }
   }
 }
