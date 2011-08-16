@@ -21,7 +21,7 @@ using NLog;
 
 namespace Harvester
 {
-  internal class ConsoleRenderer : ILogMessageRenderer
+  internal class ConsoleMessageRenderer : ILogMessageRenderer
   {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly StringBuilder _stringBuilder = new StringBuilder();

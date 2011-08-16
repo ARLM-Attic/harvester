@@ -57,7 +57,7 @@ namespace Harvester
       {
         LogEnvironmentInformation();
 
-        using (new WindowsMonitor(new ConsoleRenderer()))
+        using (new WindowsMonitor(new ConsoleMessageRenderer()))
           new ManualResetEvent(false).WaitOne();
       }
       catch (Exception ex)

@@ -58,7 +58,7 @@
     <Compile Include="..\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
-    <Compile Include="LogMessageRenderer.cs" />
+    <Compile Include="ConsoleMessageRenderer.cs" />
     <Compile Include="Properties\MessageColor.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
