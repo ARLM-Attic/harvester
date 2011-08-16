@@ -23,6 +23,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{FBF8C7F8
 		build.proj = build.proj
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{B7C62B64-06C4-4A33-84DC-1732A799C167}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Log4Net", "Integration\Log4Net\Log4Net.csproj", "{9A353BED-AC8E-4AE3-977E-68208ACF40BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NLog", "Integration\NLog\NLog.csproj", "{2D81C361-7648-4ECA-B3E2-3A639A0F6CF7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,8 +55,20 @@ Global
 		{D1891D3D-88E9-4B24-BA4A-6A4DBD1C0B1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1891D3D-88E9-4B24-BA4A-6A4DBD1C0B1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1891D3D-88E9-4B24-BA4A-6A4DBD1C0B1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A353BED-AC8E-4AE3-977E-68208ACF40BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A353BED-AC8E-4AE3-977E-68208ACF40BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A353BED-AC8E-4AE3-977E-68208ACF40BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A353BED-AC8E-4AE3-977E-68208ACF40BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D81C361-7648-4ECA-B3E2-3A639A0F6CF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D81C361-7648-4ECA-B3E2-3A639A0F6CF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D81C361-7648-4ECA-B3E2-3A639A0F6CF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D81C361-7648-4ECA-B3E2-3A639A0F6CF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9A353BED-AC8E-4AE3-977E-68208ACF40BB} = {B7C62B64-06C4-4A33-84DC-1732A799C167}
+		{2D81C361-7648-4ECA-B3E2-3A639A0F6CF7} = {B7C62B64-06C4-4A33-84DC-1732A799C167}
 	EndGlobalSection
 EndGlobal

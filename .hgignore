@@ -19,3 +19,7 @@ glob:Console/obj/
 glob:Core.Tests/Core.Tests.csproj.user
 syntax: glob
 Console/Console.csproj.user
+Integration/Log4Net/bin
+Integration/Log4Net/obj
+Integration/NLog/bin
+Integration/NLog/obj
