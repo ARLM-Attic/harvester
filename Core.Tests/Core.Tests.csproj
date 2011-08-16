@@ -91,6 +91,7 @@
     <Compile Include="Tracing\UsingOutputDebugStringWriter\WhenWrittingMessage.cs" />
     <Compile Include="Tracing\UsingOutputDebugString\WhenCreatingFromMessage.cs" />
     <Compile Include="Tracing\UsingOutputDebugString\WhenCreatingFromRawBytes.cs" />
+    <Compile Include="Tracing\UsingOutputDebugString\WhenGettingMaxCharCount.cs" />
     <Compile Include="Tracing\UsingTraceEventArgs\WhenCreatingNewEventArgs.cs" />
     <Compile Include="Tracing\UsingTraceEventProcessor\TraceEventProcessorTestBase.cs">
       <SubType>Code</SubType>

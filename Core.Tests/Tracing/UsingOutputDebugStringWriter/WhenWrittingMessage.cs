@@ -23,7 +23,6 @@ using Xunit;
  * IN THE SOFTWARE. 
  */
 
-
 namespace Harvester.Core.Tests.Tracing.UsingOutputDebugStringWriter
 {
   public class WhenWrittingMessage
@@ -37,6 +36,8 @@ namespace Harvester.Core.Tests.Tracing.UsingOutputDebugStringWriter
     {
       _mutexName = _randomizer.NextString(10) + "Mutex";
       _writer = new OutputDebugStringWriter(_mutexName, _buffer.Object);
+
+      _buffer.Setup(mock => mock.Capacity).Returns(1024);
     }
 
     [Fact]
@@ -96,6 +97,21 @@ namespace Harvester.Core.Tests.Tracing.UsingOutputDebugStringWriter
         Assert.True(_writer.Write(message));
 
       _buffer.Verify(mock => mock.Write(It.Is<Byte[]>(value => Encoding.ASCII.GetString(value, sizeof(Int32), value.Length - sizeof(Int32) - 1) == message)), Times.Once());
+    }
+
+    [Fact]
+    public void MessageSplitInToMultipleChunksIfExceedsBufferCapacity()
+    {
+      var messagePart1 = _randomizer.NextString(1019);
+      var messagePart2 = _randomizer.NextString(1019);
+      var messagePart3 = _randomizer.NextString(10);
+
+      using (new Mutex(false, _mutexName))
+        Assert.True(_writer.Write(messagePart1 + messagePart2 + messagePart3));
+
+      _buffer.Verify(mock => mock.Write(It.Is<Byte[]>(value => Encoding.ASCII.GetString(value, sizeof(Int32), value.Length - sizeof(Int32) - 1) == messagePart1)), Times.Once());
+      _buffer.Verify(mock => mock.Write(It.Is<Byte[]>(value => Encoding.ASCII.GetString(value, sizeof(Int32), value.Length - sizeof(Int32) - 1) == messagePart2)), Times.Once());
+      _buffer.Verify(mock => mock.Write(It.Is<Byte[]>(value => Encoding.ASCII.GetString(value, sizeof(Int32), value.Length - sizeof(Int32) - 1) == messagePart3)), Times.Once());
     }
   }
 }

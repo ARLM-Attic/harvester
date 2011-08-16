@@ -66,10 +66,17 @@ namespace Harvester.Core.Tracing
 
       Buffer.BlockCopy(processIdBytes, 0, result, 0, processIdBytes.Length);
 
-      if(messageBytes.Length > 0)
+      if (messageBytes.Length > 0)
         Buffer.BlockCopy(messageBytes, 0, result, processIdBytes.Length, messageBytes.Length);
 
       return result;
+    }
+
+    public static Int32 GetMaxCharCount(Int32 byteCount)
+    {
+      Verify.GreaterThanZero(byteCount);
+
+      return Math.Max(0, byteCount - sizeof(Int32) - 1);
     }
 
     public static implicit operator Byte[](OutputDebugString outputDebugString)

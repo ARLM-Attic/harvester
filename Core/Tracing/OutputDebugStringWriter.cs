@@ -57,8 +57,19 @@ namespace Harvester.Core.Tracing
         {
           Log.Debug("Writing OutputDebugString message.");
 
-          //TODO: Split messages greater than Buffer.Capacity in to multiple chunks.
-          _buffer.Write(new OutputDebugString(_processId, message));
+          var position = 0;
+          var maxBlockSize = OutputDebugString.GetMaxCharCount(_buffer.Capacity);
+
+          Verify.GreaterThanZero(maxBlockSize);
+
+          while (position < message.Length)
+          {
+            var length = Math.Min(maxBlockSize, message.Length - position);
+
+            _buffer.Write(new OutputDebugString(_processId, message.Substring(position, length)));
+
+            position += length;
+          }
         }
         finally
         {

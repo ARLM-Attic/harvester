@@ -17,3 +17,5 @@ glob:Windows/Windows.csproj.user
 glob:Console/bin/
 glob:Console/obj/
 glob:Core.Tests/Core.Tests.csproj.user
+syntax: glob
+Console/Console.csproj.user
