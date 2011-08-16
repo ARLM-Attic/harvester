@@ -31,6 +31,7 @@ namespace Harvester.Core
     private readonly Byte[] _buffer;
     private readonly String _name;
 
+    public Int32 Capacity { get { return _buffer.Length; } }
     public String Name { get { return _name; } }
     private Boolean Disposed { get; set; }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Harvester.Core.Tracing;
 using Moq;
 using Xunit;

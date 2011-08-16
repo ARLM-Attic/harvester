@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using Harvester.Core.Tracing;
-using Moq;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -41,6 +40,7 @@ namespace Harvester.Core.Tests.Tracing.UsingOutputDebugStringListener
       private Boolean _disposed;
       private Byte[] _buffer;
 
+      public Int32 Capacity { get { return _buffer.Length; } }
       public String Name { get { return "Fake Buffer"; } }
 
       public void SignalDataReady(Byte[] data)

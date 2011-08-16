@@ -1,5 +1,4 @@
-﻿using Harvester.Core.Tracing;
-using Xunit;
+﻿using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -15,15 +14,15 @@ using Xunit;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Core.Tests.Tracing.UsingOutputDebugStringListener
+namespace Harvester.Core.Tests.UsingSharedMemoryBuffer
 {
-  public class WhenDisposing
+  public class WhenGettingName
   {
     [Fact]
-    public void IgnoreMultipleCalls()
+    public void ReturnBaseObjectName()
     {
-      using (var listener = new OutputDebugStringListener("FriendlyName", "WhenDisposingOutputDebugStringListenerMutex", "Local\\OutDBWinListner"))
-        Assert.DoesNotThrow(listener.Dispose);
+      using (var buffer = new SharedMemoryBuffer("WhenGettingNameFact", 32))
+        Assert.Equal("WhenGettingNameFact", buffer.Name);
     }
   }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using Harvester.Core.Tracing;
-using Xunit;
+﻿using Xunit;
 
 /* Copyright (c) 2011 CBaxter
  * 

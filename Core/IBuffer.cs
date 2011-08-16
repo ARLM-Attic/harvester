@@ -16,8 +16,9 @@
 
 namespace Harvester.Core
 {
-  public interface IBuffer : IDisposable 
+  public interface IBuffer : IDisposable
   {
+    Int32 Capacity { get; }
     String Name { get; }
 
     Byte[] Read();

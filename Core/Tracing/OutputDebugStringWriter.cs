@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 
 /* Copyright (c) 2011 CBaxter
@@ -48,7 +49,7 @@ namespace Harvester.Core.Tracing
 
         try
         {
-          //TODO: Split messages over 2046 bytes.
+          //TODO: Split messages greater than Buffer.Capacity in to multiple chunks.
           _buffer.Write(new OutputDebugString(_processId, message));
         }
         finally

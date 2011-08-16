@@ -88,6 +88,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tracing\UsingOutputDebugStringListener\WhenReadingBuffer.cs" />
+    <Compile Include="Tracing\UsingOutputDebugStringWriter\WhenWrittingMessage.cs" />
     <Compile Include="Tracing\UsingOutputDebugString\WhenCreatingFromMessage.cs" />
     <Compile Include="Tracing\UsingOutputDebugString\WhenCreatingFromRawBytes.cs" />
     <Compile Include="Tracing\UsingTraceEventArgs\WhenCreatingNewEventArgs.cs" />
@@ -109,6 +110,8 @@
     <Compile Include="UsingBlockingQueue\WhenTryingToDequeueAllItems.cs" />
     <Compile Include="UsingMonitorWrapper\WhenWaiting.cs" />
     <Compile Include="UsingMonitorWrapper\WhenPulsingMonitor.cs" />
+    <Compile Include="UsingSharedMemoryBuffer\WhenGettingCapacity.cs" />
+    <Compile Include="UsingSharedMemoryBuffer\WhenGettingName.cs" />
     <Compile Include="UsingSharedMemoryBuffer\WhenReadingData.cs" />
     <Compile Include="UsingSharedMemoryBuffer\WhenWrittingData.cs" />
     <Compile Include="UsingVerifyException\WhenConstructingException.cs" />
