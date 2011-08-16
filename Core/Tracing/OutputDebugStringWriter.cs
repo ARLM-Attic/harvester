@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
+using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -21,6 +22,7 @@ namespace Harvester.Core.Tracing
 {
   public sealed class OutputDebugStringWriter
   {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(10);
     private readonly String _mutexName;
     private readonly Int32 _processId;
@@ -42,18 +44,26 @@ namespace Harvester.Core.Tracing
     {
       Boolean createdNew;
 
+      Log.Debug("Creating mutex: {0}", _mutexName);
+
       using (var mutex = new Mutex(false, _mutexName, out createdNew))
       {
+        Log.Debug("Mutex created as new: {0}", createdNew);
+
         if (createdNew || !mutex.WaitOne(Timeout))
           return false;
 
         try
         {
+          Log.Debug("Writing OutputDebugString message.");
+
           //TODO: Split messages greater than Buffer.Capacity in to multiple chunks.
           _buffer.Write(new OutputDebugString(_processId, message));
         }
         finally
         {
+          Log.Debug("Releasing mutex.");
+
           mutex.ReleaseMutex();
         }
 
