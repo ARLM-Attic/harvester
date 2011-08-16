@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO.MemoryMappedFiles;
 using System.Threading;
-using NLog;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -21,7 +21,7 @@ namespace Harvester.Core
 {
   public sealed class SharedMemoryBuffer : IBuffer
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
     private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(10);
 
     private readonly MemoryMappedFile _bufferFile;

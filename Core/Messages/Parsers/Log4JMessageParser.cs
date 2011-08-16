@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using NLog;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -22,7 +22,7 @@ namespace Harvester.Core.Messages.Parsers
 {
   internal class Log4JMessageParser : XmlMessageParserBase
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
     public Log4JMessageParser(XmlDocument document, XmlNamespaceManager namespaceManager)
       : base(document, namespaceManager, Log)

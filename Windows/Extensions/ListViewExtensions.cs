@@ -16,7 +16,7 @@ using System.Windows.Forms;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Windows.Extensions
+namespace Harvester.Extensions
 {
   public static class ListViewExtensions
   {

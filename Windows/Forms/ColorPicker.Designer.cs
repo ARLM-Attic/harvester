@@ -1,4 +1,4 @@
-﻿namespace Harvester.Windows.Forms
+﻿namespace Harvester.Forms
 {
   partial class ColorPicker
   {

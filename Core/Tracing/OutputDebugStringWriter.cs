@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
-using NLog;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -22,7 +21,7 @@ namespace Harvester.Core.Tracing
 {
   public sealed class OutputDebugStringWriter
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
     private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(10);
     private readonly String _mutexName;
     private readonly Int32 _processId;

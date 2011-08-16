@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using NLog;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -21,7 +21,7 @@ namespace Harvester.Core.Processes
 {
   internal class ProcessRetriever : IProcessRetriever
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
     private readonly IDictionary<Int32, IProcess> _processCache = new Dictionary<Int32, IProcess>();
 
     public IProcess GetProcessById(Int32 processId)

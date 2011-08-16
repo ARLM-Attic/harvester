@@ -1,5 +1,5 @@
 ﻿using System;
-using NLog;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -19,7 +19,7 @@ namespace Harvester.Core.Processes
 {
   internal class UnknownProcess : IProcess
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
     private readonly Int32 _processId;
     private readonly DateTime _exitTime;
     

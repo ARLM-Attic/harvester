@@ -2,8 +2,8 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Harvester.Windows.Properties;
-using NLog;
+using Harvester.Core.Logging;
+using Harvester.Properties;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -19,11 +19,11 @@ using NLog;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Windows.Forms
+namespace Harvester.Forms
 {
   internal partial class ColorPicker : FormBase
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
     public ColorPicker()
     {

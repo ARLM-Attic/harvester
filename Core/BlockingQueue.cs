@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using NLog;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -22,7 +22,7 @@ namespace Harvester.Core
 {
   public sealed class BlockingQueue<T> : IBlockingQueue<T>
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
     private readonly IMonitor _monitor;
     private readonly Queue<T> _queue;
     private Boolean _disposed;

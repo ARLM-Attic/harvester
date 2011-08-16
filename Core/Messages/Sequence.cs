@@ -1,5 +1,5 @@
 ﻿using System;
-using NLog;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -19,7 +19,7 @@ namespace Harvester.Core.Messages
 {
   internal class Sequence
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
     private readonly Object _syncLock = new Object();
     private UInt32 _nextId;
 

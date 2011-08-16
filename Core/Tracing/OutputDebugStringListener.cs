@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using NLog;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -20,7 +20,7 @@ namespace Harvester.Core.Tracing
 {
   internal class OutputDebugStringListener : ITraceListener
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
     private readonly IBuffer _sharedMemoryBuffer;
     private readonly Thread _listenerThread;
     private readonly String _listenerName;

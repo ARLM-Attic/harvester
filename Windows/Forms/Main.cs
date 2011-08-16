@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Harvester.Core;
+using Harvester.Core.Logging;
 using Harvester.Core.Messages;
-using Harvester.Windows.Extensions;
-using Harvester.Windows.Properties;
-using NLog;
+using Harvester.Extensions;
+using Harvester.Properties;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -24,11 +24,11 @@ using NLog;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Windows.Forms
+namespace Harvester.Forms
 {
   internal partial class Main : FormBase, ILogMessageRenderer
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
     private readonly WindowsMonitor _windowsMonitor;
 
     public Main()
@@ -55,7 +55,7 @@ namespace Harvester.Windows.Forms
 
     public void Render(IEnumerable<ILogMessage> logMessages)
     {
-      Log.Info("One or more messages received.");
+      Log.Debug("One or more messages received.");
       HandleEvent(() => ProcessMessages(logMessages));
     }
 

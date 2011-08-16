@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using NLog;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -16,11 +16,11 @@ using NLog;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Windows.Forms
+namespace Harvester.Forms
 {
   internal class FormBase : Form
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
     protected void HandleEvent(Action action)
     {

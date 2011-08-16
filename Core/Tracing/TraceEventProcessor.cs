@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Harvester.Core.Logging;
 using Harvester.Core.Messages;
-using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -23,7 +23,7 @@ namespace Harvester.Core.Tracing
 {
   internal class TraceEventProcessor : ITraceEventProcessor
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
     private readonly IBlockingQueue<TraceEvent> _traceEvents;
     private readonly ILogMessageFactory _logMessageFactory;
     private readonly Thread _processingThread;

@@ -8,7 +8,7 @@
     <ProjectGuid>{D4A4F479-6E07-41CB-9EE3-57336F40654E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Harvester.Windows</RootNamespace>
+    <RootNamespace>Harvester</RootNamespace>
     <AssemblyName>Harvester</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -37,7 +37,8 @@
     <ApplicationIcon>Resources\Icons\harvester.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Harvester.Windows.Program</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>
@@ -58,6 +59,9 @@
   <ItemGroup>
     <Compile Include="..\ProductInfo.cs">
       <Link>Properties\ProductInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedFiles\LoggerWrapper.cs">
+      <Link>LoggerWrapper.cs</Link>
     </Compile>
     <Compile Include="..\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>

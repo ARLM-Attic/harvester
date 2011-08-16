@@ -38,9 +38,6 @@
     <AssemblyOriginatorKeyFile>..\Harvester.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NLog">
-      <HintPath>..\Lib\Logging\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -56,6 +53,9 @@
     <Compile Include="IBuffer.cs" />
     <Compile Include="Extensions\RandomExtensions.cs" />
     <Compile Include="IBlockingQueue.cs" />
+    <Compile Include="Logging\ILog.cs" />
+    <Compile Include="Logging\LogManager.cs" />
+    <Compile Include="Logging\NullLogger.cs" />
     <Compile Include="Messages\Attribute.cs" />
     <Compile Include="Messages\ILogMessage.cs" />
     <Compile Include="Messages\ILogMessageFactory.cs" />

@@ -4,8 +4,8 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Harvester.Core;
-using Harvester.Windows.Forms;
-using NLog;
+using Harvester.Core.Logging;
+using Harvester.Forms;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -21,43 +21,43 @@ using NLog;
  * IN THE SOFTWARE. 
  */
 
-namespace Harvester.Windows
+namespace Harvester
 {
   static class Program
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
     [STAThread]
-    static void Main(String[] args)
+    static void Main()
     {
       Boolean onlyInstance;
 
       Thread.CurrentThread.Name = "Main";
+      LogManager.EnableLogging(name => new LoggerWrapper(NLog.LogManager.GetLogger(name)));
+      ILog log = LogManager.GetCurrentClassLogger();
 
       using (new Mutex(true, "Harvester", out onlyInstance))
       {
         if (onlyInstance)
-          StartApplication();
+          StartApplication(log);
         else
-          ExitApplication();
+          ExitApplication(log);
       }
     }
 
-    private static void ExitApplication()
+    private static void ExitApplication(ILog log)
     {
-      Log.Warn("Harvester session already active.");
+      log.Warn("Harvester session already active.");
 
       MessageBox.Show(Localization.DebuggerAlreadyActive, Application.ProductName);
       Application.Exit();
     }
 
-    private static void StartApplication()
+    private static void StartApplication(ILog log)
     {
-      Log.Info("Opening Harvester session.");
+      log.Info("Opening Harvester session.");
 
       try
       {
-        LogEnvironmentInformation();
+        LogEnvironmentInformation(log);
 
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
@@ -65,18 +65,18 @@ namespace Harvester.Windows
       }
       catch (Exception ex)
       {
-        Log.Fatal(ex);
+        log.Fatal(ex);
 
         MessageBox.Show(ex.Message, Application.ProductName);
       }
     }
-    
-    private static void LogEnvironmentInformation()
+
+    private static void LogEnvironmentInformation(ILog log)
     {
       var startupInfo = new StringBuilder();
 
-      AppDomain.CurrentDomain.AssemblyLoad += (sender, e) => Log.Info("Assembly Loaded: " + e.LoadedAssembly.GetName().FullName);
-      AppDomain.CurrentDomain.UnhandledException += (sender, e) => Log.Fatal(e.ExceptionObject);
+      AppDomain.CurrentDomain.AssemblyLoad += (sender, e) => log.Info("Assembly Loaded: " + e.LoadedAssembly.GetName().FullName);
+      AppDomain.CurrentDomain.UnhandledException += (sender, e) => log.Fatal(e.ExceptionObject);
 
       startupInfo.AppendLine();
       startupInfo.AppendLine("Harvester (Windows)\t" + Application.ProductVersion);
@@ -88,7 +88,7 @@ namespace Harvester.Windows
       foreach (var loadedAssemblyName in AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetName().FullName).OrderBy(assemblyName => assemblyName.ToLowerInvariant()))
         startupInfo.AppendLine('-' + loadedAssemblyName);
 
-      Log.Info(startupInfo.ToString());
+      log.Info(startupInfo.ToString());
     }
   }
 }

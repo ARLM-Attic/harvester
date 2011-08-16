@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Harvester.Core.Logging;
 using Harvester.Core.Messages;
 using Harvester.Properties;
-using NLog;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -23,7 +23,7 @@ namespace Harvester
 {
   internal class ConsoleMessageRenderer : ILogMessageRenderer
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
     private readonly StringBuilder _stringBuilder = new StringBuilder();
 
     private Int32 MaxSourceLength { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml;
-using NLog;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -20,7 +20,7 @@ namespace Harvester.Core.Messages.Parsers
 {
   internal abstract class XmlMessageParserFactoryBase : IMessageParserFactory
   {
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
     private readonly XmlNamespaceManager _xmlNamespaceManager;
     private readonly XmlParserContext _xmlParserContext;
 

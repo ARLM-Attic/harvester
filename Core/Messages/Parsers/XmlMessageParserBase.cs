@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
-using NLog;
+using Harvester.Core.Logging;
 
 /* Copyright (c) 2011 CBaxter
  * 
@@ -26,9 +26,9 @@ namespace Harvester.Core.Messages.Parsers
   {
     private readonly XmlNamespaceManager _namespaceManager;
     private readonly XmlDocument _document;
-    private readonly Logger _log;
+    private readonly ILog _log;
 
-    protected XmlMessageParserBase(XmlDocument document, XmlNamespaceManager namespaceManager, Logger log)
+    protected XmlMessageParserBase(XmlDocument document, XmlNamespaceManager namespaceManager, ILog log)
     {
       Verify.NotNull(log);
       Verify.NotNull(document);
