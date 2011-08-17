@@ -60,25 +60,77 @@
   </Target>
 
   <Target Name="PackageConsole">
+    <PropertyGroup>
+      <ConsoleWorkingDir>Console\bin\$(Configuration)</ConsoleWorkingDir>
+    </PropertyGroup>
+
     <ItemGroup>
-      <ConsoleFiles Include="Console\bin\$(Configuration)\NLog.dll" />
-      <ConsoleFiles Include="Console\bin\$(Configuration)\Harvester.Core.dll" />
-      <ConsoleFiles Include="Console\bin\$(Configuration)\Harvester.Console.exe" />
-      <ConsoleFiles Include="Console\bin\$(Configuration)\Harvester.Console.exe.config" />
+      <ConsoleFiles Include="$(ConsoleWorkingDir)\NLog.dll" />
+      <ConsoleFiles Include="$(ConsoleWorkingDir)\Harvester.Core.dll" />
+      <ConsoleFiles Include="$(ConsoleWorkingDir)\Harvester.Console.exe" />
+      <ConsoleFiles Include="$(ConsoleWorkingDir)\Harvester.Console.exe.config" />
     </ItemGroup>
     
-    <Zip Files="@(ConsoleFiles)" WorkingDirectory="Console\bin\$(Configuration)" ZipFileName="$(BuildOutputDir)\Harvester.Console.zip" />
+    <Zip Files="@(ConsoleFiles)" WorkingDirectory="$(ConsoleWorkingDir)" ZipFileName="$(BuildOutputDir)\Harvester.Console.zip" />
+    <Copy SourceFiles="@(ConsoleFiles)" DestinationFolder="$(BuildOutputDir)\Console" />
   </Target>
   
   <Target Name="PackageWindows">
+    <PropertyGroup>
+      <WindowsWorkingDir>Windows\bin\$(Configuration)</WindowsWorkingDir>
+    </PropertyGroup>
+    
     <ItemGroup>
-      <WindowsFiles Include="Windows\bin\$(Configuration)\NLog.dll" />
-      <WindowsFiles Include="Windows\bin\$(Configuration)\Harvester.Core.dll" />
-      <WindowsFiles Include="Windows\bin\$(Configuration)\Harvester.exe" />
-      <WindowsFiles Include="Windows\bin\$(Configuration)\Harvester.exe.config" />
+      <WindowsFiles Include="$(WindowsWorkingDir)\NLog.dll" />
+      <WindowsFiles Include="$(WindowsWorkingDir)\Harvester.Core.dll" />
+      <WindowsFiles Include="$(WindowsWorkingDir)\Harvester.exe" />
+      <WindowsFiles Include="$(WindowsWorkingDir)\Harvester.exe.config" />
     </ItemGroup>
 
-    <Zip Files="@(WindowsFiles)" WorkingDirectory="Windows\bin\$(Configuration)" ZipFileName="$(BuildOutputDir)\Harvester.zip" />
+    <Zip Files="@(WindowsFiles)" WorkingDirectory="$(WindowsWorkingDir)" ZipFileName="$(BuildOutputDir)\Harvester.zip" />
+    <Copy SourceFiles="@(WindowsFiles)" DestinationFolder="$(BuildOutputDir)\Windows" />
+  </Target>
+
+  <Target Name="PackageNLogIntegration">
+    <PropertyGroup>
+      <NLogIntegrationDir>Integration\NLog\bin\$(Configuration)</NLogIntegrationDir>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <NLogIntegrationFiles Include="$(NLogIntegrationDir)\NLog.dll" />
+      <NLogIntegrationFiles Include="$(NLogIntegrationDir)\Harvester.Core.dll" />
+      <NLogIntegrationFiles Include="$(NLogIntegrationDir)\Harvester.Integration.NLog.dll" />
+    </ItemGroup>
+
+    <Zip Files="@(NLogIntegrationFiles)" WorkingDirectory="$(NLogIntegrationDir)" ZipFileName="$(BuildOutputDir)\Harvester.Integration.NLog.zip" />
+    <Copy SourceFiles="@(NLogIntegrationFiles)" DestinationFolder="$(BuildOutputDir)\NLog" />
+  </Target>
+
+  <Target Name="PackageLog4NetIntegration">
+    <PropertyGroup>
+      <Log4NetIntegrationDir>Integration\Log4Net\bin\$(Configuration)</Log4NetIntegrationDir>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Log4NetIntegrationFiles Include="$(Log4NetIntegrationDir)\Log4Net.dll" />
+      <Log4NetIntegrationFiles Include="$(Log4NetIntegrationDir)\Harvester.Core.dll" />
+      <Log4NetIntegrationFiles Include="$(Log4NetIntegrationDir)\Harvester.Integration.Log4Net.dll" />
+    </ItemGroup>
+
+    <Zip Files="@(Log4NetIntegrationFiles)" WorkingDirectory="$(Log4NetIntegrationDir)" ZipFileName="$(BuildOutputDir)\Harvester.Integration.Log4Net.zip" />
+    <Copy SourceFiles="@(Log4NetIntegrationFiles)" DestinationFolder="$(BuildOutputDir)\Log4Net" />
+  </Target>
+
+  <Target Name="PackageSetup">
+    <ItemGroup>
+      <Tokens Include="Version">
+        <ReplacementValue>$(ReleaseVersion)</ReplacementValue>
+      </Tokens>
+    </ItemGroup>
+
+    <TemplateFile Template="Harvester.wxs.template" OutputFileName="$(BuildOutputDir)\Harvester.wxs" Tokens="@(Tokens)" />
+    <Exec Command="Lib\WiX\candle.exe -out $(BuildOutputDir)\Harvester.wixobj $(BuildOutputDir)\Harvester.wxs" />
+    <Exec Command="Lib\WiX\light.exe -ext WixUIExtension -ext WixNetFxExtension -out $(BuildOutputDir)\Harvester.msi $(BuildOutputDir)\Harvester.wixobj" />
   </Target>
 
   <Target Name="Release" DependsOnTargets="Test">
@@ -86,6 +138,9 @@
 
     <CallTarget Targets="PackageConsole" />
     <CallTarget Targets="PackageWindows" />
+    <CallTarget Targets="PackageNLogIntegration" />
+    <CallTarget Targets="PackageLog4NetIntegration" />
+    <CallTarget Targets="PackageSetup" />
   </Target>
 
 </Project>

@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{FBF8C7F8
 	ProjectSection(SolutionItems) = preProject
 		build.cmd = build.cmd
 		build.proj = build.proj
+		Harvester.wxs.template = Harvester.wxs.template
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{B7C62B64-06C4-4A33-84DC-1732A799C167}"
