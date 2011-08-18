@@ -41,16 +41,19 @@ namespace Harvester
 
     private void RenderLogMessage(ILogMessage logMessage)
     {
+      Console.BackgroundColor = ConsoleColor.Black;
+      Console.ForegroundColor = ConsoleColor.Cyan;
+      Console.Write(String.Format("{0:yyyy-MM-dd HH:mm:ss,fff}   ", logMessage.Timestamp));
+
       SetConsoleBackgroundColor(logMessage);
       SetConsoleForegroundColor(logMessage);
 
       _stringBuilder.Clear();
-      _stringBuilder.AppendFormat("{0:yyyy-MM-dd HH:mm:ss,fff}", logMessage.Timestamp);
-      _stringBuilder.AppendFormat(" [{0}]", GetProcessId(logMessage));
-      _stringBuilder.AppendFormat(" {0}", GetProcessName(logMessage));
-      _stringBuilder.AppendFormat(" [{0}]", GetThread(logMessage));
-      _stringBuilder.AppendFormat(" {0} ", GetSource(logMessage));
-      _stringBuilder.AppendFormat(" [{0}] ", GetLevel(logMessage));
+      _stringBuilder.AppendFormat("[{0}]   ", GetProcessId(logMessage));
+      _stringBuilder.AppendFormat("{0}   ", GetProcessName(logMessage));
+      _stringBuilder.AppendFormat("[{0}]   ", GetThread(logMessage));
+      _stringBuilder.AppendFormat("{0}   ", GetSource(logMessage));
+      _stringBuilder.AppendFormat("[{0}]   ", GetLevel(logMessage));
       _stringBuilder.Append(logMessage.Message);
 
       Console.WriteLine(_stringBuilder.ToString());
