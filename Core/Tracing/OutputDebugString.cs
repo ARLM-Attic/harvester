@@ -17,7 +17,7 @@ using System.Text;
 
 namespace Harvester.Core.Tracing
 {
-  internal class OutputDebugString
+  public class OutputDebugString
   {
     private readonly Int32 _processId;
     private readonly String _message;
@@ -82,6 +82,20 @@ namespace Harvester.Core.Tracing
     public static implicit operator Byte[](OutputDebugString outputDebugString)
     {
       return outputDebugString == null ? new Byte[0] : outputDebugString.Raw;
+    }
+
+    public static OutputDebugString operator +(OutputDebugString lhs, OutputDebugString rhs)
+    {
+      if (lhs == null)
+        return rhs;
+
+      if (rhs == null)
+        return lhs;
+
+      if(lhs.ProcessId != rhs.ProcessId)
+        throw new InvalidOperationException(Localization.OutputDebugStringProcessMismatch);
+
+      return new OutputDebugString(lhs.ProcessId, lhs.Message + rhs.Message);
     }
   }
 }

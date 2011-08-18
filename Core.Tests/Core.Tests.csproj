@@ -99,7 +99,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tracing\UsingOutputDebugStringListener\WhenReadingBuffer.cs" />
-    <Compile Include="Tracing\UsingOutputDebugStringWriter\WhenWrittingMessage.cs" />
+    <Compile Include="Tracing\UsingOutputDebugStringReader\WhenReadingFragmentedOutputDebugStrings.cs" />
+    <Compile Include="Tracing\UsingOutputDebugStringReader\WhenReadingOutputDebugStrings.cs" />
+    <Compile Include="Tracing\UsingOutputDebugStringWriter\WhenWritingMessage.cs" />
+    <Compile Include="Tracing\UsingOutputDebugString\WhenCombiningOutputDebugStrings.cs" />
     <Compile Include="Tracing\UsingOutputDebugString\WhenCreatingFromMessage.cs" />
     <Compile Include="Tracing\UsingOutputDebugString\WhenCreatingFromRawBytes.cs" />
     <Compile Include="Tracing\UsingOutputDebugString\WhenGettingMaxCharCount.cs" />

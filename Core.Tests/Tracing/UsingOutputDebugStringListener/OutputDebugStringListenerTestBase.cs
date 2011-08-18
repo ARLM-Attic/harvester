@@ -37,8 +37,8 @@ namespace Harvester.Core.Tests.Tracing.UsingOutputDebugStringListener
     {
       private readonly ManualResetEvent _bufferReadyEvent = new ManualResetEvent(false);
       private readonly ManualResetEvent _dataReadyEvent = new ManualResetEvent(false);
+      private Byte[] _buffer = new Byte[4096];
       private Boolean _disposed;
-      private Byte[] _buffer;
 
       public Int32 Capacity { get { return _buffer.Length; } }
       public String Name { get { return "Fake Buffer"; } }

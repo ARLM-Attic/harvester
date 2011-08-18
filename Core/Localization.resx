@@ -120,6 +120,9 @@
   <data name="DebuggerAlreadyActive" xml:space="preserve">
     <value>Another debugger is currently active; unable to open Harvester.</value>
   </data>
+  <data name="OutputDebugStringProcessMismatch" xml:space="preserve">
+    <value>Cannot combine OutputDebugString messages originating from different processes.</value>
+  </data>
   <data name="VerifyException" xml:space="preserve">
     <value>Value is invalid.</value>
   </data>

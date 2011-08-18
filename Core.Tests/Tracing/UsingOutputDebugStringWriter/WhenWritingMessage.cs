@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using Harvester.Core.Extensions;
@@ -25,14 +23,14 @@ using Xunit;
 
 namespace Harvester.Core.Tests.Tracing.UsingOutputDebugStringWriter
 {
-  public class WhenWrittingMessage
+  public class WhenWritingMessage
   {
     private readonly Mock<IBuffer> _buffer = new Mock<IBuffer>();
     private readonly Random _randomizer = new Random();
     private readonly OutputDebugStringWriter _writer;
     private readonly String _mutexName;
 
-    public WhenWrittingMessage()
+    public WhenWritingMessage()
     {
       _mutexName = _randomizer.NextString(10) + "Mutex";
       _writer = new OutputDebugStringWriter(_mutexName, _buffer.Object);

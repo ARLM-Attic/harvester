@@ -21,6 +21,7 @@ namespace Harvester.Core.Tracing
   internal class OutputDebugStringListener : ITraceListener
   {
     private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+    private readonly OutputDebugStringReader _reader;
     private readonly IBuffer _sharedMemoryBuffer;
     private readonly Thread _listenerThread;
     private readonly String _listenerName;
@@ -43,6 +44,7 @@ namespace Harvester.Core.Tracing
       _listenerName = friendlyName;
       _mutex = new Mutex(false, mutexName);
       _sharedMemoryBuffer = sharedMemoryBuffer;
+      _reader = new OutputDebugStringReader(OutputDebugString.GetMaxCharCount(_sharedMemoryBuffer.Capacity));
       _listenerThread = new Thread(ReadBufferData) { Name = sharedMemoryBuffer.Name + " Listener", Priority = ThreadPriority.Highest, IsBackground = true };
       _listenerThread.Start();
     }
@@ -68,23 +70,23 @@ namespace Harvester.Core.Tracing
 
         try
         {
-          var data = _sharedMemoryBuffer.Read();
-          var debugString = new OutputDebugString(data);
-
-          if (String.IsNullOrWhiteSpace(debugString.Message))
-            continue;
-
-          Log.Debug("Trace event rececived.");
-
-          var defensiveCopy = TraceEventReceived;
-          if (defensiveCopy != null)
-            defensiveCopy.Invoke(this, new TraceEventArgs(debugString.ProcessId, debugString.Message, Name));
+          foreach (var outputDebugString in _reader.GetOutputDebugStrings(_sharedMemoryBuffer.Read()))
+            RaiseTraceEventReceived(outputDebugString);
         }
         catch (ObjectDisposedException)
         {
           break;
         }
       }
+    }
+
+    private void RaiseTraceEventReceived(OutputDebugString outputDebugString)
+    {
+      Log.Debug("Raising trace event rececived.");
+
+      var defensiveCopy = TraceEventReceived;
+      if (defensiveCopy != null)
+        defensiveCopy.Invoke(this, new TraceEventArgs(outputDebugString.ProcessId, outputDebugString.Message, Name));
     }
   }
 }
