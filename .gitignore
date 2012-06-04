@@ -1,0 +1,27 @@
+# Build Folders
+# -------------------------
+.artifacts
+bin/
+obj/
+
+# NuGet
+# -------------------------
+/src/.nuget/nuget.exe
+/src/packages/
+
+# ReSharper Folders
+# -------------------------
+_ReSharper.Harvester/
+
+# User Files
+# -------------------------
+*.suo
+*.user
+
+# Generated Files
+# -------------------------
+/src/.shared/VersionInfo.cs
+
+# Other Files
+# -------------------------
+*.dotCover

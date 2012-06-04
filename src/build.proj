@@ -1,0 +1,109 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Test">
+
+    <Import Project="..\lib\MSBuild\MSBuild.Community.Tasks\MSBuild.Community.Tasks.Targets"/>
+    <UsingTask TaskName="Xunit.Runner.MSBuild.xunit" AssemblyFile="..\lib\MSBuild\xUnit\xunit.runner.msbuild.dll" />
+
+    <PropertyGroup>
+        <Platform Condition="'$(Platform)' == ''">Any CPU</Platform>
+        <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+        <MajorVersion Condition="'$(MajorVersion)' == ''">0</MajorVersion>
+        <MinorVersion Condition="'$(MinorVersion)' == ''">0</MinorVersion>
+        <RevisionNumber Condition="'$(RevisionNumber)' == ''">0</RevisionNumber>
+        <Commit Condition="'$(Commit)' == ''">Unknown</Commit>
+        <BuildOutput>.artifacts</BuildOutput>
+    </PropertyGroup>
+
+    <Target Name="Clean">
+        <ItemGroup>
+            <CleanFiles Include="**\bin\$(Configuration)\**" Exclude ="**\bin\$(Configuration)\*.vshost.exe"/>
+            <CleanFiles Include="**\obj\$(Configuration)\**" />
+        </ItemGroup>
+
+        <Delete Files="@(CleanFiles)" />
+        <RemoveDir Directories="$(BuildOutput)"/>
+    </Target>
+
+    <Target Name="StampVersionInfo">
+        <PropertyGroup>
+            <GetBuildDateScript><![CDATA[ public static string ScriptMain() { return Convert.ToInt32(DateTime.Now.Date.Subtract(new DateTime(2011, 2, 11)).TotalDays).ToString(); } ]]></GetBuildDateScript>
+            <GetBuildTimeScript><![CDATA[ public static string ScriptMain() { return Convert.ToInt32(DateTime.Now.Subtract(DateTime.Today).TotalMinutes).ToString(); } ]]></GetBuildTimeScript>
+        </PropertyGroup>
+
+        <Script Language="C#" Code="$(GetBuildDateScript)" Imports="System">
+            <Output TaskParameter="ReturnValue" PropertyName="BuildDate" />
+        </Script>
+
+        <Script Language="C#" Code="$(GetBuildTimeScript)" Imports="System">
+            <Output TaskParameter="ReturnValue" PropertyName="BuildTime" />
+        </Script>
+
+        <CreateProperty Value="$(MajorVersion).$(MinorVersion).$(RevisionNumber).0">
+            <Output TaskParameter="Value" PropertyName="AssemblyVersion" />
+        </CreateProperty>
+
+        <CreateProperty Value="$(MajorVersion).$(MinorVersion).$(BuildDate).$(BuildTime)">
+            <Output TaskParameter="Value" PropertyName="FileVersion" />
+        </CreateProperty>
+
+        <AssemblyInfo CodeLanguage="CS"
+                      OutputFile=".shared\VersionInfo.cs"
+                      AssemblyVersion="$(AssemblyVersion)"
+                      AssemblyFileVersion="$(FileVersion)"
+                      AssemblyConfiguration="$(Configuration)"
+                      AssemblyInformationalVersion="$(Commit)" />
+    </Target>
+
+    <Target Name="Build" DependsOnTargets="Clean;StampVersionInfo">
+        <MakeDir Directories="$(BuildOutput)" />
+        <MSBuild Projects="Harvester.sln" Targets="Build" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+    </Target>
+
+    <Target Name="Test" DependsOnTargets="Build">
+        <ItemGroup>
+            <TestProjects Include="*.Tests\bin\$(Configuration)\*.Tests.dll"/>
+        </ItemGroup>
+
+        <xunit Assembly="%(TestProjects.Identity)" />
+    </Target>
+
+    <Target Name="PackageBinaries">
+        <ItemGroup>
+            <BinaryFiles Include="Windows\bin\$(Configuration)\Harvester.exe" />
+            <BinaryFiles Include="Windows\bin\$(Configuration)\Harvester.exe.config" />
+            <BinaryFiles Include="Core\bin\$(Configuration)\Harvester.Core.dll" />
+            <BinaryFiles Include="Console\bin\$(Configuration)\Harvester.Console.exe" />
+            <BinaryFiles Include="Console\bin\$(Configuration)\Harvester.Console.exe.config" />
+            <BinaryFiles Include="Log4net\bin\$(Configuration)\Log4Net.dll" />
+            <BinaryFiles Include="Log4net\bin\$(Configuration)\Harvester.Integration.Log4Net.dll" />
+            <BinaryFiles Include="NLog\bin\$(Configuration)\NLog.dll" />
+            <BinaryFiles Include="NLog\bin\$(Configuration)\Harvester.Integration.NLog.dll" />
+            <BinaryFiles Include="TraceListener\bin\$(Configuration)\Harvester.Integration.TraceListener.dll" />
+        </ItemGroup>
+
+        <Copy SourceFiles="@(BinaryFiles)" DestinationFolder="$(BuildOutput)\bin" />
+
+        <ItemGroup>
+            <ZipFiles Include="$(BuildOutput)\bin\**" />
+        </ItemGroup>
+        
+        <Zip Files="@(ZipFiles)" WorkingDirectory="$(BuildOutput)\bin" ZipFileName="$(BuildOutput)\Harvester.zip" />
+    </Target>
+
+    <Target Name="PackageSetup">
+        <ItemGroup>
+            <Tokens Include="Version">
+                <ReplacementValue>$(AssemblyVersion)</ReplacementValue>
+            </Tokens>
+        </ItemGroup>
+
+        <TemplateFile Template="Harvester.wxs.template" OutputFileName="$(BuildOutput)\Harvester.wxs" Tokens="@(Tokens)" />
+        <Exec Command="..\Lib\WiX\candle.exe -out $(BuildOutput)\Harvester.wixobj $(BuildOutput)\Harvester.wxs" />
+        <Exec Command="..\Lib\WiX\light.exe -ext WixUIExtension -ext WixNetFxExtension -out $(BuildOutput)\Harvester.msi $(BuildOutput)\Harvester.wixobj" />
+    </Target>
+
+    <Target Name="Package" DependsOnTargets="Test">
+        <CallTarget Targets="PackageBinaries" />
+        <CallTarget Targets="PackageSetup" />
+    </Target>
+
+</Project>
