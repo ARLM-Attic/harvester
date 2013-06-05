@@ -1,7 +1,7 @@
 @ECHO OFF
 
 set MSBuildExe="%SYSTEMROOT%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
-set GitExe="%SYSTEMDRIVE%\Program Files (x86)\Git\bin\git.exe"
+set GitExe="%SYSTEMDRIVE%\Program Files (x86)\SmartGitHg 4\git\bin"
 
 IF NOT EXIST %MSBuildExe% GOTO MSBuildNotFound
 IF NOT EXIST %GitExe% GOTO GitNotFound

@@ -2,7 +2,7 @@
 using System.Xml;
 using Harvester.Core.Processes;
 
-/* Copyright (c) 2012 CBaxter
+/* Copyright (c) 2012-2013 CBaxter
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
  * to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
@@ -24,6 +24,9 @@ namespace Harvester.Core.Messaging.Parsers
             : base(processRetriever, "log4j", "http://logging.apache.org/log4j/")
         {
             Verify.NotNull(extendedProperties, "extendedProperties");
+
+            //HACK: NLog now extends standard log4j XML structure with custom NLog namespace (i.e., <nlog:properties /> element). 
+            NamespaceManager.AddNamespace("nlog", "http://nlog-project.org/log4j/");
         }
 
         public override Boolean CanParseMessage(String message)
