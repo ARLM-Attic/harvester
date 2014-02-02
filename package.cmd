@@ -1,17 +1,8 @@
 @ECHO OFF
 
 set MSBuildExe="%SYSTEMROOT%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
-set GitExe="%SYSTEMDRIVE%\Program Files (x86)\SmartGitHg 4\git\bin"
 
 IF NOT EXIST %MSBuildExe% GOTO MSBuildNotFound
-IF NOT EXIST %GitExe% GOTO GitNotFound
-
-:: Load HEAD commit in to parameter
-:: --------------------------------------------------
-%GitExe% rev-parse HEAD > .gitcommit
-set /p Commit= < .gitcommit
-del .gitcommit
-echo Commit: %Commit%
 
 :: Prompt for product version
 :: --------------------------------------------------
