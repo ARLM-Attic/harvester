@@ -38,6 +38,7 @@ namespace Harvester.Integration.Diagnostics
         private readonly String machineName = Environment.MachineName;
         private readonly IWriteMessages messageWriter;
         private readonly MessageBuffer messageBuffer;
+        private readonly Boolean captureIdentity;
 
         /// <summary>
         /// Gets a value indicating whether the trace listener is thread safe.
@@ -55,6 +56,7 @@ namespace Harvester.Integration.Diagnostics
             var mutexName = parsedInitializeData.ContainsKey("Mutex Name") ? parsedInitializeData["Mutex Name"] : "HarvesterMutex";
             var bufferType = parsedInitializeData.ContainsKey("Buffer Type") ? parsedInitializeData["Buffer Type"] : "NamedPipeBuffer";
 
+            captureIdentity = !parsedInitializeData.ContainsKey("Capture Identity") || Boolean.Parse(parsedInitializeData["Capture Identity"]);
             switch (bufferType)
             {
                 case "SharedMemoryBuffer":
@@ -330,7 +332,7 @@ namespace Harvester.Integration.Diagnostics
         private void WriteEvent(DateTime timestamp, TraceEventType? level, String logger, String message)
         {
             var xml = new StringBuilder();
-            
+
             using (var stringWriter = new StringWriter(xml))
             using (var xmlWriter = new XmlTextWriter(stringWriter))
             {
@@ -339,45 +341,79 @@ namespace Harvester.Integration.Diagnostics
                 // Write out core trace event attributes.
                 xmlWriter.WriteAttributeString("logger", logger);
                 xmlWriter.WriteAttributeString("timestamp", timestamp.ToLocalTime().ToString("yyyy-MM-ddTHH:mm:ss.ffffffzzzz"));
-                xmlWriter.WriteAttributeString("username", GetCurrentUsername());
                 xmlWriter.WriteAttributeString("level", GetLevelFromType(level));
                 xmlWriter.WriteAttributeString("thread", GetCurrentThread());
                 xmlWriter.WriteAttributeString("domain", domain);
 
-                // Write out message element if available.
-                if (!String.IsNullOrWhiteSpace(message))
-                {
-                    xmlWriter.WriteStartElement("log4net:message");
-                    xmlWriter.WriteString(message);
-                    xmlWriter.WriteEndElement();
-                }
+                // Only capture username if required (slow).
+                if (captureIdentity)
+                    xmlWriter.WriteAttributeString("username", GetCurrentUsername());
 
-                // Write out trace event extended properties.
-                xmlWriter.WriteStartElement("log4net:properties");
+                // Write child elements.
+                WriteMessage(xmlWriter, message);
+                WriteProperties(xmlWriter, machineName);
 
-                // Write out the machine name.
-                if (!String.IsNullOrWhiteSpace(machineName))
-                    WriteProperty(xmlWriter, "log4net:HostName", machineName);
-
-                // Include the correlation manager's activity ID if available.
-                var activityId = Trace.CorrelationManager.ActivityId;
-                if (activityId != Guid.Empty)
-                    WriteProperty(xmlWriter, "correlationManager:ActivityId", activityId);
-
-                // Include the correlation manager's logical stack trace frames if available
-                var logicalOperationStack = Trace.CorrelationManager.LogicalOperationStack;
-                if (logicalOperationStack.Count > 0)
-                {
-                    var frames = logicalOperationStack.ToArray();
-                    for (var i = 0; i < frames.Length; i++)
-                        WriteProperty(xmlWriter, "correlationManager:LogicalOperationStack[" + i + "]", frames[i]);
-                }
-
-                xmlWriter.WriteEndElement();
+                // Close the trace event element.
                 xmlWriter.WriteEndElement();
             }
 
             messageWriter.Write(xml.ToString());
+        }
+
+        /// <summary>
+        /// Write out the trace event log message.
+        /// </summary>
+        /// <param name="xmlWriter">The underlying XML writer.</param>
+        /// <param name="message">The message to write.</param>
+        private static void WriteMessage(XmlWriter xmlWriter, String message)
+        {
+            if (String.IsNullOrWhiteSpace(message)) return;
+
+            xmlWriter.WriteStartElement("log4net:message");
+            xmlWriter.WriteString(message);
+            xmlWriter.WriteEndElement();
+        }
+
+        /// <summary>
+        /// Write out the trace event extended properties.
+        /// </summary>
+        /// <param name="xmlWriter">The underlying XML writer.</param>
+        /// <param name="machineName">The machine name.</param>
+        private static void WriteProperties(XmlWriter xmlWriter, String machineName)
+        {
+            // Write out trace event extended properties.
+            xmlWriter.WriteStartElement("log4net:properties");
+
+            // Write out the machine name.
+            if (!String.IsNullOrWhiteSpace(machineName))
+                WriteProperty(xmlWriter, "log4net:HostName", machineName);
+
+            // Include the correlation manager's activity ID if available.
+            var activityId = Trace.CorrelationManager.ActivityId;
+            if (activityId != Guid.Empty)
+                WriteProperty(xmlWriter, "trace:activityId", activityId);
+
+            // Include the correlation manager's logical stack trace frames if available
+            var logicalOperationStack = Trace.CorrelationManager.LogicalOperationStack;
+            if (logicalOperationStack.Count == 1)
+            {
+                WriteProperty(xmlWriter, "trace:logicalOperationStack", logicalOperationStack.Peek());
+            }
+            else if (logicalOperationStack.Count > 1)
+            {
+                var frames = logicalOperationStack.ToArray();
+                var flattened = new StringBuilder(frames[0].ToString());
+
+                for (var i = 1; i < frames.Length; i++)
+                {
+                    flattened.Append(", ");
+                    flattened.Append(frames[i]);
+                }
+
+                WriteProperty(xmlWriter, "trace:logicalOperationStack", flattened);
+            }
+
+            xmlWriter.WriteEndElement();
         }
 
         /// <summary>
@@ -420,7 +456,7 @@ namespace Harvester.Integration.Diagnostics
         private static String GetCurrentUsername()
         {
             var principal = Thread.CurrentPrincipal;
-            var username = principal != null && !String.IsNullOrWhiteSpace(principal.Identity.Name) ? Thread.CurrentPrincipal.Identity.Name : String.Empty;
+            var username = principal == null ? String.Empty : principal.Identity.Name;
 
             return String.IsNullOrWhiteSpace(username) ? (WindowsIdentity.GetCurrent() ?? WindowsIdentity.GetAnonymous()).Name : username;
         }
